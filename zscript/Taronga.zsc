@@ -1,0 +1,472 @@
+class HDTaronga : WAN_20mmLauncher
+{
+    enum TarongaFlags
+    {
+        TRF_JustUnload = 1,
+        TRF_GrenadeLoaded = 2,
+        TRF_GL = 4
+    }
+
+    enum TarongaProperties
+    {
+        TRProp_Flags,
+        TRProp_Chamber,
+        TRProp_Mode,
+        TRProp_Heat
+    }
+
+    override void PostBeginPlay()
+    {
+        // hehe 1337 the UaS number - [Ted]
+        weaponspecial = 1337;
+        Super.PostBeginPlay();
+    }
+
+    override void tick()
+    {
+        super.tick();
+        drainheat(TRProp_Heat, 1);
+
+        if(owner && WeaponStatus[TRProp_Heat] > 50 && !(Level.time % TICRATE))
+        {
+            owner.damagemobj(owner, owner, random(1, 3), "electrical");
+        }
+        
+        if (!(WeaponStatus[TRProp_Flags] & TRF_GL) && WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
+        {
+            WeaponStatus[TRProp_Flags] &= ~TRF_GrenadeLoaded;
+            Actor ptr = owner ? owner : Actor(self);
+            ptr.A_SpawnItemEx('WAN_20mmGrenadeAmmo', cos(ptr.pitch) * 10, 0, ptr.height - 10 - 10 * sin(ptr.pitch), ptr.vel.x, ptr.vel.y, ptr.vel.z, 0, SXF_ABSOLUTEMOMENTUM | SXF_NOCHECKPOSITION | SXF_TRANSFERPITCH);
+            ptr.A_StartSound("weapons/grenopen", CHAN_WEAPON);
+        }
+    }
+
+    override bool AddSpareWeapon(actor newowner) { return AddSpareWeaponRegular(newowner); }
+    override HDWeapon GetSpareWeapon(actor newowner, bool reverse, bool doselect) { return GetSpareWeaponRegular(newowner, reverse, doselect); }
+    override double GunMass()
+    {
+        double BaseMass = 8.5;
+        if (WeaponStatus[TRProp_Flags] & TRF_GL)
+        {
+            BaseMass += 1.5;
+        }
+        if (WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
+        {
+            BaseMass += 1;
+        }
+        return BaseMass;
+    }
+
+    override double WeaponBulk()
+    {
+        double BaseBulk = 180;
+        if (WeaponStatus[TRProp_Flags] & TRF_GL)
+        {
+            BaseBulk += 20;
+        }
+        if (WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
+        {
+            BaseBulk += ENC_ROCKETLOADED;
+        }
+        return BaseBulk;
+    }
+
+    override string PickupMessage()
+    {
+        string GLString = WeaponStatus[TRProp_Flags] & TRF_GL ? Stringtable.localize("$PICKUP_TARONGA_GL") : "";
+
+        return Stringtable.localize("$PICKUP_TARONGA_PREFIX")..Stringtable.Localize("$TAG_TARONGA")..GLString..Stringtable.localize("$PICKUP_Taronga_SUFFIX");
+    }
+
+    override string, double GetPickupSprite()
+    {
+        return WeaponStatus[TRProp_Flags] & TRF_GL ? "HRFPB0" : "HRFPA0", 1.0;
+    }
+
+    override void LoadoutConfigure(string input)
+    {
+        if (GetLoadoutVar(input, "gl", 1) > 0)
+        {
+            WeaponStatus[TRProp_Flags] |= TRF_GL;
+        }
+
+        InitializeWepStats(false);
+    }
+
+    override void InitializeWepStats(bool idfa)
+    {
+        WeaponStatus[TRProp_Chamber] = 1;
+        if (WeaponStatus[TRProp_Flags] & TRF_GL)
+        {
+            WeaponStatus[TRProp_Flags] |= TRF_GrenadeLoaded;
+        }
+    }
+
+    override string GetHelpText()
+    {
+        LocalizeHelp();
+        return 
+        LWPHELP_FIRESHOOT
+        ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ALTFIRE.. Stringtable.Localize("$TARONGA_HELPTEXT_1") : "")
+        ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ALTRELOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_2") : "")
+        ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_FIREMODE.."+"..LWPHELP_UNLOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_3") : "")
+        ..LWPHELP_RELOAD..Stringtable.Localize("$TARONGA_HELPTEXT_4")
+        ..LWPHELP_MAGMANAGER;
+    }
+
+    override void DrawHUDStuff(HDStatusBar sb, HDWeapon hdw, HDPlayerPawn hpl)
+    {
+        if (hdw.WeaponStatus[TRProp_Chamber] == 1)
+        {
+            sb.DrawRect(-22, -8, 6, 3);
+            sb.DrawRect(-23, -7, 1, 1);
+        }
+
+        if (hdw.WeaponStatus[TRProp_Flags] & TRF_GL)
+        {
+            sb.DrawImage("MA7GB0",(-50, -4), sb.DI_SCREEN_CENTER_BOTTOM, scale: (1.1, 1.1));
+            sb.DrawNum(hpl.CountInv('WAN_20mmGrenadeAmmo'), -48, -8, sb.DI_SCREEN_CENTER_BOTTOM);
+        }
+
+        if (hdw.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
+        {
+            sb.DrawRect(-22, -13, 6, 3);
+        }
+        else
+        {
+            sb.DrawWepCounter(hdw.WeaponStatus[TRProp_Mode], -26, -5, "RBRSA3A7", "STBURAUT", "STFULAUT");
+        }
+    }
+
+    override void DropOneAmmo(int amt)
+    {
+        if (owner)
+        {
+            double OldAngle = owner.angle;
+            amt = clamp(amt, 1, 10);
+            if (owner.CheckInventory('HD6mmFlechetteAmmo', 1))
+            {
+                owner.A_DropInventory('HD6mmFlechetteAmmo', amt * 50);
+                owner.angle += 15;
+            }
+            if (owner.CheckInventory('WAN_20mmGrenadeAmmo', 1))
+            {
+                owner.A_DropInventory('WAN_20mmGrenadeAmmo', 1);
+            }
+            owner.angle = OldAngle;
+        }
+    }
+
+    override void DrawSightPicture(HDStatusBar sb, HDWeapon hdw, HDPlayerPawn hpl, bool sightbob, vector2 bob, double fov, bool scopeview, actor hpc, string whichdot)
+    {
+        int cx, cy, cw, ch;
+        [cx, cy, cw, ch] = Screen.GetClipRect();
+        sb.SetClipRect(-16 + bob.x, -4 + bob.y, 32, 16, sb.DI_SCREEN_CENTER);
+        vector2 bob2 = bob * 1.18;
+        //bob2.y = clamp(bob2.y, -8, 8);
+        sb.DrawImage("BCHFRONT", (0, -4) + bob2, sb.DI_SCREEN_CENTER | sb.DI_ITEM_TOP, alpha: 0.9, scale: (0.8, 0.8));
+        sb.SetClipRect(cx, cy, cw, ch);
+        sb.DrawImage("BCHBACK", (0, 2) + bob, sb.DI_SCREEN_CENTER | sb.DI_ITEM_TOP, scale: (0.8, 0.8));
+    }
+
+    private action void A_TryLoadChamber()
+    {
+        if (invoker.Storage && invoker.Storage.owner == invoker.owner && invoker.Storage.Storage)
+        {
+            if (invoker.WeaponStatus[TRProp_Chamber] == 0)
+            {
+                if (invoker.AmmoReserve && invoker.AmmoReserve.Amounts.Size() > 0 && invoker.AmmoReserve.Amounts[0] > 0)
+                {
+                    invoker.Storage.Storage.RemoveItem(invoker.AmmoReserve, null, null, 1);
+                    invoker.WeaponStatus[TRProp_Chamber] = 1;
+                }
+                else
+                {
+                    invoker.AmmoReserve = null;
+                    if (A_FindStorage())
+                    {
+                        A_TryLoadChamber();
+                    }
+                }
+            }
+            return;
+        }
+        if (A_FindStorage())
+        {
+            A_TryLoadChamber();
+        }
+    }
+
+    private action bool A_FindStorage()
+    {
+        for (Inventory Next = Inv; Next; Next = Next.Inv)
+        {
+            let bp = HDBackpack(Next);
+            if (bp && bp.Storage)
+            {
+                let nma = bp.Storage.Find('HD6mmFlechetteAmmo');
+                if (nma && nma.Amounts.Size() > 0 && nma.Amounts[0] > 0)
+                {
+                    invoker.AmmoReserve = nma;
+                    invoker.Storage = bp;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private HDBackpack Storage;
+    private StorageItem AmmoReserve;
+    private int BurstIndex;
+    transient int OldFireMode;
+
+    Default
+    {
+        -HDWEAPON.FITSINBACKPACK
+        Weapon.SelectionOrder 300;
+        Weapon.SlotNumber 4;
+        Weapon.SlotPriority 1.5;
+        HDWeapon.BarrelSize 25, 2, 4;
+        Scale 0.75;
+        Tag "$TAG_TARONGA";
+        HDWeapon.Refid HDLD_Taronga;
+        HDWeapon.Loadoutcodes "
+            \cugl - Grenade Launcher";
+    }
+
+    States
+    {
+        Spawn:
+            HRFP A 0 NoDelay A_JumpIf(invoker.WeaponStatus[TRProp_Flags] & TRF_GL, 2);
+            HRFP B 0;
+            #### # -1;
+            Stop;
+        Ready:
+            HRFL A 1
+            {
+                if (JustPressed(BT_FIREMODE))
+                {
+                    invoker.OldFireMode = invoker.WeaponStatus[TRProp_Mode];
+                    int maxMode = 3;
+                    ++invoker.WeaponStatus[TRProp_Mode] %= maxMode;
+                }
+                invoker.BurstIndex = 0;
+                A_WeaponReady(WRF_ALL & ~WRF_ALLOWUSER2);
+            }
+            Goto ReadyEnd;
+        Select0:
+            HRFL A 0;
+            Goto Select0Big;
+        Deselect0:
+            HRFL A 0;
+            Goto Deselect0Big;
+
+        Fire:
+            HRFL A 1
+            {
+                if (invoker.WeaponStatus[TRProp_Chamber] == 1)
+                {
+                    SetWeaponState("Shoot");
+                    return;
+                }
+            }
+            Goto Nope;
+        Shoot:
+            HRFL A 1
+            {
+                if (invoker.WeaponStatus[TRProp_Mode] == 1 || invoker.WeaponStatus[TRProp_Mode] == 3)
+                {
+                    A_SetTics(0);
+                }
+            }
+            HRFL A 2 Offset(0, 34)
+            {
+                A_Overlay(PSP_FLASH, 'Flash');
+
+                if (invoker.WeaponStatus[TRProp_Mode] == 1 || invoker.WeaponStatus[TRProp_Mode] == 3)
+                {
+                    A_SetTics(1);
+                }
+                HDBulletActor.FireBullet(self, "HDB_6mmFlechette");
+                A_AlertMonsters();
+                invoker.WeaponStatus[TRProp_Chamber] = 0;
+                invoker.WeaponStatus[TRProp_Heat] += random(4, 6);
+                A_StartSound("weapons/taronga", CHAN_WEAPON, volume: 0.7);
+                A_ZoomRecoil(1.05);
+                A_MuzzleClimb(-frandom(-0.24, 0.24), -frandom(0.3, 0.36), -frandom(-0.24, 0.24), -frandom(0.3, 0.36), -frandom(-0.24, 0.24), -frandom(0.3, 0.36));
+                A_Light1();
+                A_WeaponReady(WRF_NOFIRE);
+            }
+            HRFL A 0
+            {
+                if (invoker.WeaponStatus[TRProp_Chamber] <= 0)
+                A_TryLoadChamber();
+                if (invoker.WeaponStatus[TRProp_Heat] > 250 && !random(0, 5))
+                {
+                    invoker.WeaponStatus[TRProp_Chamber] = 0;
+                }
+            }
+            HRFL A 0
+            {
+                switch (invoker.WeaponStatus[TRProp_Mode])
+                {
+                    case 1:
+                    {
+                        if (invoker.BurstIndex < 2)
+                        {
+                            invoker.BurstIndex++;
+                            A_Refire('Fire');
+                        }
+                        break;
+                    }
+                    case 2:
+                    {
+                        A_Refire('Fire');
+                        break;
+                    }
+                }
+            }
+            Goto Nope;
+
+        AltFire:
+            HRFL A 0 A_JumpIf(!(invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded), 'Nope');
+            HRFL A 2
+            {
+                A_Fire20mmGL();
+                invoker.WeaponStatus[TRProp_Flags] &= ~TRF_GrenadeLoaded;
+                A_StartSound("weapons/20mmgrenadeshot", CHAN_WEAPON);
+                A_ZoomRecoil(0.95);
+            }
+            HRFL A 2 A_MuzzleClimb(0, 0, 0, 0, -1.2, -3.0, -1.0, -2.8);
+            Goto Nope;
+
+        Flash:
+            HRFL F 1 Bright
+            {
+                HDFlashAlpha(-16);
+            }
+            goto lightdone;
+
+        Reload:
+        ChamberManual:
+            HRFL A 0 A_JumpIf(invoker.WeaponStatus[TRProp_Chamber] == 1, "Nope");
+            HRFL A 2 Offset(2, 34);
+            HRFL A 4 Offset(3, 38) A_StartSound("weapons/rifchamber", 8, CHANF_OVERLAP);
+            HRFL A 5 Offset(4, 44)
+            {
+                A_WeaponBusy();
+                if (invoker.WeaponStatus[TRProp_Heat] > 0 && random(0, 4))
+                {
+                    invoker.WeaponStatus[TRProp_Chamber] = 0;
+                }
+                else A_TryLoadChamber();
+            }
+            HRFL A 2 Offset(3, 38);
+            HRFL A 2 Offset(2, 34);
+            HRFL A 2 Offset(0, 32);
+            Goto Nope;
+
+        Unload:
+            #### A 0
+            {
+                invoker.WeaponStatus[TRProp_Flags] |= TRF_JustUnload;
+                if (PressingFiremode() && invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
+                {
+                    SetWeaponState('UnloadGL');
+                }
+            }
+            Goto Nope;
+
+        AltReload:
+            #### A 0
+            {
+                invoker.WeaponStatus[TRProp_Flags] &= ~TRF_JustUnload;
+                if (invoker.WeaponStatus[TRProp_Flags] & TRF_GL && !(invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded) && CheckInventory("WAN_20mmGrenadeAmmo", 1))
+                {
+                    SetWeaponState('UnloadGL');
+                }
+            }
+            Goto Nope;
+        UnloadGL:
+            #### A 0
+            {
+                A_SetCrosshair(21);
+                A_MuzzleClimb(-0.3, -0.3);
+            }
+            #### A 2 Offset(0, 34);
+            #### A 1 Offset(4, 38) A_MuzzleClimb(-0.3,-0.3);
+            #### A 2 Offset(8, 48)
+            {
+                A_StartSound("weapons/grenopen", CHAN_WEAPON, CHANF_OVERLAP);
+                A_MuzzleClimb(-0.3, -0.3);
+
+                if (invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
+                {
+                    A_StartSound("weapons/grenreload", CHAN_WEAPON);
+                }
+            }
+            #### A 8 Offset(10, 49)
+            {
+                if (!(invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded))
+                {
+                    if (invoker.WeaponStatus[TRProp_Flags] & TRF_JustUnload)
+                    {
+                        A_SetTics(3);
+                    }
+                    return;
+                }
+                invoker.WeaponStatus[TRProp_Flags] &= ~TRF_GrenadeLoaded;
+                if(!PressingUnload() || A_JumpIfInventory('WAN_20mmGrenadeAmmo', 0, 'Null'))
+                {
+                    A_SpawnItemEx('WAN_20mmGrenadeAmmo', cos(pitch) * 10, 0, height - 10 - 10 * sin(pitch), vel.x, vel.y, vel.z, 0, SXF_ABSOLUTEMOMENTUM | SXF_NOCHECKPOSITION | SXF_TRANSFERPITCH);
+                }
+                else
+                {
+                    A_SetTics(20);
+                    A_StartSound("weapons/pocket", CHAN_WEAPON, CHANF_OVERLAP);
+                    A_GiveInventory('WAN_20mmGrenadeAmmo', 1);
+                    A_MuzzleClimb(frandom(0.8, -0.2), frandom(0.4, -0.2));
+                }
+            }
+            #### A 0 A_JumpIf(invoker.WeaponStatus[TRProp_Flags] & TRF_JustUnload, 'ReloadEndGL');
+        LoadGL:
+            #### A 2 Offset(10, 50) A_StartSound("weapons/pocket", CHAN_WEAPON,  CHANF_OVERLAP);
+            #### AAA 5 Offset(10, 50) A_MuzzleClimb(frandom(-0.2, 0.8), frandom(-0.2, 0.4));
+            #### A 15 Offset(8, 50)
+            {
+                A_TakeInventory('WAN_20mmGrenadeAmmo', 1, TIF_NOTAKEINFINITE);
+                invoker.WeaponStatus[TRProp_Flags] |= TRF_GrenadeLoaded;
+                A_StartSound("weapons/grenreload", CHAN_WEAPON);
+            }
+        ReloadEndGL:
+            #### A 4 Offset(4, 44) A_StartSound("weapons/grenopen", CHAN_WEAPON);
+            #### A 1 Offset(0, 40);
+            #### A 1 Offset(0, 34) A_MuzzleClimb(frandom(-2.4, 0.2), frandom(-1.4, 0.2));
+            Goto Nope;
+    }
+}
+
+class TarongaRandom : IdleDummy
+{
+    States
+    {
+        Spawn:
+            TNT1 A 0 NoDelay
+            {
+                let wpn = HDTaronga(Spawn("HDTaronga", pos, ALLOW_REPLACE));
+                if (!wpn)
+                {
+                    return;
+                }
+
+                HDF.TransferSpecials(self, wpn);
+                if (!random(0, 3))
+                {
+                    wpn.WeaponStatus[wpn.TRProp_Flags] |= wpn.TRF_GL;
+                }
+                wpn.InitializeWepStats(false);
+            }
+            Stop;
+    }
+}

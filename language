@@ -1,0 +1,13 @@
+[enu default]
+
+// Taronga 6mm SAW
+TAG_TARONGA = "UAC 'Taronga' 6mm SAW";
+
+PICKUP_TARONGA_PREFIX = "You got a ";
+PICKUP_TARONGA_GL = " with a 20mm Grenade Launcher";
+PICKUP_TARONGA_SUFFIX = "!";
+
+TARONGA_HELPTEXT_1 = " Fire GL\n";
+TARONGA_HELPTEXT_2 = " Load GL\n";
+TARONGA_HELPTEXT_3 = " Unload GL\n";
+TARONGA_HELPTEXT_4 = " Reload chamber\n";
