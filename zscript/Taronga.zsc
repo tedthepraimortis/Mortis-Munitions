@@ -333,7 +333,7 @@ class HDTaronga : WAN_20mmLauncher
             {
                 A_Fire20mmGL();
                 invoker.WeaponStatus[TRProp_Flags] &= ~TRF_GrenadeLoaded;
-                A_StartSound("weapons/20mmgrenadeshot", CHAN_WEAPON);
+                A_StartSound("weapons/tarongagrenadeshot", CHAN_WEAPON);
                 A_ZoomRecoil(0.95);
             }
             HRFL A 2 A_MuzzleClimb(0, 0, 0, 0, -1.2, -3.0, -1.0, -2.8);

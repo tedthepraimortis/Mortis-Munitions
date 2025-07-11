@@ -1,0 +1,14 @@
+weapons/targrenopen "Sounds/Taronga/M203_Open.ogg"
+weapons/targrenclose "Sounds/Taronga/M203_Close.ogg"
+weapons/targrenreload "Sounds/Taronga/M203_Insert_Grenade.ogg"
+$random weapons/tarongagrenadeshot {weapons/targrenshot1 weapons/targrenshot2 weapons/targrenshot3 weapons/targrenshot4}
+weapons/targrenshot1 "Sounds/Taronga/GrenadeLauncher_Shot_1.ogg"
+weapons/targrenshot2 "Sounds/Taronga/GrenadeLauncher_Shot_2.ogg"
+weapons/targrenshot3 "Sounds/Taronga/GrenadeLauncher_Shot_3.ogg"
+weapons/targrenshot4 "Sounds/Taronga/GrenadeLauncher_Shot_4.ogg"
+$random weapons/taronga {weapons/tarongashot1 weapons/tarongashot2 weapons/tarongashot3 weapons/tarongashot4}
+weapons/tarongashot1 "Sounds/Taronga/M60_Shot_1.ogg"
+weapons/tarongashot2 "Sounds/Taronga/M60_Shot_2.ogg"
+weapons/tarongashot3 "Sounds/Taronga/M60_Shot_3.ogg"
+weapons/tarongashot4 "Sounds/Taronga/M60_Shot_4.ogg"
+weapons/tarongachamber "Sounds/Taronga/M60_BoltSlideForwardHeld.ogg"
