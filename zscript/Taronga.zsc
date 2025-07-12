@@ -231,8 +231,8 @@ class HDTaronga : WAN_20mmLauncher
         Scale 0.75;
         Tag "$TAG_TARONGA";
         HDWeapon.Refid HDLD_Taronga;
-        HDWeapon.Loadoutcodes "
-            \cugl - Grenade Launcher";
+        HDWeapon.Loadoutcodes
+        "\n\cu   gl - Grenade Launcher";
     }
 
     States
