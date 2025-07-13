@@ -110,10 +110,10 @@ class HDTaronga : WAN_20mmLauncher
         LocalizeHelp();
         return 
         LWPHELP_FIRESHOOT
-        ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ALTFIRE.. Stringtable.Localize("$TARONGA_HELPTEXT_1") : "")
+        ..LWPHELP_ALTFIRE..Stringtable.Localize("$TARONGA_HELPTEXT_4")
+        ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_FIREMODE.."+"..LWPHELP_ALTFIRE.. Stringtable.Localize("$TARONGA_HELPTEXT_1") : "")
         ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ALTRELOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_2") : "")
         ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_FIREMODE.."+"..LWPHELP_UNLOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_3") : "")
-        ..LWPHELP_RELOAD..Stringtable.Localize("$TARONGA_HELPTEXT_4")
         ..LWPHELP_MAGMANAGER;
     }
 
@@ -364,7 +364,8 @@ class HDTaronga : WAN_20mmLauncher
 		AltFire:
             HRFL A 1
             {
-                if(PressingFiremode())
+                A_Log("Important: TRF_GrenadeLoaded "..Invoker.WeaponStatus[TRF_GrenadeLoaded].." TRF_GL "..invoker.WeaponStatus[TRF_GL]);
+                if(PressingFiremode() && invoker.WeaponStatus[TRF_GrenadeLoaded] && invoker.WeaponStatus[TRProp_Flags] & invoker.WeaponStatus[TRF_GL])
                 {
                     SetWeaponState("FireGL");
                 }

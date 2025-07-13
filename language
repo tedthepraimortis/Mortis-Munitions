@@ -10,4 +10,4 @@ PICKUP_TARONGA_SUFFIX = "!";
 TARONGA_HELPTEXT_1 = " Fire GL\n";
 TARONGA_HELPTEXT_2 = " Load GL\n";
 TARONGA_HELPTEXT_3 = " Unload GL\n";
-TARONGA_HELPTEXT_4 = " Reload chamber\n";
+TARONGA_HELPTEXT_4 = " Rack bolt\n";
