@@ -188,7 +188,7 @@ class HDTaronga : WAN_20mmLauncher
 
     private action void A_TryLoadChamber()
     {
-        if (invoker.Storage && invoker.Storage.owner == invoker.owner && invoker.Storage.Storage)
+        if (invoker.Storage && invoker.Storage.owner == invoker.owner && invoker.Storage.Storage && !invoker.WeaponStatus[TRProp_Jammed])
         {
             if (invoker.WeaponStatus[TRProp_Chamber] == 0)
             {
@@ -361,21 +361,14 @@ class HDTaronga : WAN_20mmLauncher
             }
             Goto Nope;
 
-        // Commented out till I figure out control scheme. - [Ted]
-        /*
-        AltFire:
-            HRFL A 0 A_JumpIf(!(invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded), 'Nope');
-            HRFL F 2 Bright
-            {
-                A_Fire20mmGL();
-                invoker.WeaponStatus[TRProp_Flags] &= ~TRF_GrenadeLoaded;
-                A_StartSound("weapons/tarongagrenadeshot", CHAN_WEAPON);
-                A_ZoomRecoil(0.95);
-            }
-            HRFL A 2 A_MuzzleClimb(0, 0, 0, 0, -1.2, -3.0, -1.0, -2.8);
-            Goto Nope;
-        */
 		AltFire:
+            HRFL A 1
+            {
+                if(PressingFiremode())
+                {
+                    SetWeaponState("FireGL");
+                }
+            }
 			#### A 1 Offset(0, 34) A_WeaponBusy();
 			#### A 1 Offset(1, 35);
 			#### A 1 Offset (2, 36) A_JumpIf(invoker.weaponstatus[TRProp_Chamber]>2,"startjamderp");
@@ -638,6 +631,18 @@ class HDTaronga : WAN_20mmLauncher
                 }
             }
             Goto Nope;
+
+        FireGL:
+            HRFL F 2 Bright
+            {
+                A_Fire20mmGL();
+                invoker.WeaponStatus[TRProp_Flags] &= ~TRF_GrenadeLoaded;
+                A_StartSound("weapons/tarongagrenadeshot", CHAN_WEAPON);
+                A_ZoomRecoil(0.95);
+            }
+            HRFL A 1 A_MuzzleClimb(0, 0, 0, 0, -1.2, -3.0, -1.0, -2.8);
+            goto Nope;
+
         UnloadGL:
             #### A 0
             {
