@@ -12,7 +12,9 @@ class HDTaronga : WAN_20mmLauncher
         TRProp_Flags,
         TRProp_Chamber,
         TRProp_Mode,
-        TRProp_Heat
+        TRProp_Heat,
+        TRProp_Muck,
+        TRProp_LoadType
     }
 
     override void PostBeginPlay()
@@ -27,9 +29,9 @@ class HDTaronga : WAN_20mmLauncher
         super.tick();
         drainheat(TRProp_Heat, 1);
 
-        if(owner && WeaponStatus[TRProp_Heat] > 50 && !(Level.time % TICRATE))
+        if(owner && WeaponStatus[TRProp_Heat] > 65 && !(Level.time % TICRATE))
         {
-            owner.damagemobj(owner, owner, random(1, 3), "electrical");
+            owner.damagemobj(owner, owner, 2, "electrical");
         }
         
         if (!(WeaponStatus[TRProp_Flags] & TRF_GL) && WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
@@ -132,10 +134,25 @@ class HDTaronga : WAN_20mmLauncher
         {
             sb.DrawRect(-22, -13, 6, 3);
         }
-        else
-        {
-            sb.DrawWepCounter(hdw.WeaponStatus[TRProp_Mode], -26, -5, "RBRSA3A7", "STBURAUT", "STFULAUT");
-        }
+        sb.DrawWepCounter(hdw.WeaponStatus[TRProp_Mode], -26, -5, "RBRSA3A7", "STBURAUT", "STFULAUT");
+    }
+
+    action void A_ChamberGrit(int amt,bool onlywhileempty=false)
+    {
+        int ibg = invoker.weaponstatus[TRProp_Muck];
+        if(!onlywhileempty||invoker.weaponstatus[TRProp_Chamber]<1)ibg+=amt;
+        else if(!random(0,4))ibg++;
+        invoker.weaponstatus[TRProp_Muck]=clamp(ibg,0,100);
+        A_Log(string.format("Taronga Muck level: %i",invoker.weaponstatus[TRProp_Muck]));
+    }
+
+    int jamchance()
+    {
+        int jc=
+        weaponstatus[TRProp_Muck]
+        +(weaponstatus[TRProp_Heat]>>2)
+        +weaponstatus[TRProp_Chamber];
+        return jc;
     }
 
     override void DropOneAmmo(int amt)
@@ -263,6 +280,14 @@ class HDTaronga : WAN_20mmLauncher
             Goto Deselect0Big;
 
         Fire:
+            HRFL A 0
+            {
+                if(invoker.WeaponStatus[TRProp_Muck] > 65 || random(0,99) > 90)
+                {
+                    SetWeaponState("JamShoot");
+                    return;
+                }
+            }
             HRFL A 1
             {
                 if (invoker.WeaponStatus[TRProp_Chamber] == 1)
@@ -273,6 +298,14 @@ class HDTaronga : WAN_20mmLauncher
             }
             Goto Nope;
         Shoot:
+            HRFL A 0
+            {
+                if(invoker.WeaponStatus[TRProp_Muck] > 65 || random(0,99) > 90)
+                {
+                    SetWeaponState("JamShoot");
+                    return;
+                }
+            }
             HRFL A 1
             {
                 if (invoker.WeaponStatus[TRProp_Mode] == 1 || invoker.WeaponStatus[TRProp_Mode] == 3)
@@ -289,7 +322,8 @@ class HDTaronga : WAN_20mmLauncher
                 HDBulletActor.FireBullet(self, "HDB_6mmFlechette");
                 A_AlertMonsters();
                 invoker.WeaponStatus[TRProp_Chamber] = 0;
-                invoker.WeaponStatus[TRProp_Heat] += random(4, 6);
+                invoker.WeaponStatus[TRProp_Heat] += random(2, 4);
+                invoker.WeaponStatus[TRProp_Muck] += random(0, 1);
                 A_StartSound("weapons/taronga", CHAN_WEAPON, volume: 0.7);
                 A_ZoomRecoil(0.999);
                 A_MuzzleClimb(-frandom(-0.35, 0.35), -frandom(0.4, 0.48), -frandom(-0.3, 0.35), -frandom(0.4, 0.48), -frandom(-0.24, 0.24), -frandom(0.3, 0.36));
@@ -327,6 +361,8 @@ class HDTaronga : WAN_20mmLauncher
             }
             Goto Nope;
 
+        // Commented out till I figure out control scheme. - [Ted]
+        /*
         AltFire:
             HRFL A 0 A_JumpIf(!(invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded), 'Nope');
             HRFL F 2 Bright
@@ -338,8 +374,222 @@ class HDTaronga : WAN_20mmLauncher
             }
             HRFL A 2 A_MuzzleClimb(0, 0, 0, 0, -1.2, -3.0, -1.0, -2.8);
             Goto Nope;
+        */
+		AltFire:
+			#### A 1 Offset(0, 34) A_WeaponBusy();
+			#### A 1 Offset(1, 35);
+			#### A 1 Offset (2, 36) A_JumpIf(invoker.weaponstatus[TRProp_Chamber]>2,"startjamderp");
+			#### A 1 Offset(3, 37) A_MuzzleClimb(-frandom(0.06,0.1),-frandom(0.3,0.5));
+			#### A 1 Offset(4, 38) A_ChamberGrit(randompick(0,0,1,1,2,3,4),true);
+			#### A 0 A_Refire("chamber");
+			goto ready;
 
-        Reload:
+		AltHold:
+			HRFL A 1 A_WeaponReady(WRF_NOFIRE);
+			#### A 1{
+				A_ClearRefire();
+				bool ChamberEmpty = invoker.WeaponStatus[TRProp_Chamber]<1;
+				if (PressingUnload())
+				{
+					if(ChamberEmpty)
+					{
+						return resolvestate("altholdclean");
+					}
+					else
+					{
+						invoker.WeaponStatus[TRProp_LoadType] = 0;
+						return resolvestate("loadchamber");
+					}
+				}
+				else if(PressingReload())
+				{
+					if(!ChamberEmpty)
+					{
+						invoker.WeaponStatus[TRProp_LoadType] = 0;
+						return resolvestate("loadchamber");
+					}
+					else if (CheckInventory("HD6mmFlechetteAmmo", 1))
+					{
+						invoker.WeaponStatus[TRProp_LoadType] = 1;
+						return resolvestate("loadchamber");
+					}
+				}
+
+				if (PressingAltFire())
+				{
+					return ResolveState("AltHold");
+				}
+
+				return resolvestate("altholdend");
+			}
+		AltHoldEnd:
+			#### A 2 A_StartSound("Scorpion/BoltFwd", 8);
+			#### AAAAA 2;
+			Goto Ready;
+		Chamber:
+			#### A 4 Offset(4, 38);
+			#### A 3 Offset(6, 42)
+			{
+				A_StartSound("Scorpion/BoltBack", 8);
+				if (GunBraced())
+				{
+					A_MuzzleClimb(frandom(-0.1, 0.3), frandom(-0.1, 0.3));
+				}
+				else
+				{
+					A_MuzzleClimb(frandom(-0.2, 0.8), frandom(-0.4, 0.8));
+				}
+			}
+			#### G 2 Offset(6, 42)
+			{
+                if(invoker.WeaponStatus[TRProp_Chamber] <= 2)
+                {
+                    A_TryLoadChamber();
+                }
+			}
+			#### A 2 Offset(7, 44);
+			#### A 2 Offset(6, 46);
+			#### A 1 Offset(5, 42);
+			#### A 1 Offset(3, 38);
+			#### A 1 Offset(1, 34);
+			#### A 1 A_WeaponReady(WRF_NOFIRE);
+			#### A 0 A_Refire("AltHold");
+			Goto AltHoldEnd;
+
+		LoadChamber:
+			#### # 1 Offset(2, 36) A_ClearRefire();
+			#### # 1 Offset(3, 38);
+			#### # 1 Offset(5, 42);
+			#### # 1 Offset(8, 48) A_StartSound("weapons/pocket", 9);
+			#### # 1 Offset(9, 52) A_MuzzleClimb(frandom(-0.2, 0.2), 0.2, frandom(-0.2, 0.2),0.2, frandom(-0.2, 0.2), 0.2);
+			#### # 1 Offset(8, 60);
+			#### # 1 Offset(7, 72);
+			#### # 1 Offset(6, 80);
+			#### # 1 Offset(6, 88);
+			TNT1 # 25;
+			TNT1 # 4
+			{
+				A_StartSound("Scorpion/BossLoad", 8, volume: 0.7);
+				switch (invoker.WeaponStatus[TRProp_LoadType])
+				{
+					case 0:
+						int Chamber = invoker.WeaponStatus[TRProp_Chamber];
+						invoker.WeaponStatus[TRProp_Chamber] = 0;
+						if (Chamber < 2 || A_JumpIfInventory("HD6mmFlechetteAmmo", 0, "null"))
+						{
+							Class<actor> EjectClass = Chamber == 2 ? "HD6mmFlechetteAmmo" : "HDSpent6mmFlechette";
+							actor rrr = Spawn(EjectClass, pos + (cos(angle) * 10, sin(angle) * 10,  height - 12), ALLOW_REPLACE);
+							rrr.angle = angle;
+							rrr.A_ChangeVelocity(1, 2, 1, CVF_RELATIVE);
+						}
+						else
+						{
+							HDF.Give(self, "HD6mmFlechetteAmmo", 1);
+						}
+						A_ChamberGrit(randompick(0,0,0,0,-1,1),true);
+						break;
+					case 1:
+						A_TakeInventory("HD6mmFlechetteAmmo", 1, TIF_NOTAKEINFINITE);
+						invoker.WeaponStatus[TRProp_Chamber] = 2;
+						break;
+				}
+			} 
+			HRFL # 2 Offset(6, 80);
+			#### # 2 Offset(7, 72);
+			#### # 2 Offset(8, 60);
+			#### # 1 Offset(7, 52);
+			#### # 1 Offset(5, 42);
+			#### # 1 Offset(3, 38);
+			#### # 1 Offset(3, 35);
+			Goto AltHold;
+			
+		AltHoldClean:
+			HRFL A 1 offset(2,36) A_ClearRefire();
+			#### A 1 offset(3,38);
+			#### A 1 offset(5,41) A_Log(StringTable.Localize("$BOSS_CLEANS"),true);
+			#### A 1 offset(8,44) A_StartSound("weapons/pocket",9);
+			#### A 1 offset(7,50) A_MuzzleClimb(frandom(-0.2,0.2),0.2,frandom(-0.2,0.2),0.2,frandom(-0.2,0.2),0.2,wepdot:false);
+			TNT1 A 3 A_StartSound("weapons/pocket",10);
+			TNT1 AAAA 4 A_MuzzleClimb(frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),wepdot:false);
+			TNT1 A 3 A_StartSound("weapons/pocket",9);
+			TNT1 AAAA 4 A_MuzzleClimb(frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),wepdot:false);
+			TNT1 A 40{
+				A_StartSound("weapons/pocket",9);
+				int amt=invoker.weaponstatus[TRProp_Muck];
+				string amts=StringTable.Localize("$BOSS_CLEAN1");
+				if(amt>80)amts=StringTable.Localize("$BOSS_CLEAN2");
+				else if(amt>60)amts=StringTable.Localize("$BOSS_CLEAN3");
+				else if(amt>40)amts=StringTable.Localize("$BOSS_CLEAN4");
+				else if(amt>20)amts=StringTable.Localize("$BOSS_CLEAN5");
+
+				string cleanverbs[]={"$BOSS_EXTRACT","$BOSS_SCRAPEOFF","$BOSS_WIPEAWAY","$BOSS_CAREREMOVE","$BOSS_DUMPOUT","$BOSS_PICKOUT","$BOSS_BLOWOFF","$BOSS_SHAKEOUT","$BOSS_SCRUBOFF","$BOSS_FISH"};
+				string contaminants[]={"$BOSS_SOMEDUST","$BOSS_ALODUST","$BOSS_ABOPOWDER","$BOSS_DAOPOWDER","$BOSS_SEXGREASE","$BOSS_ALOSOOT","$BOSS_SOMEIRON","$BOSS_HAIR","$BOSS_EYELASH","$BOSS_BLOOD","$BOSS_RUST","$BOSS_CRUMB","$BOSS_DEADSOME","$BOSS_ASHES","$BOSS_SKIN","$BOSS_FLUID","$BOSS_WOWSOME","$BOSS_BOOGER","$BOSS_FECAL","$BOSS_BULLETSIMPACT","$BOSS_JAM","$BOSS_HUSK","$BOSS_SFLESH","$BOSS_CRYSTAL","$BOSS_SPACEANT","$BOSS_TRANSISTOR","$BOSS_TINBOSS","$BOSS_FILM"};
+				string actionparts[]={"$BOSS_BOLTCAR","$BOSS_MAINEXTRACTOR","$BOSS_AUXEXTRACTOR","$BOSS_CAMPIN","$BOSS_BOLTHEAD","$BOSS_STRIKER","$BOSS_SPRING","$BOSS_EJECTSLOT","$BOSS_STRIKERSPRING","$BOSS_EJSPRING"};
+				for(int i=amt;i>0;i-=random(16,32))amts.appendformat(StringTable.Localize("$BOSS_FINLINE"),
+					StringTable.Localize(cleanverbs[random(0,cleanverbs.size()-1)]),
+					StringTable.Localize(contaminants[random(0,random(0,contaminants.size()-1))]),
+					StringTable.Localize(actionparts[random(0,random((actionparts.size()>>1),actionparts.size()-1))])
+				);
+				amts=HDMath.BuildVariableString(amts);
+				amts.appendformat("\n");
+
+				amt=randompick(-3,-5,-5,-random(16,32));
+
+				A_ChamberGrit(amt,true);
+				amt=invoker.weaponstatus[TRProp_Muck];
+				if(amt>40)amts.appendformat(StringTable.Localize("$BOSS_CLENF1"));
+				else if(amt>30)amts.appendformat(StringTable.Localize("$BOSS_CLENF2"));
+				else if(amt>20)amts.appendformat(StringTable.Localize("$BOSS_CLENF3"));
+				else if(amt>10)amts.appendformat(StringTable.Localize("$BOSS_CLENF4"));
+				else amts.appendformat(StringTable.Localize("$BOSS_CLENF5"));
+				A_Log(amts,true);
+			}
+			HRFL A 1 offset(7,52);
+			#### A 1 offset(8,48);
+			#### A 1 offset(5,42);
+			#### A 1 offset(3,38);
+			#### A 1 offset(2,36);
+			goto althold;
+
+        JamShoot: 
+            #### A 0 offset(2,36) A_StartSound("weapons/tarongajammed");
+            #### A 0 A_Log("Jammed!");
+            Goto Nope;
+        Jam: 
+            #### A 0 {
+                int chm = invoker.WeaponStatus[TRProp_Chamber];
+                if(chm<1)SetWeaponState("chamber");
+            }
+        StartJamDerp:
+            #### A 0{
+                A_StartSound("weapons/tarongachamber",8,CHANF_OVERLAP);
+            }
+            #### A 1 offset(0,34);
+            #### A 2 offset(1,35);
+            #### A 2 offset(3,37) A_MuzzleClimb(frandom(-0.5,0.6),frandom(-0.3,0.6));
+            #### A 2 offset(0,34);
+            #### A 0 SetWeaponState("JamDerp");
+        
+        JamDerp:
+            #### A 0 A_StartSound("weapons/tarongachamber",8,CHANF_OVERLAP);
+            #### A 1 offset(0,34);
+            #### A 2 offset(1,35);
+            #### A 2 offset(3,37) A_MuzzleClimb(frandom(-0.5,0.6),frandom(-0.3,0.6));
+            #### A 2 offset(0,34);
+            #### A 3 offset(4,38){
+                A_MuzzleClimb(frandom(-0.5,0.6),frandom(-0.3,0.6));
+                if(random(0,invoker.jamchance())<12){
+                    SetWeaponState("Chamber");
+                    if(invoker.WeaponStatus[TRProp_Chamber]>2)
+                        invoker.WeaponStatus[TRProp_Chamber]-=2;
+                }
+            }
+            #### A 2 offset(4,38);
+			#### A 3 offset(2,36);
+			#### A 0 A_Refire("jamderp");
+			goto ready;
+
+        /*(Reload:
         ChamberManual:
             HRFL A 0 A_JumpIf(invoker.WeaponStatus[TRProp_Chamber] == 1, "Nope");
             HRFL A 2 Offset(2, 34);
@@ -357,7 +607,7 @@ class HDTaronga : WAN_20mmLauncher
             HRFL A 2 Offset(2, 34);
             HRFL A 2 Offset(0, 32);
             Goto Nope;
-
+        */
         Unload:
             #### A 0
             {
