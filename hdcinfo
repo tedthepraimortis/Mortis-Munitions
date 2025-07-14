@@ -1,0 +1,6 @@
+// Ammo Usage
+addAmmoUser => { "ammoName": "WAN_20mmGrenadeAmmo", "name": "HDTaronga" }
+addAmmoUser => { "ammoName": "HD6mmFlechetteAmmo", "name": "HDTaronga" }
+
+// Spawns
+addSpawnTableSingleEntry => { "tableName": "ChaingunReplaces", "name": "HDTarongaRandom", "weight": "#taronga_chaingun_spawn_weight", "persists": "#mm_weapon_persistency" }

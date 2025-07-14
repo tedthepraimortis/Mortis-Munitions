@@ -1,0 +1,19 @@
+AddOptionMenu "OptionsMenu" {
+	Submenu "$MORTISMUNITIONS_MENU", "MortisMunitionsMenu"
+}
+
+AddOptionMenu "HDAddonMenu" {
+	Submenu "$MORTISMUNITIONS_MENU", "MortisMunitionsMenu"
+}
+
+OptionMenu "MortisMunitionsMenu"
+{
+    Title "$MORTISMUNITIONS_MENU"
+    
+    StaticText ""
+    Slider "$MENU_WEPSPAWNRATE", "taronga_chaingun_spawn_weight", 0.0, 100, .01, 2
+    StaticText ""
+    StaticText ""
+
+    Option "$MENU_BACKPACKSALLOWED", "mm_weapon_persistency", "OnOff"
+}

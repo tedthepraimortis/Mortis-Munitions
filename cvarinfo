@@ -1,0 +1,4 @@
+// Spawn Weights
+server float taronga_chaingun_spawn_weight = 2;
+
+server bool mm_weapon_persistency = true;

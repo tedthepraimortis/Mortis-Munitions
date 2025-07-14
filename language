@@ -1,5 +1,7 @@
 [enu default]
 
+MORTISMUNITIONS_MENU = "\c[Cyan]Ⓜ\c- \'Mortis Munitions";
+
 // Taronga 6mm SAW
 TAG_TARONGA = "UAC 'Taronga' 6mm SAW";
 
