@@ -329,13 +329,14 @@ class HDTaronga : WAN_20mmLauncher
             }
             HRFL F 2 Bright Offset(0, 34)
             {
+                int heat = min(50, invoker.weaponStatus[TRProp_Heat]);
                 if (invoker.WeaponStatus[TRProp_Mode] == 1 || invoker.WeaponStatus[TRProp_Mode] == 3)
                 {
                     A_SetTics(1);
                 }
                 A_StartSound("weapons/TarongaBoltBack", 8, CHAN_WEAPON, CHANF_OVERLAP, volume: 0.4);
                 HDBulletActor.FireBullet(self, "HDB_MM6mmFlechette");
-                A_AlertMonsters();
+                A_AlertMonsters(HDCONST_ONEMETRE * (30 + heat));
                 invoker.WeaponStatus[TRProp_Chamber] = 0;
                 invoker.WeaponStatus[TRProp_Heat] += random(3, 7);
                 invoker.WeaponStatus[TRProp_Muck] += random(0, 1);
