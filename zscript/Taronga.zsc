@@ -712,6 +712,7 @@ class HDTarongaRandom : IdleDummy
         Spawn:
             TNT1 A 0 NoDelay
             {
+                name ammoPouch = 'UaS_AmmoPouch';
                 let wpn = HDTaronga(Spawn("HDTaronga", pos, ALLOW_REPLACE));
                 if (!wpn)
                 {
@@ -724,6 +725,7 @@ class HDTarongaRandom : IdleDummy
                     wpn.WeaponStatus[wpn.TRProp_Flags] |= wpn.TRF_GL;
                 }
                 wpn.InitializeWepStats(false);
+                if(HDCore.CheckClassExists(ammoPouch)) spawn(ammoPouch,pos+(random(-7,7),0,0),ALLOW_REPLACE); 
                 spawn("HD6mmFlechetteBoxPickup",pos+(random(-7,7),0,0),ALLOW_REPLACE);
                 spawn("HD6mmFlechetteBoxPickup",pos+(random(-5,5),0,0),ALLOW_REPLACE);
             }
