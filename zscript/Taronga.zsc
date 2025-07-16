@@ -114,6 +114,18 @@ class HDTaronga : WAN_20mmLauncher
             WeaponStatus[TRProp_Flags] |= TRF_GrenadeLoaded;
         }
     }
+    
+    override void DoEffect(){
+		let hdp=hdplayerpawn(owner);
+		if(hdp){
+			//droop downwards
+			if(!hdp.gunbraced && !!hdp.player && hdp.player.readyweapon==self && hdp.strength && hdp.pitch<frandom(5,8))
+            {
+                hdp.A_MuzzleClimb((frandom(-0.05,0.05),frandom(0.1,clamp(1-pitch,0.06/hdp.strength,0.12))),(0,0),(0,0),(0,0));
+    		}
+        }
+		Super.DoEffect();
+	}
 
     override string GetHelpText()
     {
