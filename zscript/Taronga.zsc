@@ -133,9 +133,9 @@ class HDTaronga : WAN_20mmLauncher
         return 
         LWPHELP_FIRESHOOT
         ..LWPHELP_ALTFIRE..Stringtable.Localize("$TARONGA_HELPTEXT_4")
-        ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_FIREMODE.."+"..LWPHELP_ALTFIRE.. Stringtable.Localize("$TARONGA_HELPTEXT_1") : "")
+        ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ZOOM.." + "..LWPHELP_ALTFIRE.. Stringtable.Localize("$TARONGA_HELPTEXT_1") : "")
         ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ALTRELOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_2") : "")
-        ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_FIREMODE.."+"..LWPHELP_UNLOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_3") : "")
+        ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_FIREMODE.." + "..LWPHELP_UNLOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_3") : "")
         ..LWPHELP_MAGMANAGER;
     }
 
@@ -316,7 +316,7 @@ class HDTaronga : WAN_20mmLauncher
             {
                 if(invoker.WeaponStatus[TRProp_Chamber] > 1)
                 {
-                    SetWeaponState("JamShoot");
+                    SetWeaponState("nope");
                     return;
                 }
             }
@@ -347,7 +347,7 @@ class HDTaronga : WAN_20mmLauncher
             }
             HRFL A 0
             {
-                if(random(0,invoker.jamchance())>36)
+                if(random(0,invoker.jamchance())>55)
                 {
                     invoker.WeaponStatus[TRProp_Chamber] = 2;
                 }
@@ -387,7 +387,7 @@ class HDTaronga : WAN_20mmLauncher
 		AltFire:
             HRFL A 1
             {
-                if(PressingFiremode() && invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
+                if(PressingZoom() && invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
                 {
                     SetWeaponState("FireGL");
                 }
@@ -576,9 +576,6 @@ class HDTaronga : WAN_20mmLauncher
 			#### A 1 offset(2,36);
 			goto althold;
 
-        JamShoot: 
-            #### A 0 offset(2,36) A_StartSound("weapons/tarongajammed");
-            Goto Nope;
         Jam: 
             #### A 0 {
                 int chm = invoker.WeaponStatus[TRProp_Chamber];
@@ -602,7 +599,7 @@ class HDTaronga : WAN_20mmLauncher
             #### A 2 offset(0,34);
             #### A 3 offset(4,38){
                 A_MuzzleClimb(frandom(-0.5,0.6),frandom(-0.3,0.6));
-                if(random(0,invoker.jamchance())<12){
+                if(random(0,invoker.jamchance())<36){
                     SetWeaponState("Chamber");
                     if(invoker.WeaponStatus[TRProp_Chamber]==2)
                         invoker.WeaponStatus[TRProp_Chamber]=0;
@@ -613,25 +610,6 @@ class HDTaronga : WAN_20mmLauncher
 			#### A 0 A_Refire("jamderp");
 			goto ready;
 
-        /*(Reload:
-        ChamberManual:
-            HRFL A 0 A_JumpIf(invoker.WeaponStatus[TRProp_Chamber] == 1, "Nope");
-            HRFL A 2 Offset(2, 34);
-            HRFL A 4 Offset(3, 38) A_StartSound("weapons/tarongachamber", 8, CHANF_OVERLAP);
-            HRFL A 5 Offset(4, 44)
-            {
-                A_WeaponBusy();
-                if (invoker.WeaponStatus[TRProp_Heat] > 0 && random(0, 4))
-                {
-                    invoker.WeaponStatus[TRProp_Chamber] = 0;
-                }
-                else A_TryLoadChamber();
-            }
-            HRFL A 2 Offset(3, 38);
-            HRFL A 2 Offset(2, 34);
-            HRFL A 2 Offset(0, 32);
-            Goto Nope;
-        */
         Unload:
             #### A 0
             {
@@ -746,6 +724,8 @@ class HDTarongaRandom : IdleDummy
                     wpn.WeaponStatus[wpn.TRProp_Flags] |= wpn.TRF_GL;
                 }
                 wpn.InitializeWepStats(false);
+                spawn("HD6mmFlechetteBoxPickup",pos+(random(-7,7),0,0),ALLOW_REPLACE);
+                spawn("HD6mmFlechetteBoxPickup",pos+(random(-5,5),0,0),ALLOW_REPLACE);
             }
             Stop;
     }
