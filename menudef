@@ -11,7 +11,10 @@ OptionMenu "MortisMunitionsMenu"
     Title "$MORTISMUNITIONS_MENU"
     
     StaticText ""
+    StaticText "$MERCH_TAG_TARONGA"
     Slider "$MENU_WEPSPAWNRATE", "taronga_chaingun_spawn_weight", 0.0, 100, .01, 2
+    Slider "$MENU_WEPSPAWNRATE", "hdm_taronga_price", 0.0, 10000, 10, 2
+    Option "$MENU_WEPSPAWNRATE", "hdm_enable_taronga", "OnOff"
     StaticText ""
     StaticText ""
 

@@ -1,4 +1,6 @@
-// Spawn Weights
+// Taronga
 server float taronga_chaingun_spawn_weight = 2;
+server bool hdm_enable_taronga = true;
+server int hdm_taronga_price = 500;
 
 server bool mm_weapon_persistency = true;

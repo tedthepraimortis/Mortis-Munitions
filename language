@@ -3,7 +3,7 @@
 MORTISMUNITIONS_MENU = "\c[Cyan]Ⓜ\c- \'Mortis Munitions";
 
 // Taronga 6mm SAW
-TAG_TARONGA = "UAC 'Taronga' 6mm SAW";
+TAG_TARONGA = "P.M.I 'Taronga' 6mm SAW";
 
 PICKUP_TARONGA_PREFIX = "You got a ";
 PICKUP_TARONGA_GL = " with a 20mm Grenade Launcher";
@@ -13,3 +13,7 @@ TARONGA_HELPTEXT_1 = " Fire GL\n";
 TARONGA_HELPTEXT_2 = " Load GL\n";
 TARONGA_HELPTEXT_3 = " Unload GL\n";
 TARONGA_HELPTEXT_4 = " Rack bolt\n";
+
+MERCH_FLAVOR_TARONGA = "Hot, jammy and ready for tons of penetrative fun! Till you run out of ammo, that is.";
+MERCH_TAG_TARONGA = "P.M.I. 'Taronga' 6mm SAW";
+MERCH_CAT_MORTISMUNITIONS = "Mortis Munitions";

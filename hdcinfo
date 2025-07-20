@@ -4,3 +4,6 @@ addAmmoUser => { "ammoName": "HD6mmFlechetteAmmo", "name": "HDTaronga" }
 
 // Spawns
 addSpawnTableSingleEntry => { "tableName": "ChaingunReplaces", "name": "HDTarongaRandom", "weight": "#taronga_chaingun_spawn_weight", "persists": "#mm_weapon_persistency" }
+
+// Merchant Compatibility
+newMerchantStoreItem => { "enabled": "#hdm_enable_taronga", "type": "weapon", "category": "$MERCH_CAT_MORTISMUNITIONS", "item": "HDTaronga", "icon": "HRFPA0", "displayName": "$MERCH_TAG_TARONGA", "basePrice": "#hdm_taronga_price", "flavorText": "$MERCH_FLAVOR_TARONGA" }
