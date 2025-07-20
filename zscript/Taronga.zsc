@@ -553,14 +553,14 @@ class HDTaronga : WAN_20mmLauncher
 				amts=HDMath.BuildVariableString(amts);
 				amts.appendformat("\n");
 
-				amt=randompick(-3,-5,-5,-random(16,32));
+				amt=randompick(-10,-15,-15,-random(30,55));
 
 				A_ChamberGrit(amt,true);
 				amt=invoker.weaponstatus[TRProp_Muck];
-				if(amt>40)amts.appendformat(StringTable.Localize("$BOSS_CLENF1"));
-				else if(amt>30)amts.appendformat(StringTable.Localize("$BOSS_CLENF2"));
-				else if(amt>20)amts.appendformat(StringTable.Localize("$BOSS_CLENF3"));
-				else if(amt>10)amts.appendformat(StringTable.Localize("$BOSS_CLENF4"));
+				if(amt>80)amts.appendformat(StringTable.Localize("$BOSS_CLENF1"));
+				else if(amt>50)amts.appendformat(StringTable.Localize("$BOSS_CLENF2"));
+				else if(amt>40)amts.appendformat(StringTable.Localize("$BOSS_CLENF3"));
+				else if(amt>20)amts.appendformat(StringTable.Localize("$BOSS_CLENF4"));
 				else amts.appendformat(StringTable.Localize("$BOSS_CLENF5"));
 				A_Log(amts,true);
 			}
