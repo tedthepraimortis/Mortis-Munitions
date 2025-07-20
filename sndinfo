@@ -14,3 +14,4 @@ weapons/tarongashot4 "Sounds/Taronga/M60_Shot_4.ogg"
 weapons/tarongachamber "Sounds/Taronga/M60_Cover_Open.ogg"
 weapons/tarongaboltfwd "Sounds/Taronga/M60_BoltSlideForwardHeld.ogg"
 weapons/tarongaboltback "Sounds/Taronga/M60_BoltSlideBackHeld.ogg"
+$alias weapons/tarongaload weapons/tarongachamber
