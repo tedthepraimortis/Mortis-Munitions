@@ -135,7 +135,7 @@ class HDTaronga : WAN_20mmLauncher
         ..LWPHELP_ALTFIRE..Stringtable.Localize("$TARONGA_HELPTEXT_4")
         ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ZOOM.." + "..LWPHELP_ALTFIRE.. Stringtable.Localize("$TARONGA_HELPTEXT_1") : "")
         ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ALTRELOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_2") : "")
-        ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_FIREMODE.." + "..LWPHELP_UNLOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_3") : "")
+        ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ZOOM.." + "..LWPHELP_UNLOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_3") : "")
         ..LWPHELP_MAGMANAGER;
     }
 
@@ -613,7 +613,7 @@ class HDTaronga : WAN_20mmLauncher
             #### A 0
             {
                 invoker.WeaponStatus[TRProp_Flags] |= TRF_JustUnload;
-                if (PressingFiremode() && invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
+                if (PressingZoom() && invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
                 {
                     SetWeaponState('UnloadGL');
                 }
