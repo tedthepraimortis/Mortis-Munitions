@@ -13,4 +13,6 @@ A weapon pack made to utilize some of the more underutilized rounds in HDBulletL
 Taronga
 
 - Sprites: Tesefy/Sonik.O.Fan
-- Code: Edited from the 'Bitch' lmg by Icarus & Accensus
+- Code: Heavily based on the 'Bitch' lmg by Icarus & Accensus & many bits of Hideous Destructor.
+- Coding Help: UndeadZeratul
+- Testing & Feedback: ComradeNikki, Satellaview-Dev, Terkoiz
