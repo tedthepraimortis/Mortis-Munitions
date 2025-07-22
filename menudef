@@ -18,5 +18,6 @@ OptionMenu "MortisMunitionsMenu"
     StaticText ""
     StaticText ""
 
+    Option "$MENU_ADVANCEDHELPTEXT", "mm_advanced_helptext", "OnOff"
     Option "$MENU_BACKPACKSALLOWED", "mm_weapon_persistency", "OnOff"
 }

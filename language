@@ -1,6 +1,7 @@
 [enu default]
 
 MORTISMUNITIONS_MENU = "\c[Cyan]Ⓜ\c- \'Mortis Munitions";
+MENU_ADVANCEDHELPTEXT = "Advanced Help Text: ";
 
 // Generic Strings
 WEPHELP_INFO = "\n\cuExtra Info\n\c-";
