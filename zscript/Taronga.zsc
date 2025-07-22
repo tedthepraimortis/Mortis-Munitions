@@ -130,13 +130,18 @@ class HDTaronga : WAN_20mmLauncher
     override string GetHelpText()
     {
         LocalizeHelp();
+        if(!AHelpText) AHelpText = CVar.GetCVar('mm_advanced_helptext', owner.player);
         return 
         LWPHELP_FIRESHOOT
         ..LWPHELP_ALTFIRE..Stringtable.Localize("$TARONGA_HELPTEXT_4")
         ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ZOOM.." + "..LWPHELP_ALTFIRE.. Stringtable.Localize("$TARONGA_HELPTEXT_1") : "")
         ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ALTRELOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_2") : "")
         ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ZOOM.." + "..LWPHELP_UNLOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_3") : "")
-        ..LWPHELP_MAGMANAGER;
+        ..LWPHELP_MAGMANAGER
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$WEPHELP_INFO") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$TARONGA_HELPTEXT_5") : "")
+        ..(WeaponStatus[TRProp_Flags] & TRF_GL & AHelpText.GetBool() ? Stringtable.Localize("$TARONGA_HELPTEXT_6") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$TARONGA_HELPTEXT_7") : "");
     }
 
     override void DrawHUDStuff(HDStatusBar sb, HDWeapon hdw, HDPlayerPawn hpl)
@@ -257,6 +262,7 @@ class HDTaronga : WAN_20mmLauncher
     private HDBackpack Storage;
     private StorageItem AmmoReserve;
     private int BurstIndex;
+    private transient CVar AHelpText;
     transient int OldFireMode;
 
     Default

@@ -2,6 +2,9 @@
 
 MORTISMUNITIONS_MENU = "\c[Cyan]Ⓜ\c- \'Mortis Munitions";
 
+// Generic Strings
+WEPHELP_INFO = "\n Extra Info\n";
+
 // Taronga 6mm SAW
 TAG_TARONGA = "P.M.I 'Taronga' 6mm SAW";
 
@@ -13,6 +16,10 @@ TARONGA_HELPTEXT_1 = " Fire GL\n";
 TARONGA_HELPTEXT_2 = " Load GL\n";
 TARONGA_HELPTEXT_3 = " Unload GL\n";
 TARONGA_HELPTEXT_4 = " Rack bolt\n";
+
+TARONGA_HELPTEXT_5 = " - Round Type: 6mm Flechettes\n";
+TARONGA_HELPTEXT_6 = " - Grenade Type: 20mm Rifle Grenades\n";
+TARONGA_HELPTEXT_7 = " - Weapon Type: Heavy Weapon";
 
 MERCH_FLAVOR_TARONGA = "Hot, jammy and ready for tons of penetrative fun! Till you run out of ammo, that is.";
 MERCH_TAG_TARONGA = "P.M.I. 'Taronga' 6mm SAW";
