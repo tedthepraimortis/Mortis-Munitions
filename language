@@ -3,7 +3,7 @@
 MORTISMUNITIONS_MENU = "\c[Cyan]Ⓜ\c- \'Mortis Munitions";
 
 // Generic Strings
-WEPHELP_INFO = "\n Extra Info\n";
+WEPHELP_INFO = "\n\cuExtra Info\n\c-";
 
 // Taronga 6mm SAW
 TAG_TARONGA = "P.M.I 'Taronga' 6mm SAW";
