@@ -1,3 +1,4 @@
+// Taronga
 weapons/targrenopen "Sounds/Taronga/M203_Open.ogg"
 weapons/targrenclose "Sounds/Taronga/M203_Close.ogg"
 weapons/targrenreload "Sounds/Taronga/M203_Insert_Grenade.ogg"
@@ -15,3 +16,14 @@ weapons/tarongachamber "Sounds/Taronga/M60_Cover_Open.ogg"
 weapons/tarongaboltfwd "Sounds/Taronga/M60_BoltSlideForwardHeld.ogg"
 weapons/tarongaboltback "Sounds/Taronga/M60_BoltSlideBackHeld.ogg"
 $alias weapons/tarongaload weapons/tarongachamber
+
+// Currawong
+$random weapons/currawong {weapons/currashot1 weapons/currashot2 weapons/currashot3 weapons/currashot4}
+weapons/currashot1 "Sounds/Currawong/MP5_Shot_1.ogg"
+weapons/currashot2 "Sounds/Currawong/MP5_Shot_2.ogg"
+weapons/currashot3 "Sounds/Currawong/MP5_Shot_3.ogg"
+weapons/currashot4 "Sounds/Currawong/MP5_Shot_4.ogg"
+weapons/currawongchamber "Sounds/Currawong/MP5_BoltSlideForwardHeld.ogg"
+weapons/currawongmagout "Sounds/Currawong/MP5_MagazineOut.ogg"
+weapons/currawongmagin "Sounds/Currawong/MP5_MagazineIn.ogg"
+weapons/currawongmagmove "Sounds/Currawong/MP5_HandleUp.ogg"
