@@ -17,7 +17,7 @@ __Taronga__
 - Feeds from a belt-bag system, requiring no belt links to go with, though always will require some form of pouch to use for ammo management.
 - Never adopted due to its high maintenance requirements and nature of bolt seizes when feeding rounds for too long, along with heat dissipation issues.
 
-Loadout Code: trn | stock 0-2, barrel 0-2, bolt 0-2, gl 0/1
+Loadout Code: trn | stock 0-2, barrel 0-2, bolt 0-2, gl 0/1  
 Attachments with 3 variants are all Stock/Lightweight/Heavyweight for their respective values. E.g. "trn stock 1 barrel 1 bolt 1" will give you a light stocked, light barreled, light bolt'd Taronga.
 
 ## Credits
