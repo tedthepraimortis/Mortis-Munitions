@@ -25,7 +25,10 @@ class HDTaronga : WAN_20mmLauncher
         TRProp_Mode,
         TRProp_Heat,
         TRProp_Muck,
-        TRProp_LoadType
+        TRProp_LoadType,
+        TRProp_StockWeight,
+        TRProp_BarrelWeight,
+        TRProp_BoltWeight
     }
 
     override void PostBeginPlay()
@@ -59,6 +62,18 @@ class HDTaronga : WAN_20mmLauncher
     override double GunMass()
     {
         double BaseMass = 8.5;
+        switch (WeaponStatus[TRProp_StockWeight])
+        {
+            case 0: break; case 1: BaseMass -= 1.5; break; case 2: BaseMass += 1.5; break; default: break;
+        }
+        switch (WeaponStatus[TRProp_BarrelWeight])
+        {
+            case 0: break; case 1: BaseMass -= 1; break; case 2: BaseMass += 1; break; default: break;
+        }
+        switch (WeaponStatus[TRProp_BoltWeight])
+        {
+            case 0: break; case 1: BaseMass -= 0.1; break; case 2: BaseMass += 0.2; break; default: break;
+        }
         if (WeaponStatus[TRProp_Flags] & TRF_GL)
         {
             BaseMass += 1.5;
@@ -76,6 +91,45 @@ class HDTaronga : WAN_20mmLauncher
         if (WeaponStatus[TRProp_Flags] & TRF_GL)
         {
             BaseBulk += 20;
+        }
+        switch (WeaponStatus[TRProp_StockWeight])
+        {
+            case 0: 
+                break;
+            case 1: 
+                BaseBulk -= 15;
+                break;
+            case 2: 
+                BaseBulk += 15;
+                break;
+            default:
+                break;
+        }
+        switch (WeaponStatus[TRProp_BarrelWeight])
+        {
+            case 0: 
+                break;
+            case 1: 
+                BaseBulk -= 9;
+                break;
+            case 2: 
+                BaseBulk += 6;
+                break;
+            default:
+                break;
+        }
+        switch (WeaponStatus[TRProp_BoltWeight])
+        {
+            case 0: 
+                break;
+            case 1: 
+                BaseBulk -= 1;
+                break;
+            case 2: 
+                BaseBulk += 2;
+                break;
+            default:
+                break;
         }
         if (WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
         {
@@ -98,6 +152,52 @@ class HDTaronga : WAN_20mmLauncher
 
     override void LoadoutConfigure(string input)
     {
+        //  For next 3, 0 is stock, 1 is Lightened, 2 is heavy. - [Ted]
+        switch (GetLoadoutVar(input, "stock", 1))
+        {
+            case 0:
+                WeaponStatus[TRProp_StockWeight]=0; 
+                break;
+            case 1: 
+                WeaponStatus[TRProp_StockWeight]=1;
+                break;
+            case 2: 
+                WeaponStatus[TRProp_StockWeight]=2;
+                break;
+            default:
+                break;
+        }
+        
+        switch (GetLoadoutVar(input, "barrel", 1))
+        {
+            case 0:
+                WeaponStatus[TRProp_BarrelWeight]=0; 
+                break;
+            case 1: 
+                WeaponStatus[TRProp_BarrelWeight]=1;
+                break;
+            case 2: 
+                WeaponStatus[TRProp_BarrelWeight]=2;
+                break;
+            default:
+                break;
+        }
+        
+        switch (GetLoadoutVar(input, "bolt", 1))
+        {
+            case 0:
+                WeaponStatus[TRProp_BoltWeight]=0; 
+                break;
+            case 1: 
+                WeaponStatus[TRProp_BoltWeight]=1;
+                break;
+            case 2: 
+                WeaponStatus[TRProp_BoltWeight]=2;
+                break;
+            default:
+                break;
+        }
+
         if (GetLoadoutVar(input, "gl", 1) > 0)
         {
             WeaponStatus[TRProp_Flags] |= TRF_GL;
@@ -108,7 +208,7 @@ class HDTaronga : WAN_20mmLauncher
 
     override void InitializeWepStats(bool idfa)
     {
-        WeaponStatus[TRProp_Chamber] = 1;
+        WeaponStatus[TRProp_Chamber] = 0;
         if (WeaponStatus[TRProp_Flags] & TRF_GL)
         {
             WeaponStatus[TRProp_Flags] |= TRF_GrenadeLoaded;
@@ -116,12 +216,28 @@ class HDTaronga : WAN_20mmLauncher
     }
     
     override void DoEffect(){
+        float barrel;
+        float stock;
+        switch (WeaponStatus[TRProp_BarrelWeight])
+        {
+            case 0: barrel = 1; break;
+            case 1: barrel = 0.25; break;
+            case 2: barrel = 1.75; break;
+            default: barrel = 1; break;
+        }
+        switch (WeaponStatus[TRProp_StockWeight])
+        {
+            case 0: stock = 1; break;
+            case 1: stock = 0.25; break;
+            case 2: stock = 1.75; break;
+            default: stock = 1; break;
+        }
 		let hdp=hdplayerpawn(owner);
 		if(hdp){
 			//droop downwards
-			if(!hdp.gunbraced && !!hdp.player && hdp.player.readyweapon==self && hdp.strength && hdp.pitch<frandom(5,8))
+			if(!hdp.gunbraced && !!hdp.player && hdp.player.readyweapon==self && hdp.strength && hdp.pitch<frandom(5*stock,8*barrel) && WeaponStatus[TRProp_StockWeight] && WeaponStatus[TRProp_BarrelWeight] != 1)
             {
-                hdp.A_MuzzleClimb((frandom(-0.05,0.05),frandom(0.1,clamp(1-pitch,0.06/hdp.strength,0.12))),(0,0),(0,0),(0,0));
+                hdp.A_MuzzleClimb((frandom(-0.05*stock,0.05*stock),frandom(0.1,clamp(1-pitch,0.08/hdp.strength,0.12))),(0,0),(0,0),(0,0)*barrel);
     		}
         }
 		Super.DoEffect();
@@ -141,6 +257,9 @@ class HDTaronga : WAN_20mmLauncher
         ..(AHelpText.GetBool() ? Stringtable.Localize("$WEPHELP_INFO") : "")
         ..(AHelpText.GetBool() ? Stringtable.Localize("$TARONGA_HELPTEXT_5") : "")
         ..(AHelpText.GetBool() ? WeaponStatus[TRProp_Flags] & TRF_GL ? Stringtable.Localize("$TARONGA_HELPTEXT_6") : "" : "")
+        ..(AHelpText.GetBool() ? WeaponStatus[TRProp_BarrelWeight]<0 ? Stringtable.Localize("$TARONGA_HELPTEXT_8") .. WeaponStatus[TRProp_BarrelWeight] : "" : "")
+        ..(AHelpText.GetBool() ? WeaponStatus[TRProp_StockWeight]<0 ? Stringtable.Localize("$TARONGA_HELPTEXT_9") .. WeaponStatus[TRProp_StockWeight] : "" : "")
+        ..(AHelpText.GetBool() ? WeaponStatus[TRProp_BoltWeight]<0 ? Stringtable.Localize("$TARONGA_HELPTEXT_10") .. WeaponStatus[TRProp_BoltWeight] : "" : "")
         ..(AHelpText.GetBool() ? Stringtable.Localize("$TARONGA_HELPTEXT_7") : "");
     }
 
@@ -277,7 +396,7 @@ class HDTaronga : WAN_20mmLauncher
         Tag "$TAG_TARONGA";
         HDWeapon.Refid HDLD_TARONGA;
         HDWeapon.Loadoutcodes
-        "\n\cu   gl - Grenade Launcher";
+        "\n\cu   gl - 0/1, Grenade Launcher \n\cu   stock - 0-2, Stock/Light/Heavy \n\cu   barrel - 0-2, Stock/Short/Long \n\cu   bolt - 0-2, Stock/Light/Heavy";
     }
 
     States
@@ -320,6 +439,7 @@ class HDTaronga : WAN_20mmLauncher
         Shoot:
             HRFL A 0
             {
+                A_Log("Stock: "..invoker.WeaponStatus[TRProp_StockWeight].." Barrel: "..invoker.WeaponStatus[TRProp_BarrelWeight].." Bolt: "..invoker.WeaponStatus[TRProp_BoltWeight]);
                 if(invoker.WeaponStatus[TRProp_Chamber] > 1)
                 {
                     SetWeaponState("nope");
@@ -328,10 +448,23 @@ class HDTaronga : WAN_20mmLauncher
             }
             HRFL A 1
             {
-                if (invoker.WeaponStatus[TRProp_Mode] == 1 || invoker.WeaponStatus[TRProp_Mode] == 3)
+                int tics;
+                switch (invoker.WeaponStatus[TRProp_BoltWeight])
                 {
-                    A_SetTics(0);
+                    case 0:
+                        tics = 1;
+                        break;
+                    case 1:
+                        tics = 0;
+                        break;
+                    case 2:
+                        tics = 2;
+                        break;
+                    default:
+                        tics = 1;
+                        break;
                 }
+                A_SetTics(tics);
             }
             HRFL F 2 Bright Offset(0, 34)
             {
@@ -341,20 +474,61 @@ class HDTaronga : WAN_20mmLauncher
                     A_SetTics(1);
                 }
                 A_StartSound("weapons/TarongaBoltBack", 8, CHAN_WEAPON, CHANF_OVERLAP, volume: 0.4);
-                HDBulletActor.FireBullet(self, "HDB_MM6mmFlechette");
-                A_AlertMonsters(HDCONST_ONEMETRE * (30 + heat));
+                float barrel;
+                switch (invoker.WeaponStatus[TRProp_BarrelWeight])
+                {
+                    case 0: barrel = 1; break;
+                    case 1: barrel = 0.75; break;
+                    case 2: barrel = 1.5; break;
+                    default: barrel = 1; break;
+                }
+                float bolt;
+                switch (invoker.WeaponStatus[TRProp_BoltWeight])
+                {
+                    case 0: bolt = 1; break;
+                    case 1: bolt = 2; break;
+                    case 2: bolt = 0; break;
+                    default: bolt = 1; break;
+                }
+                HDBulletActor.FireBullet(self, "HDB_MM6mmFlechette", speedfactor: barrel);
+                A_AlertMonsters(HDCONST_ONEMETRE * (30 + heat * barrel));
                 invoker.WeaponStatus[TRProp_Chamber] = 0;
-                invoker.WeaponStatus[TRProp_Heat] += random(3, 7);
-                invoker.WeaponStatus[TRProp_Muck] += random(0, 1);
+                invoker.WeaponStatus[TRProp_Heat] += random(3, 7) * barrel;
+                invoker.WeaponStatus[TRProp_Muck] += random(0, 1) + bolt;
                 A_StartSound("weapons/taronga", CHAN_WEAPON, CHANF_OVERLAP, volume: 0.7);
-                A_ZoomRecoil(1.05);
-                A_MuzzleClimb(-frandom(-0.45, 0.45), -frandom(0.49, 0.59), -frandom(-0.3, 0.35), -frandom(0.4, 0.48), -frandom(-0.24, 0.24), -frandom(0.3, 0.36));
+                switch (invoker.WeaponStatus[TRProp_StockWeight])
+                {
+                    case 0:
+                        A_ZoomRecoil(1.05);
+                        A_MuzzleClimb(-frandom(-0.45, 0.45), -frandom(0.49, 0.59), -frandom(-0.3, 0.35), -frandom(0.4, 0.48), -frandom(-0.24, 0.24), -frandom(0.3, 0.36));
+                        break;
+                    case 1:
+                        A_ZoomRecoil(1.1);
+                        A_MuzzleClimb(-frandom(-0.65, 0.65), -frandom(0.59, 0.79), -frandom(-0.5, 0.95), -frandom(0.6, 0.48), -frandom(-0.44, 0.54), -frandom(0.4, 0.56));
+                        break;
+                    case 2:
+                        A_ZoomRecoil(0.995);
+                        A_MuzzleClimb(-frandom(-0.25, 0.25), -frandom(0.3, 0.3), -frandom(-0.1, 0.1), -frandom(0.25, 0.25), -frandom(-0.14, 0.14), -frandom(0.1, 0.1));
+                        break;
+                    default:
+                        A_ZoomRecoil(1.05);
+                        A_MuzzleClimb(-frandom(-0.45, 0.45), -frandom(0.49, 0.59), -frandom(-0.3, 0.35), -frandom(0.4, 0.48), -frandom(-0.24, 0.24), -frandom(0.3, 0.36));
+                        break;
+                }
                 A_Light1();
                 A_WeaponReady(WRF_NOFIRE);
             }
             HRFL A 0
             {
-                if(random(0,invoker.jamchance())>55)
+                float bolt;
+                switch (invoker.WeaponStatus[TRProp_BoltWeight])
+                {
+                    case 0: bolt = 1; break;
+                    case 1: bolt = 0.75; break;
+                    case 2: bolt = 1.5; break;
+                    default: bolt = 1; break;
+                }
+                if(random(0,invoker.jamchance())>55*bolt)
                 {
                     invoker.WeaponStatus[TRProp_Chamber] = 2;
                 }
@@ -729,6 +903,9 @@ class HDTarongaRandom : IdleDummy
                 {
                     wpn.WeaponStatus[wpn.TRProp_Flags] |= wpn.TRF_GL;
                 }
+                wpn.weaponStatus[wpn.TRProp_BarrelWeight]=(random(0,2));
+                wpn.weaponStatus[wpn.TRProp_StockWeight]=(random(0,2));
+                wpn.weaponStatus[wpn.TRProp_BoltWeight]=(random(0,2));
                 wpn.InitializeWepStats(false);
                 if(HDCore.CheckClassExists(ammoPouch)) spawn(ammoPouch,pos+(random(-7,7),0,0),ALLOW_REPLACE); 
                 spawn("HD6mmFlechetteBoxPickup",pos+(random(-7,7),0,0),ALLOW_REPLACE);
