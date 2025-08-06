@@ -462,7 +462,6 @@ class HDTaronga : WAN_20mmLauncher
         Shoot:
             HRFL A 0
             {
-                A_Log("Stock: "..invoker.WeaponStatus[TRProp_StockWeight].." Barrel: "..invoker.WeaponStatus[TRProp_BarrelWeight].." Bolt: "..invoker.WeaponStatus[TRProp_BoltWeight]);
                 if(invoker.WeaponStatus[TRProp_Chamber] > 1)
                 {
                     SetWeaponState("nope");
