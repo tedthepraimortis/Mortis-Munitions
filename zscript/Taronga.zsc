@@ -36,6 +36,30 @@ class HDTaronga : WAN_20mmLauncher
         // hehe 1337 the UaS number - [Ted]
         weaponspecial = 1337;
         Super.PostBeginPlay();
+        switch (WeaponStatus[TRProp_BarrelWeight])
+        {
+            case 0:
+                barrellength=32;
+                barrelwidth=4;
+                barreldepth=6;
+                break;
+            case 1:
+                barrellength=26;
+                barrelwidth=3;
+                barreldepth=4;
+                bfitsinbackpack=true;
+                break;
+            case 2:
+                barrellength=38;
+                barrelwidth=4;
+                barreldepth=8;
+                break;
+            default: barrellength=32; barrelwidth=4; barreldepth=6; break;
+        }
+        if (WeaponStatus[TRProp_StockWeight] && WeaponStatus[TRProp_BarrelWeight] == 1)
+        {
+            bhinderlegs=false;
+        }
     }
 
     override void tick()
@@ -391,7 +415,6 @@ class HDTaronga : WAN_20mmLauncher
         Weapon.SelectionOrder 69;
         Weapon.SlotNumber 4;
         Weapon.SlotPriority 1.75;
-        HDWeapon.BarrelSize 32, 4, 6;
         Scale 0.75;
         Tag "$TAG_TARONGA";
         HDWeapon.Refid HDLD_TARONGA;
