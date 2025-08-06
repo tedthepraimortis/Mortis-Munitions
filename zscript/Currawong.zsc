@@ -21,7 +21,7 @@ class HDCurrawong:HDWeapon{
         hdweapon.barrelsize 36,1.5,2;
         hdweapon.refid HDLD_CURRAWONG;
         tag "$TAG_CURRAAWONG";
-        inventory.icon "CRWPA0";
+        inventory.icon "CWRPA0";
 
         hdweapon.ammo1 "HD10mMag25",1;
 
@@ -138,7 +138,6 @@ class HDCurrawong:HDWeapon{
 		double shotpower=1.0;
 		HDBulletActor.FireBullet(caller,"HDB_4wad");
 		let p=HDBulletActor.FireBullet(caller,"HDB_400",spread:6.0,speedfactor:0.98,amount:40);
-		distantnoise.make(p,"world/shotgunfar");
 		caller.A_StartSound("weapons/cur4gaugeshot",9,CHANF_DEFAULT);
 		return shotpower;
 	}
@@ -147,7 +146,7 @@ class HDCurrawong:HDWeapon{
         CURW A 0;
         goto select0small;
     deselect0:
-        TNT1 A 0;
+        CURW A 0;
         goto deselect0small;
         CURW A 0;
 
@@ -240,7 +239,7 @@ class HDCurrawong:HDWeapon{
 		#### A 23 offset(8,50){
 			A_TakeInventory("HD4GBAmmo",1,TIF_NOTAKEINFINITE);
 			invoker.weaponstatus[CURS_FLAGS]|=CURF_4GAUGELOADED;
-			A_StartSound("weapons/cur4gaugeload",CHAN_WEAPON);
+			A_StartSound("weapons/cur4gaugereload",CHAN_WEAPON);
 		}
 	greloadend:
 		#### A 5 offset(4,44) A_StartSound("weapons/cur4gaugeopen",CHAN_WEAPON);
@@ -470,8 +469,8 @@ class HDCurrawong:HDWeapon{
 
 
     spawn:
-        CRWP A -1{if(invoker.weaponstatus[CURS_MAG]<0)frame=1;}
-        CRWP # -1;
+        CWRP A -1{if(invoker.weaponstatus[CURS_MAG]<0)frame=1;}
+        CWRP # -1;
         stop;
     }
     override void initializewepstats(bool idfa){

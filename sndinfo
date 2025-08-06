@@ -27,3 +27,11 @@ weapons/currawongchamber "Sounds/Currawong/MP5_BoltSlideForwardHeld.ogg"
 weapons/currawongmagout "Sounds/Currawong/MP5_MagazineOut.ogg"
 weapons/currawongmagin "Sounds/Currawong/MP5_MagazineIn.ogg"
 weapons/currawongmagmove "Sounds/Currawong/MP5_HandleUp.ogg"
+$alias weapons/cur4gaugeopen weapons/targrenopen
+$alias weapons/cur4gaugeclose weapons/targrenclose
+weapons/cur4gaugereload "Sounds/Currawong/CarlGustaf84_Shell_Out_01.ogg"
+$random weapons/cur4gaugeshot {weapons/cur4gshot1 weapons/cur4gshot2 weapons/cur4gshot3 weapons/cur4gshot4}
+weapons/cur4gshot1 "Sounds/Currawong/Balthazaar_Shoot_01.ogg"
+weapons/cur4gshot2 "Sounds/Currawong/Balthazaar_Shoot_02.ogg"
+weapons/cur4gshot3 "Sounds/Currawong/Balthazaar_Shoot_03.ogg"
+weapons/cur4gshot4 "Sounds/Currawong/Balthazaar_Shoot_04.ogg"
