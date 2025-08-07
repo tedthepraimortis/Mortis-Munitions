@@ -594,6 +594,19 @@ class HD10mMag25:HDMagAmmo{
 		mags[mindex]-=totake;
 		return true;
 	}
+	override bool Insert(){
+		SyncAmount();
+		if(
+			mags.size()<1
+			||mags[mags.size()-1]>=25
+			||!owner.countinv(roundtype)
+		)return false;
+		owner.A_TakeInventory(roundtype,1,TIF_NOTAKEINFINITE);
+		owner.A_StartSound("magmanager/insert",8);
+		owner.A_StartSound("weapons/pocket",9,volume:frandom(0.1,0.6));
+		mags[mags.size()-1]++;
+		return true;
+	}
 	override void Consolidate(){
 		SyncAmount();
 		if(amount<2)return;
