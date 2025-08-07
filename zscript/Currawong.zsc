@@ -161,92 +161,6 @@ class HDCurrawong:HDWeapon{
         ---- A 0 A_MagManager("HD10mMag25");
         goto ready;
 
-	nadeflash:
-		TNT1 A 0 A_JumpIf(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED,1);
-		stop;
-		TNT1 A 2{
-            invoker.FireShell(Self);
-			invoker.weaponstatus[CURS_FLAGS]&=~CURF_4GAUGELOADED;
-			A_ZoomRecoil(0.995);
-		}
-		TNT1 A 2 {
-            A_MuzzleClimb(-frandom(5.5, 10.25), -frandom(9.5, 11.75), -frandom(8.5, 10.25), -frandom(9.5, 11.75));
-            if(!gunbraced()){
-                A_ChangeVelocity(cos(pitch)*-frandom(0.375,0.75),0,sin(pitch)*frandom(0.375,0.75),CVF_RELATIVE);
-            }
-            A_ChangeVelocity(cos(pitch)*-frandom(0.125,0.25),0,sin(pitch)*frandom(0.125,0.25),CVF_RELATIVE);
-            GiveBody (max(0,11-health));
-            DamageMobJ (invoker, self, 10, "bashing");
-        }
-		stop;
-
-	altfire:
-		#### A 1 A_JumpIf(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED,1);
-		goto nope;
-		#### A 1;
-		#### A 3 {
-		invoker.airburst=0;
-		A_Gunflash("nadeflash");
-		}
-		goto nope;
-
-	altreload:
-		#### A 0{
-			invoker.weaponstatus[CURS_FLAGS]&=~CURF_FLAGS;
-			if(
-				!(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED)
-				&&countinv("HD4GBAmmo")
-			)setweaponstate("unloadgrenade");
-		}goto nope;
-	unloadgrenade:
-		#### A 0{
-			A_SetCrosshair(21);
-			A_MuzzleClimb(-0.3,-0.3);
-		}
-		#### A 3 offset(0,34);
-		#### A 2 offset(4,38){
-			A_MuzzleClimb(-0.3,-0.3);
-		}
-		#### A 3 offset(8,48){
-			A_StartSound("weapons/cur4gaugeopen",CHAN_WEAPON,CHANF_OVERLAP);
-			A_MuzzleClimb(-0.3,-0.3);
-			if(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED)A_StartSound("weapons/cur4gaugereload",CHAN_WEAPON);
-		}
-		#### A 11 offset(10,49){
-			if(!(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED)){
-				if(!(invoker.weaponstatus[CURS_FLAGS]&CURF_FLAGS))A_SetTics(3);
-				return;
-			}
-			invoker.weaponstatus[CURS_FLAGS]&=~CURF_4GAUGELOADED;
-			if(
-				!PressingUnload()
-				||A_JumpIfInventory("HD4GBAmmo",0,"null")
-			){
-				A_SpawnItemEx("HD4GBAmmo",
-					cos(pitch)*10,0,height-10-10*sin(pitch),vel.x,vel.y,vel.z,0,
-					SXF_ABSOLUTEMOMENTUM|SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH
-				);
-			}else{
-				A_StartSound("weapons/pocket",CHAN_WEAPON,CHANF_OVERLAP);
-				A_GiveInventory("HD4GBAmmo",1);
-				A_MuzzleClimb(frandom(0.8,-0.2),frandom(0.4,-0.2));
-			}
-		}
-		#### A 0 A_JumpIf(invoker.weaponstatus[CURS_FLAGS]&CURF_FLAGS,"greloadend");
-	loadgrenade:
-		#### A 3 offset(10,50) A_StartSound("weapons/pocket",CHAN_WEAPON,CHANF_OVERLAP);
-		#### ABB 6 offset(10,50) A_MuzzleClimb(frandom(-0.2,0.8),frandom(-0.2,0.4));
-		#### A 23 offset(8,50){
-			A_TakeInventory("HD4GBAmmo",1,TIF_NOTAKEINFINITE);
-			invoker.weaponstatus[CURS_FLAGS]|=CURF_4GAUGELOADED;
-			A_StartSound("weapons/cur4gaugereload",CHAN_WEAPON);
-		}
-	greloadend:
-		#### A 5 offset(4,44) A_StartSound("weapons/cur4gaugeopen",CHAN_WEAPON);
-		#### A 2 offset(0,40);
-		#### A 1 offset(0,34) A_MuzzleClimb(frandom(-2.4,0.2),frandom(-1.4,0.2));
-		goto nope;
-
     althold:
         goto nope;
     hold:
@@ -467,6 +381,91 @@ class HDCurrawong:HDWeapon{
         #### A 1 offset(2,31);
         goto nope;
 
+	nadeflash:
+		TNT1 A 0 A_JumpIf(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED,1);
+		stop;
+		TNT1 A 2{
+            invoker.FireShell(Self);
+			invoker.weaponstatus[CURS_FLAGS]&=~CURF_4GAUGELOADED;
+			A_ZoomRecoil(0.995);
+		}
+		TNT1 A 2 {
+            A_MuzzleClimb(-frandom(5.5, 10.25), -frandom(9.5, 11.75), -frandom(8.5, 10.25), -frandom(9.5, 11.75));
+            if(!gunbraced()){
+                A_ChangeVelocity(cos(pitch)*-frandom(0.375,0.75),0,sin(pitch)*frandom(0.375,0.75),CVF_RELATIVE);
+            }
+            A_ChangeVelocity(cos(pitch)*-frandom(0.125,0.25),0,sin(pitch)*frandom(0.125,0.25),CVF_RELATIVE);
+            GiveBody (max(0,11-health));
+            DamageMobJ (invoker, self, 10, "bashing");
+        }
+		stop;
+
+	altfire:
+		#### A 1 A_JumpIf(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED,1);
+		goto nope;
+		#### A 1;
+		#### A 3 {
+		invoker.airburst=0;
+		A_Gunflash("nadeflash");
+		}
+		goto nope;
+
+	altreload:
+		#### A 0{
+			invoker.weaponstatus[CURS_FLAGS]&=~CURF_FLAGS;
+			if(
+				!(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED)
+				&&countinv("HD4GBAmmo")
+			)setweaponstate("unloadgrenade");
+		}goto nope;
+	unloadgrenade:
+		#### A 0{
+			A_SetCrosshair(21);
+			A_MuzzleClimb(-0.3,-0.3);
+		}
+		#### A 3 offset(0,34);
+		#### A 2 offset(4,38){
+			A_MuzzleClimb(-0.3,-0.3);
+		}
+		#### A 3 offset(8,48){
+			A_StartSound("weapons/cur4gaugeopen",CHAN_WEAPON,CHANF_OVERLAP);
+			A_MuzzleClimb(-0.3,-0.3);
+			if(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED)A_StartSound("weapons/cur4gaugereload",CHAN_WEAPON);
+		}
+		#### A 11 offset(10,49){
+			if(!(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED)){
+				if(!(invoker.weaponstatus[CURS_FLAGS]&CURF_FLAGS))A_SetTics(3);
+				return;
+			}
+			invoker.weaponstatus[CURS_FLAGS]&=~CURF_4GAUGELOADED;
+			if(
+				!PressingUnload()
+				||A_JumpIfInventory("HD4GBAmmo",0,"null")
+			){
+				A_SpawnItemEx("HD4GBAmmo",
+					cos(pitch)*10,0,height-10-10*sin(pitch),vel.x,vel.y,vel.z,0,
+					SXF_ABSOLUTEMOMENTUM|SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH
+				);
+			}else{
+				A_StartSound("weapons/pocket",CHAN_WEAPON,CHANF_OVERLAP);
+				A_GiveInventory("HD4GBAmmo",1);
+				A_MuzzleClimb(frandom(0.8,-0.2),frandom(0.4,-0.2));
+			}
+		}
+		#### A 0 A_JumpIf(invoker.weaponstatus[CURS_FLAGS]&CURF_FLAGS,"greloadend");
+	loadgrenade:
+		#### A 3 offset(10,50) A_StartSound("weapons/pocket",CHAN_WEAPON,CHANF_OVERLAP);
+		#### ABB 6 offset(10,50) A_MuzzleClimb(frandom(-0.2,0.8),frandom(-0.2,0.4));
+		#### A 23 offset(8,50){
+			A_TakeInventory("HD4GBAmmo",1,TIF_NOTAKEINFINITE);
+			invoker.weaponstatus[CURS_FLAGS]|=CURF_4GAUGELOADED;
+			A_StartSound("weapons/cur4gaugereload",CHAN_WEAPON);
+		}
+	greloadend:
+		#### A 5 offset(4,44) A_StartSound("weapons/cur4gaugeopen",CHAN_WEAPON);
+		#### A 2 offset(0,40);
+		#### A 1 offset(0,34) A_MuzzleClimb(frandom(-2.4,0.2),frandom(-1.4,0.2));
+		goto nope;
 
     spawn:
         CWRP A -1{if(invoker.weaponstatus[CURS_MAG]<0)frame=1;}
@@ -491,6 +490,8 @@ enum CurrawongStatus{
     CURF_FLAGS=1,
     CURF_JUSTUNLOAD=2,
     CURF_4GAUGELOADED=3,
+    CURF_DIRTYMAG=4,
+    CURF_LOADINGDIRTY=5,
 
     CURN_SEMIONLY=1,
     CURN_BURSTONLY=2,
@@ -522,7 +523,7 @@ class HDCurrawongRandom:IdleDummy{
 
 class HD10mMag25:HDMagAmmo{
     default{
-        hdmagammo.maxperunit 25;
+        hdmagammo.maxperunit 26;
         hdmagammo.roundtype "HD10mAmmo";
         hdmagammo.roundbulk ENC_10_LOADED;
         hdmagammo.magbulk ENC_9MAG_EMPTY;
@@ -530,14 +531,101 @@ class HD10mMag25:HDMagAmmo{
         inventory.pickupmessage "$PICKUP_10MMAG25";
         hdpickup.refid HDLD_CURRAWONGMAG;
     }
-    override string,string,name,double getmagsprite(int thismagamt){
-        string magsprite=(thismagamt>0)?"CWNMA0":"CWNMB0";
-        return magsprite,"PBRSA0","HD10mAmmo",0.6;
-    }
-    states{
+	override string,string,name,double getmagsprite(int thismagamt){
+		string magsprite;
+		if(thismagamt>=51)magsprite="CWNMA0";
+		else if(thismagamt>0)magsprite="CWNMB0";
+		else magsprite="CWNMC0";
+		return magsprite,"PBRSA0","HD10mAmmo",0.6;
+	}
+	override void postbeginplay(){
+		super.postbeginplay();
+		sealtimer=0;
+		breakchance=0;
+	}
+	int breakchance;
+	int sealtimer;
+	override void doeffect(){
+		if(sealtimer>0)sealtimer--;
+		if(breakchance>0)breakchance--;
+		super.doeffect();
+	}
+	override string pickupmessage(){
+		string pms=super.pickupmessage();
+		if(mags[0]<26)pms.appendformat(" %s",StringTable.Localize("$426MAGMSG"));
+		return pms;
+	}
+	override int GetMagHudCount(int input){
+		if(input==26)return 25;
+		return input;
+	}
+	bool DirtyMagsOnly(){
+		if(mags.size()!=amount)return false;
+		for(int i=0;i<amount;i++){
+			if(mags[i]>=26)return false;
+		}
+		return true;
+	}
+	override bool Extract(){
+		SyncAmount();
+		int mindex=mags.size()-1;
+		if(
+			mags.size()<1
+			||mags[mindex]<1
+			||owner.A_JumpIfInventory(roundtype,0,"null")
+		)return false;
+		if(mags[mindex]==26){
+			if(sealtimer<1){
+				owner.A_Log(string.format(StringTable.Localize("$426MAGREALLY"),StringTable.Localize("$426MAGMSG")),true);
+				sealtimer=10;
+				extracttime=9;
+				return false;
+			}else{
+				mags[mindex]=25;
+				extracttime=12;
+				owner.A_StartSound("magmanager/426open",CHAN_WEAPON,CHANF_OVERLAP);
+				return false;
+			}
+		}else extracttime=default.extracttime;
+		int totake=min(random(1,6),mags[mindex]);
+		if(totake<HDPickup.MaxGive(owner,roundtype,roundbulk))HDF.Give(owner,roundtype,totake);
+		else HDPickup.DropItem(owner,roundtype,totake);
+		owner.A_StartSound("magmanager/extract",CHAN_WEAPON);
+		mags[mindex]-=totake;
+		return true;
+	}
+	override void Consolidate(){
+		SyncAmount();
+		if(amount<2)return;
+		int totalrounds=0;
+		int howmanymags=0;
+		for(int i=0;i<amount;i++){
+			int thismag=mags[i];
+			if(
+				!thismag
+				||thismag>=25
+			)continue;
+			howmanymags++;
+			totalrounds+=mags[i]%25;
+			mags[i]=0; //keep the empties, do NOT call clear()!
+		}
+		if(howmanymags>1)totalrounds=int(totalrounds*frandom(0.9,1.));
+		for(int i=0;i<amount;i++){
+			if(mags[i]>=25)continue;
+			int toinsert=clamp(totalrounds,mags[i],25);
+			mags[i]=toinsert;
+			totalrounds-=toinsert;
+			if(totalrounds<1)break;
+		}
+	}
+    states(actor){
     spawn:
-        CWNM A -1;
-        stop;
+        CWNM A -1 nodelay{
+			if(!mags.size()){destroy();return;}
+			int mmm=mags[0];
+			if(mmm>26)mags[0]=min(25,mmm%100);
+			if(mmm<26)frame=1;
+		}stop;
     spawnempty:
         CWNM A -1 A_SpawnEmpty();
         stop;
