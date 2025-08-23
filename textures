@@ -3,3 +3,71 @@ graphic CWNMGREY,10,13
     offset 5,13
     patch CWNMA0,0,0{translation "0:255=%[0,0,0]:[1.8,1.8,1.8]"}
 }
+
+// 066 Bore clips
+sprite 6CLPA0,5,14{
+    yscale 2.0
+    offset 2,14
+    patch CMAGA0,-7,8{}
+    patch CMAGA0,-7,-1{}
+    patch 42BRA0,1,0{}
+    patch 42BRA0,1,1{}
+    patch 42BRA0,1,3{}
+    patch 42BRA0,1,4{}
+    patch 42BRA0,1,6{}
+    patch 42BRA0,1,7{}
+    patch 42BRA0,1,9{}
+    patch 42BRA0,1,10{}
+    patch 42BRA0,1,12{}
+    patch 42BRA0,1,13{}
+}
+sprite 6CLPB0,5,14{
+    yscale 2.0
+    offset 2,14
+    patch CMAGA0,-7,8{}
+    patch CMAGA0,-7,-1{}
+    patch 42BRA0,1,3{}
+    patch 42BRA0,1,4{}
+    patch 42BRA0,1,6{}
+    patch 42BRA0,1,7{}
+    patch 42BRA0,1,9{}
+    patch 42BRA0,1,10{}
+    patch 42BRA0,1,12{}
+    patch 42BRA0,1,13{}
+}
+sprite 6CLPC0,5,14{
+    yscale 2.0
+    offset 2,14
+    patch CMAGA0,-7,8{}
+    patch CMAGA0,-7,-1{}
+    patch 42BRA0,1,6{}
+    patch 42BRA0,1,7{}
+    patch 42BRA0,1,9{}
+    patch 42BRA0,1,10{}
+    patch 42BRA0,1,12{}
+    patch 42BRA0,1,13{}
+}
+sprite 6CLPD0,5,14{
+    yscale 2.0
+    offset 2,14
+    patch CMAGA0,-7,8{}
+    patch CMAGA0,-7,-1{}
+    patch 42BRA0,1,9{}
+    patch 42BRA0,1,10{}
+    patch 42BRA0,1,12{}
+    patch 42BRA0,1,13{}
+}
+sprite 6CLPE0,5,14{
+    yscale 2.0
+    offset 2,14
+    patch CMAGA0,-7,8{}
+    patch CMAGA0,-7,-1{}
+    patch 42BRA0,1,12{}
+    patch 42BRA0,1,13{}
+}
+sprite 6CLPF0,14,5{
+    xscale 1.6
+    offset 7,2
+    patch CMAGA0,8,3{rotate 270}
+    patch CMAGA0,-1,3{rotate 270}
+}
