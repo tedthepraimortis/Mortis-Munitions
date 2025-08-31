@@ -25,7 +25,7 @@ class HDShotPistol:HDHandgun{
     }
 	double shotpower;
     int handrounds;
-	const SHOTPIS_MINSHOTPOWER=0.751;
+	const SHOTPIS_MINSHOTPOWER=0.851;
 	//returns the power of the load just fired
 	static double Fire(actor caller,int choke=1, int suppressor=0){
 		double spread=6.;
@@ -38,7 +38,7 @@ class HDShotPistol:HDHandgun{
 		spread=10.5-0.25*choke;
 		speedfactor=1.15+0.02857*choke;
 
-		double shotpower=(suppressor?frandom(0.4,0.85):frandom(0.9,1.05));
+		double shotpower=(suppressor?frandom(0.58,0.92):frandom(0.84,1.05));
 		spread*=shotpower;
 		speedfactor*=shotpower;
 		HDBulletActor.FireBullet(caller,"HDB_wad");
