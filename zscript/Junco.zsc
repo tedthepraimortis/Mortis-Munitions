@@ -1,0 +1,804 @@
+class JuncoPistol:HDWeapon{
+    default{
+        //$Category "Weapons/Hideous Destructor"
+        //$Title "ZM66 Rifle (All)"
+        //$Sprite "RIGLA0"
+
+        +hdweapon.fitsinbackpack
+        weapon.selectionorder 20;
+        weapon.slotnumber 2;
+        weapon.slotpriority 14;
+        inventory.pickupsound "misc/w_pkup";
+        inventory.pickupmessage "$PICKUP_JUNCO";
+        scale 0.7;
+        weapon.bobrangex 0.1;
+        weapon.bobrangey 0.6;
+        weapon.bobspeed 1.95;
+        obituary "$OB_JUNCO";
+        hdweapon.refid HDLD_JUNCO;
+        tag "$TAG_JUNCO";
+        inventory.icon "RIGLA0";
+
+        hdweapon.ammo1 "HD4mMag25",1;
+
+        hdweapon.loadoutcodes "
+            \cunogl - 0/1, whether it has a launcher
+            \cusemi - 0/1, whether it has a fire selector enabled
+            \cufiremode - 0-2, semi/auto/burst
+            \cuzoom - 16-70, 10x the resulting FOV in degrees
+            \cudot - 0-5";
+    }
+    override void tick(){
+        super.tick();
+        drainheat(JUNCS_HEAT,12);
+    }
+    override bool AddSpareWeapon(actor newowner){return AddSpareWeaponRegular(newowner);}
+    override hdweapon GetSpareWeapon(actor newowner,bool reverse,bool doselect){return GetSpareWeaponRegular(newowner,reverse,doselect);}
+    override void postbeginplay(){
+        super.postbeginplay();
+        barrellength=18;
+        barrelwidth=0.4;
+        barreldepth=0.7;
+        bobrangex*=1.05;
+        bobrangey*=1.2;
+    }
+    override double gunmass(){
+            return 7.7+weaponstatus[JUNCS_MAG]*0.01;
+    }
+    override void GunBounce(){
+        super.GunBounce();
+        if(!random(0,5))weaponstatus[0]&=~JUNCF_CHAMBERBROKEN;
+    }
+    override void OnPlayerDrop(){
+        if(
+            weaponstatus[0]&JUNCF_CHAMBER
+            &&!random(0,15)
+        )weaponstatus[0]|=JUNCF_CHAMBERBROKEN;
+        if(owner&&weaponstatus[JUNCS_HEAT]>HDCONST_ZM66COOKOFF)owner.dropinventory(self);
+    }
+    override string pickupmessage(){
+        if(weaponstatus[0]&JUNCF_NOFIRESELECT)return Stringtable.Localize("$PICKUP_SEMIJUNCO");
+        return super.pickupmessage();
+    }
+    override string,double getpickupsprite(bool usespare){
+        string spr;
+        int wep0=GetSpareWeaponValue(0,usespare);
+        if(wep0&JUNCF_NOFIRESELECT)
+            spr="RIGS";
+        else spr="RIGL";
+
+        //set to no-mag frame
+        if(GetSpareWeaponValue(JUNCS_MAG,usespare)<0)spr=spr.."D";
+        else spr=spr.."A";
+
+        return spr.."0",1.;
+    }
+    override void DrawHUDStuff(HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl){
+        if(sb.hudlevel==1){
+            int nextmagloaded=sb.GetNextLoadMag(hdmagammo(hpl.findinventory("HD4mMag25")));
+            if(nextmagloaded>25){
+                sb.drawimage("ZMAGA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,scale:(2,2));
+            }else if(nextmagloaded<1){
+                sb.drawimage("ZMAGC0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.,scale:(2,2));
+            }else sb.drawbar(
+                "ZMAGNORM","ZMAGGREY",
+                nextmagloaded,25,
+                (-46,-3),-1,
+                sb.SHADER_VERT,sb.DI_SCREEN_CENTER_BOTTOM
+            );
+            sb.drawnum(hpl.countinv("HD4mMag25"),-43,-8,sb.DI_SCREEN_CENTER_BOTTOM);
+        }
+
+        if(!(hdw.weaponstatus[0]&JUNCF_NOFIRESELECT))
+        sb.drawwepcounter(hdw.weaponstatus[JUNCS_AUTO],
+            -22,-10,"STFULAUT","STBURAUT"
+        );
+        int lod=clamp(hdw.weaponstatus[JUNCS_MAG]%100,0,25);
+        sb.drawwepnum(lod,25);
+        if(hdw.weaponstatus[0]&JUNCF_CHAMBER){
+            sb.drawrect(-19,-10,3,1);
+            lod++;
+        }
+        if(hdw.weaponstatus[JUNCS_MAG]>50)lod=random[shitgun](10,99);
+        sb.drawnum(lod,-16,-22,sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_TEXT_ALIGN_RIGHT,Font.CR_RED);
+    }
+    override string gethelptext(){
+        LocalizeHelp();
+        return
+        LWPHELP_FIRESHOOT
+        ..LWPHELP_RELOAD..StringTable.Localize("$ZMWH_RELOAD")
+        ..LWPHELP_MAGMANAGER
+        ..LWPHELP_UNLOAD..StringTable.Localize("$ZMWH_UNLOAD")..StringTable.Localize("$ZMWH_MAG");
+    }
+    override void DrawSightPicture(
+		HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl,
+		bool sightbob,vector2 bob,double fov,bool scopeview,actor hpc
+	){
+		int cx,cy,cw,ch;
+		[cx,cy,cw,ch]=screen.GetClipRect();
+		vector2 scc;
+		vector2 bobb=bob*1.3;
+
+		//if slide is pushed back, throw sights off line
+		if(hpl.player.getpsprite(PSP_WEAPON).frame>=2){
+			sb.SetClipRect(
+				-10+bob.x,-10+bob.y,20,19,
+				sb.DI_SCREEN_CENTER
+			);
+			bobb.y-=2;
+			scc=(0.7,0.8);
+		}else{
+			sb.SetClipRect(
+				-8+bob.x,-9+bob.y,16,15,
+				sb.DI_SCREEN_CENTER
+			);
+			scc=(0.6,0.6);
+		}
+		sb.drawimage(
+			"frntsite",(0,0)+bobb,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
+			scale:scc
+		);
+		sb.SetClipRect(cx,cy,cw,ch);
+		sb.drawimage(
+			"backsite",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
+			alpha:0.9,
+			scale:scc
+		);
+	}
+    override double weaponbulk(){
+        double blx=90;
+        int mgg=weaponstatus[JUNCS_MAG];
+        return blx+(mgg<0?0:(ENC_426MAG_LOADED+mgg*ENC_426_LOADED));
+    }
+    override void failedpickupunload(){
+        failedpickupunloadmag(JUNCS_MAG,"HD4mMag25");
+    }
+    override void DropOneAmmo(int amt){
+        if(owner){
+            amt=clamp(amt,1,10);
+            if(owner.countinv("FourMilAmmo"))owner.A_DropInventory("FourMilAmmo",amt*25);
+            else{
+                double angchange=-10;
+                if(angchange)owner.angle-=angchange;
+                owner.A_DropInventory("HD4mMag25",amt);
+            }
+        }
+    }
+    override void ForceBasicAmmo(){
+        owner.A_TakeInventory("FourMilAmmo");
+        ForceOneBasicAmmo("HD4mMag25");
+    }
+    action bool A_CheckCookoff(){
+        if(
+            invoker.weaponstatus[JUNCS_HEAT]>HDCONST_ZM66COOKOFF
+            &&!(invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN)
+            &&invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBER
+        ){
+            setweaponstate("cookoff");
+            return true;
+        }
+        return false;
+    }
+    action bool brokenround(){
+        if(!(invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBERBROKEN)){
+            int hht=invoker.weaponstatus[JUNCS_HEAT];
+            if(hht>240)invoker.weaponstatus[JUNCS_BORESTRETCHED]++;
+            hht*=hht;hht>>=10;
+            int rnd=
+                (invoker.owner?1:10)
+                +max(invoker.weaponstatus[JUNCS_AUTO],hht)
+                +invoker.weaponstatus[JUNCS_BORESTRETCHED]
+                +(invoker.weaponstatus[JUNCS_MAG]>100?10:0);
+            if(random(0,2000)<rnd){
+                invoker.weaponstatus[JUNCS_FLAGS]|=JUNCF_CHAMBERBROKEN;
+            }
+        }return invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBERBROKEN;
+    }
+    states{
+    ready:
+        JNCO A 1{
+            if(A_CheckCookoff())return;
+            else A_WeaponReady(WRF_ALL);
+            if(invoker.weaponstatus[JUNCS_AUTO]>=2)invoker.weaponstatus[JUNCS_AUTO]=1;
+        }goto readyend;
+    firemode:
+		JNCO A 1{
+            switch(invoker.WeaponStatus[JUNCS_AUTO])
+            {
+                case 0: invoker.WeaponStatus[JUNCS_AUTO]=1; return;
+                case 1: invoker.WeaponStatus[JUNCS_AUTO]=0; return;
+                default: invoker.WeaponStatus[JUNCS_AUTO]=0; return;
+            }
+			A_WeaponReady(WRF_NOFIRE);
+		}goto nope;
+
+
+    select0:
+        JNCO A 0;
+        goto select0big;
+    deselect0:
+        JNCO A 0{
+            if(
+                invoker.weaponstatus[JUNCS_HEAT]>HDCONST_ZM66COOKOFF
+                &&!(invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN)
+                &&(
+                    invoker.weaponstatus[JUNCS_MAG]||
+                    invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBER
+                )
+            ){
+                DropInventory(invoker);
+                return;
+            }
+        }goto deselect0big;
+    flash:
+        JNCO F 1 bright{
+            int heat = min(50, invoker.weaponStatus[JUNCS_HEAT]);
+            A_Light1();
+            HDFlashAlpha(-16);
+            A_StartSound("weapons/rifle",CHAN_WEAPON);
+            A_ZoomRecoil(max(0.95,1.-0.05*min(invoker.weaponstatus[JUNCS_AUTO],3)));
+
+            //shoot the bullet
+            //copypaste any changes to spawnshoot as well!
+            double brnd=max(invoker.weaponstatus[JUNCS_HEAT],invoker.weaponstatus[JUNCS_BORESTRETCHED])*0.01;
+            HDBulletActor.FireBullet(self,"HDB_426",spread:brnd>1.2?brnd:0);
+
+            A_MuzzleClimb(-frandom(0.3,0.9),-frandom(0.3,1.2));
+            A_AlertMonsters(HDCONST_ONEMETRE * (30 + heat));
+
+            invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_CHAMBER;
+            invoker.weaponstatus[JUNCS_HEAT]+=random(3,5);
+        }
+        goto lightdone;
+
+
+    fire:
+        JNCO A 3;
+        goto shootgun;
+    hold:
+        JNCO A 0 A_JumpIf(invoker.weaponstatus[0]&JUNCF_NOFIRESELECT,"nope");
+        JNCO A 0 A_JumpIf(invoker.weaponstatus[JUNCS_AUTO]>3,"nope");
+        goto shootgun;
+    althold:
+        ---- A 1{
+            if(!A_CheckCookoff())A_WeaponReady(WRF_NOFIRE);
+        }
+        ---- A 0 A_Refire();
+        goto ready;
+    jam:
+        JNCO B 1 offset(-1,36){
+            A_StartSound("weapons/riflejam",CHAN_WEAPON,CHANF_OVERLAP);
+            invoker.weaponstatus[0]|=JUNCF_CHAMBERBROKEN;
+            invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_CHAMBER;
+        }
+        JNCO B 1 offset(1,30) A_StartSound("weapons/riflejam",CHAN_WEAPON,CHANF_OVERLAP);
+        goto nope;
+
+    shootgun:
+        JNCO A 1{
+            if(
+                //can neither shoot nor chamber
+                invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN
+                ||(
+                    !(invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBER)
+                    &&invoker.weaponstatus[JUNCS_MAG]<1
+                )
+            ){
+                setweaponstate("nope");
+            }else if(!(invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBER)){
+                //no shot but can chamber
+                setweaponstate("chamber_manual");
+            }else{
+                A_GunFlash();
+                A_WeaponReady(WRF_NOFIRE);
+                if(invoker.weaponstatus[JUNCS_AUTO]>=1)invoker.weaponstatus[JUNCS_AUTO]++;
+            }
+        }
+    chamber:
+        JNCO B 0 offset(0,32){
+            if(invoker.weaponstatus[JUNCS_MAG]<1){
+                setweaponstate("nope");
+                return;
+            }
+            if(invoker.weaponstatus[JUNCS_MAG]%100>0){
+                if(invoker.weaponstatus[JUNCS_MAG]==26)invoker.weaponstatus[JUNCS_MAG]=25;
+                invoker.weaponstatus[JUNCS_MAG]--;
+                invoker.weaponstatus[JUNCS_FLAGS]|=JUNCF_CHAMBER;
+            }else{
+                invoker.weaponstatus[JUNCS_MAG]=min(invoker.weaponstatus[JUNCS_MAG],0);
+                A_StartSound("weapons/rifchamber",CHAN_WEAPON,CHANF_OVERLAP);
+            }
+            if(brokenround()){
+                setweaponstate("jam");
+                return;
+            }
+            A_WeaponReady(WRF_NOFIRE); //not WRF_NONE: switch to drop during cookoff
+        }
+        JNCO B 0 A_CheckCookoff();
+        JNCO B 0 A_JumpIf(invoker.weaponstatus[JUNCS_AUTO]>3,"nope");
+        JNCO B 2 A_JumpIf(invoker.weaponstatus[JUNCS_AUTO]>0,1);
+        JNCO B 0 A_Refire();
+        goto ready;
+    
+    cookoff:
+        JNCO A 0{
+            A_ClearRefire();
+            if(
+                (invoker.weaponstatus[JUNCS_MAG]>=0)	//something to detach
+                &&(justpressed(BT_RELOAD)||justpressed(BT_UNLOAD))	//trying to detach
+            ){
+                A_StartSound("weapons/rifleclick2",CHAN_WEAPON,CHANF_OVERLAP);
+                A_StartSound("weapons/rifleunload",CHAN_WEAPON,CHANF_OVERLAP);
+                HDMagAmmo.SpawnMag(self,"HD4mMag25",invoker.weaponstatus[JUNCS_MAG]);
+                invoker.weaponstatus[JUNCS_MAG]=-1;
+            }
+            setweaponstate("shootgun");
+        }
+
+
+    user3:
+        JNCO A 0 A_MagManager("HD4mMag25");
+        goto ready;
+
+    user4:
+    unload:
+        JNCO A 0{
+            invoker.weaponstatus[JUNCS_FLAGS]|=JUNCF_UNLOADONLY;
+            if(
+                invoker.weaponstatus[JUNCS_MAG]>=0
+            ){
+                setweaponstate("unloadmag");
+            }else if(
+                invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBER
+                ||invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBERBROKEN
+            ){
+                setweaponstate("unloadchamber");
+            }else{
+                setweaponstate("unloadmag");
+            }
+        }
+    reload:
+        JNCO A 0{
+            invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_UNLOADONLY;
+            if(	//full mag, no jam, not unload-only - why hit reload at all?
+                !(invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN)
+                &&invoker.weaponstatus[JUNCS_MAG]%100>=25
+                &&!(invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_UNLOADONLY)
+            ){
+                setweaponstate("nope");
+            }else if(	//if jammed, treat as unloading
+                invoker.weaponstatus[JUNCS_MAG]<0
+                &&invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN
+            ){
+                invoker.weaponstatus[JUNCS_FLAGS]|=JUNCF_UNLOADONLY;
+                setweaponstate("unloadchamber");
+            }else if(!HDMagAmmo.NothingLoaded(self,"HD4mMag25")){
+                setweaponstate("unloadmag");
+            }
+        }goto nope;
+    unloadmag:
+        JNCO A 1 offset(0,33);
+        JNCO A 1 offset(-3,34);
+        JNCO A 1 offset(-8,37);
+        JNCO B 2 offset(-11,39){
+            if(	//no mag, skip unload
+                invoker.weaponstatus[JUNCS_MAG]<0
+            ){
+                setweaponstate("magout");
+            }
+            if(invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN)
+                invoker.weaponstatus[JUNCS_FLAGS]|=JUNCF_UNLOADONLY;
+            A_MuzzleClimb(-0.3,-0.3,wepdot:false);
+            A_StartSound("weapons/rifleclick2",CHAN_WEAPON,CHANF_OVERLAP);
+        }
+        JNCO B 4 offset(-12,40){
+            A_MuzzleClimb(-0.3,-0.3,wepdot:false);
+            A_StartSound("weapons/rifleunload",CHAN_WEAPON);
+        }
+        JNCO B 20 offset(-14,44){
+            int inmag=invoker.weaponstatus[JUNCS_MAG];
+            if(inmag>26)inmag=min(25,inmag%100);
+            invoker.weaponstatus[JUNCS_MAG]=-1;
+            if(
+                !PressingUnload()&&!PressingReload()
+                ||A_JumpIfInventory("HD4mMag25",0,"null")
+            ){
+                HDMagAmmo.SpawnMag(self,"HD4mMag25",inmag);
+                A_SetTics(1);
+            }else{
+                HDMagAmmo.GiveMag(self,"HD4mMag25",inmag);
+                A_StartSound("weapons/pocket",CHAN_WEAPON);
+                if(inmag<26)A_Log(StringTable.Localize("$426MAGMSG"),true);
+            }
+        }
+    magout:
+        JNCO B 0{
+            if(
+                invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_UNLOADONLY
+                ||!countinv("HD4mMag25")
+            )setweaponstate("reloadend");
+        } //fallthrough to loadmag
+    loadmag:
+        ---- A 12 offset(-15,44){
+            let zmag=HD4mMag25(findinventory("HD4mMag25"));
+            if(!zmag){setweaponstate("reloadend");return;}
+            A_StartSound("weapons/pocket",CHAN_WEAPON);
+            if(zmag.DirtyMagsOnly())invoker.weaponstatus[0]|=JUNCF_LOADINGDIRTY;
+            else{
+                invoker.weaponstatus[0]&=~JUNCF_LOADINGDIRTY;
+                A_SetTics(10);
+            }
+        }
+        ---- A 2 offset(-15,44) A_JumpIf(invoker.weaponstatus[0]&JUNCF_LOADINGDIRTY,"loadmagdirty");
+    loadmagclean:
+        JNCO B 8 offset(-15,45)A_StartSound("weapons/rifleload",CHAN_WEAPON);
+        JNCO B 1 offset(-14,44){
+            let zmag=HD4mMag25(findinventory("HD4mMag25"));
+            if(!zmag){setweaponstate("reloadend");return;}
+            if(zmag.DirtyMagsOnly()){
+                setweaponstate("loadmagdirty");
+                return;
+            }
+            invoker.weaponstatus[JUNCS_MAG]=zmag.TakeMag(true);
+            A_StartSound("weapons/rifleclick2",CHAN_WEAPON);
+        }goto reloadend;
+    loadmagdirty:
+        JNCO B 0{
+            if(PressingReload())invoker.weaponstatus[0]|=JUNCF_STILLPRESSINGRELOAD;
+            else invoker.weaponstatus[0]&=~JUNCF_STILLPRESSINGRELOAD;
+        }
+        JNCO B 3 offset(-15,45)A_StartSound("weapons/rifleload",CHAN_WEAPON);
+        JNCO B 1 offset(-15,42)A_WeaponMessage(StringTable.Localize("$ZM426MAGMSG"),70);
+        JNCO BBBBBBBAAAA 1 offset(-15,41){
+            bool prr=PressingReload();
+            if(
+                prr
+                &&!(invoker.weaponstatus[0]&JUNCF_STILLPRESSINGRELOAD)
+            ){
+                setweaponstate("reallyloadmagdirty");
+            }
+            else if(!PressingReload())invoker.weaponstatus[0]&=~JUNCF_STILLPRESSINGRELOAD;
+        }
+        goto nope;
+    reallyloadmagdirty:
+        JNCO B 1 offset(-14,44)A_StartSound("weapons/rifleclick2",CHAN_WEAPON);
+        JNCO A 8 offset(-18,50){
+            let zmag=HD4mMag25(findinventory("HD4mMag25"));
+            if(!zmag){setweaponstate("reloadend");return;}
+            invoker.weaponstatus[JUNCS_MAG]=zmag.TakeMag(true)+100;
+            A_MuzzleClimb(
+                -frandom(0.4,0.6),frandom(2.,3.)
+                -frandom(0.2,0.3),frandom(1.,1.6),
+                wepdot:false
+            );
+            A_StartSound("weapons/rifleclick2",CHAN_WEAPON,CHANF_OVERLAP);
+            A_StartSound("weapons/smack",CHAN_WEAPON,CHANF_OVERLAP);
+
+            string realmessage=StringTable.Localize("$426MAGMSG");
+            realmessage=realmessage.left(random(13,20));
+            realmessage.appendformat(StringTable.Localize("$ZMRELERROR")..random(0,9999)..StringTable.Localize("$ZMNOCARRIER"));
+            A_WeaponMessage(realmessage,70);
+        }
+        JNCO A 4 offset(-17,49);
+        goto chamber_manual;
+
+    reloadend:
+        JNCO B 2 offset(-11,39);
+        JNCO A 1 offset(-8,37) A_MuzzleClimb(frandom(0.2,-2.4),frandom(0.2,-1.4),wepdot:false);
+        JNCO A 0 A_CheckCookoff();
+        JNCO A 1 offset(-3,34);
+        goto chamber_manual;
+
+    chamber_manual:
+        JNCO A 0 A_JumpIf(invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBER,"nope");
+        JNCO A 3 offset(-1,36)A_WeaponBusy();
+        JNCO B 4 offset(-3,42){
+            if(!invoker.weaponstatus[JUNCS_MAG]%100)invoker.weaponstatus[JUNCS_MAG]=0;
+            if(
+                !(invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBER)
+                && !(invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBER)
+                && invoker.weaponstatus[JUNCS_MAG]%100>0
+            ){
+                A_StartSound("weapons/rifleclick",CHAN_WEAPON);
+                if(invoker.weaponstatus[JUNCS_MAG]==26)invoker.weaponstatus[JUNCS_MAG]=24;
+                else invoker.weaponstatus[JUNCS_MAG]--;
+                invoker.weaponstatus[JUNCS_FLAGS]|=JUNCF_CHAMBER;
+                brokenround();
+            }else setweaponstate("nope");
+        }
+        JNCO A 2 offset(-1,36);
+        JNCO A 0 offset(0,34);
+        goto nope;
+
+
+    unloadchamber:
+        JNCO A 1 offset(-3,34);
+        JNCO A 1 offset(-9,39);
+        JNCO B 3 offset(-19,44) A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
+        JNCO A 2 offset(-16,42){
+            A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
+            if(
+                invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBER
+                &&!(invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN)
+            ){
+                A_SpawnItemEx("ZM66DroppedRound",0,0,20,
+                    random(4,7),random(-2,2),random(-2,1),0,
+                    SXF_NOCHECKPOSITION
+                );
+                invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_CHAMBER;
+                A_StartSound("weapons/rifleclick2",CHAN_WEAPON,CHANF_OVERLAP);
+            }else if(!random(0,4)){
+                invoker.weaponstatus[0]&=~JUNCF_CHAMBERBROKEN;
+                invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_CHAMBER;
+                A_StartSound("weapons/rifleclick",CHAN_WEAPON,CHANF_OVERLAP);
+                for(int i=0;i<5;i++)A_SpawnItemEx("FourMilChunk",0,0,20,
+                    random(4,7),random(-2,2),random(-2,1),0,SXF_NOCHECKPOSITION
+                );
+                if(!random(0,5))A_SpawnItemEx("HDSmokeChunk",12,0,gunheight()-10,4,frandom(-2,2),frandom(2,4));
+            }else if(invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN){
+                A_StartSound("weapons/smack",CHAN_WEAPON,CHANF_OVERLAP);
+            }
+        }goto reloadend;
+
+    spawn:
+        RIFL DCBA 0;
+        RIGL DCBA 0;
+        RIFS DCBA 0;
+        RIGS DA 0;
+        ---- A 0{
+            //don't jam just because
+            if(
+                !(invoker.weaponstatus[0]&JUNCF_CHAMBER)
+                &&!(invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN)
+                &&invoker.weaponstatus[JUNCS_MAG]>0
+                &&invoker.weaponstatus[JUNCS_MAG]<26
+            ){
+                invoker.weaponstatus[JUNCS_MAG]--;
+                invoker.weaponstatus[0]|=JUNCF_CHAMBER;
+                brokenround();
+            }
+        }
+    spawn2:
+        ---- A -1{
+            //set sprite
+            if(invoker.weaponstatus[0]&JUNCF_NOFIRESELECT)
+                sprite=getspriteindex("RIGSA0");
+            else sprite=getspriteindex("RIGLA0");
+
+            //set to no-mag frame
+            if(invoker.weaponstatus[JUNCS_MAG]<0){
+                frame=3;
+            }
+
+            if(
+                invoker.weaponstatus[0]&JUNCF_CHAMBER
+                &&!(invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN)
+                &&invoker.weaponstatus[JUNCS_HEAT]>HDCONST_ZM66COOKOFF
+            )setstatelabel("spawnshoot");
+        }
+    spawnshoot:
+        #### C 1 bright light("SHOT"){
+            sprite=getspriteindex("RIGLA0");
+
+            //shoot the bullet
+            //copy any changes to flash as well!
+            double brnd=invoker.weaponstatus[JUNCS_HEAT]*0.01;
+            let bbb=HDBulletActor.FireBullet(self,"HDB_426",
+                spread:brnd>1.2?invoker.weaponstatus[JUNCS_HEAT]*0.1:0
+            );
+
+            //if overlapping owner, treat owner as shooter
+            let targ=invoker.target;
+            if(
+                targ
+                &&abs(targ.pos.x-invoker.pos.x)<=targ.radius
+                &&abs(targ.pos.y-invoker.pos.y)<=targ.radius
+            ){
+                bbb.target=targ;
+            }
+            A_ChangeVelocity(
+                frandom(-0.4,0.1)*cos(pitch),
+                frandom(-0.1,0.08),
+                sin(pitch)+frandom(-1.,1.),CVF_RELATIVE
+            );
+            A_StartSound("weapons/rifle",CHAN_VOICE);
+            invoker.weaponstatus[JUNCS_HEAT]+=random(3,5);
+            angle+=frandom(2,-7);
+            pitch+=frandom(-4,4);
+        }
+        #### B 0{
+            invoker.weaponstatus[0]&=~(JUNCF_CHAMBER|JUNCF_CHAMBERBROKEN);
+            if(invoker.weaponstatus[JUNCS_MAG]%100>0){
+                invoker.weaponstatus[JUNCS_MAG]--;
+                invoker.weaponstatus[0]|=JUNCF_CHAMBER;
+                brokenround();
+            }
+        }goto spawn2;
+    }
+
+    override inventory CreateTossable(int amt){
+        let owner=self.owner;
+        let zzz=JuncoPistol(super.createtossable());
+        if(!zzz)return null;
+        zzz.target=owner;
+        return zzz;
+    }
+
+    override void InitializeWepStats(bool idfa){
+        weaponstatus[JUNCS_MAG]=26;
+        if(!idfa && !owner){
+            weaponstatus[JUNCS_AUTO]=0;
+            weaponstatus[JUNCS_HEAT]=0;
+        }
+        if(idfa)weaponstatus[0]&=~JUNCF_CHAMBERBROKEN;
+    }
+    override void loadoutconfigure(string input){
+        int firemode=getloadoutvar(input,"firemode",1);
+        if(firemode>=0){
+            weaponstatus[0]&=~JUNCF_NOFIRESELECT;
+            weaponstatus[JUNCS_AUTO]=clamp(firemode,0,1);
+        }
+        if(
+            !(weaponstatus[0]&JUNCF_CHAMBER)
+            &&weaponstatus[JUNCS_MAG]>0
+        ){
+            weaponstatus[0]|=JUNCF_CHAMBER;
+            if(weaponstatus[JUNCS_MAG]==26)weaponstatus[JUNCS_MAG]=24;
+            else weaponstatus[JUNCS_MAG]--;
+        }
+    }
+}
+enum juncostatus{
+    JUNCF_CHAMBER=1,
+    JUNCF_CHAMBERBROKEN=2,
+    JUNCF_DIRTYMAG=4,
+    JUNCF_NOFIRESELECT=8,
+    JUNCF_UNLOADONLY=16,
+    JUNCF_STILLPRESSINGRELOAD=32,
+    JUNCF_LOADINGDIRTY=64,
+
+    JUNCS_FLAGS=0,
+    JUNCS_MAG=1, //-1 is empty
+    JUNCS_AUTO=2, //2 is burst, 2-5 counts ratchet
+    JUNCS_HEAT=3,
+    JUNCS_BORESTRETCHED=4,
+};
+
+class HD4mMag25:HDMagAmmo{
+    default{
+        //$Category "Ammo/Hideous Destructor/"
+        //$Title "4.26mm UAC Standard Mag"
+        //$Sprite "CLIPB0"
+
+        hdmagammo.maxperunit 26;  //NOTE: *only* the guns do the "+100 for dirty mag" thing
+        hdmagammo.roundtype "FourMilAmmo";
+        hdmagammo.roundbulk ENC_426_LOADED;
+        hdmagammo.magbulk ENC_426MAG_EMPTY;
+        hdmagammo.extracttime 8;
+
+        tag "$TAG_4MMAG";
+        hdpickup.refid HDLD_4M25;
+        inventory.pickupmessage "$PICKUP_4MMAG";
+    }
+    override void postbeginplay(){
+        super.postbeginplay();
+        sealtimer=0;
+        breakchance=0;
+    }
+    int breakchance;
+    int sealtimer;
+    override void doeffect(){
+        if(sealtimer>0)sealtimer--;
+        if(breakchance>0)breakchance--;
+        super.doeffect();
+    }
+    override string pickupmessage(){
+        string pms=super.pickupmessage();
+        if(mags[0]<26)pms.appendformat(" %s",StringTable.Localize("$426MAGMSG"));
+        return pms;
+    }
+    override string,string,name,double getmagsprite(int thismagamt){
+        string magsprite;
+        if(thismagamt>=26)magsprite="ZMAGA0";
+        else if(thismagamt>0)magsprite="ZMAGB0";
+        else magsprite="ZMAGC0";
+        return magsprite,"RBRSBRN","FourMilAmmo",2.;
+    }
+    override int GetMagHudCount(int input){
+        if(input==26)return 25;
+        return input;
+    }
+    bool DirtyMagsOnly(){
+        if(mags.size()!=amount)return false;
+        for(int i=0;i<amount;i++){
+            if(mags[i]>=26)return false;
+        }
+        return true;
+    }
+    override bool Extract(){
+        SyncAmount();
+        int mindex=mags.size()-1;
+        if(
+            mags.size()<1
+            ||mags[mindex]<1
+            ||owner.A_JumpIfInventory(roundtype,0,"null")
+        )return false;
+        if(mags[mindex]==26){
+            if(sealtimer<1){
+                owner.A_Log(string.format(StringTable.Localize("$426MAGREALLY"),StringTable.Localize("$426MAGMSG")),true);
+                sealtimer=10;
+                extracttime=9;
+                return false;
+            }else{
+                mags[mindex]=25;
+                extracttime=12;
+                owner.A_StartSound("magmanager/426open",CHAN_WEAPON,CHANF_OVERLAP);
+                return false;
+            }
+        }else extracttime=default.extracttime;
+        int totake=min(random(1,24),mags[mindex]);
+        if(totake<HDPickup.MaxGive(owner,roundtype,roundbulk))HDF.Give(owner,roundtype,totake);
+        else HDPickup.DropItem(owner,roundtype,totake);
+        owner.A_StartSound("magmanager/extract",CHAN_WEAPON);
+        owner.A_StartSound("magmanager/extract426",CHAN_WEAPON,CHANF_OVERLAP,0.4);
+        mags[mindex]-=totake;
+        return true;
+    }
+    override bool Insert(){
+        SyncAmount();
+        if(
+            mags.size()<1
+            ||mags[mags.size()-1]>=25
+            ||!owner.countinv(roundtype)
+        )return false;
+        owner.A_TakeInventory(roundtype,1,TIF_NOTAKEINFINITE);
+        owner.A_StartSound("magmanager/insert",8);
+        if(random(0,80)<=breakchance){
+            owner.A_StartSound("magmanager/426shatter",8,CHANF_OVERLAP);
+            owner.A_SpawnItemEx("HDSmokeChunk",12,0,owner.height-12,4,frandom(-2,2),frandom(2,4));
+            owner.damagemobj(self,owner,1,"hot",DMG_NO_ARMOR);
+            breakchance=min(breakchance+25,80);
+            return false;
+        }
+        breakchance=max(breakchance,24);
+        owner.A_StartSound("weapons/pocket",9,volume:frandom(0.1,0.6));
+        mags[mags.size()-1]++;
+        return true;
+    }
+    override void Consolidate(){
+        SyncAmount();
+        if(amount<2)return;
+        int totalrounds=0;
+        int howmanymags=0;
+        for(int i=0;i<amount;i++){
+            int thismag=mags[i];
+            if(
+                !thismag
+                ||thismag>=25
+            )continue;
+            howmanymags++;
+            totalrounds+=mags[i]%25;
+            mags[i]=0; //keep the empties, do NOT call clear()!
+        }
+        if(howmanymags>1)totalrounds=int(totalrounds*frandom(0.9,1.));
+        for(int i=0;i<amount;i++){
+            if(mags[i]>=25)continue;
+            int toinsert=clamp(totalrounds,mags[i],25);
+            mags[i]=toinsert;
+            totalrounds-=toinsert;
+            if(totalrounds<1)break;
+        }
+    }
+    states(actor){
+    spawn:
+        ZMAG AB -1 nodelay{
+            if(!mags.size()){destroy();return;}
+            int mmm=mags[0];
+            if(mmm>26)mags[0]=min(25,mmm%100);
+            if(mmm<26)frame=1;
+        }stop;
+    spawnempty:
+        ZMAG C -1 A_SpawnEmpty();
+        stop;
+    }
+}

@@ -3,10 +3,13 @@ version "4.14"
 #include "zscript/Taronga.zsc"
 //#include "zscript/Currawong.zsc"
 #include "zscript/ShotPistol.zsc"
+#include "zscript/Junco.zsc"
 
 const HDLD_TARONGA = "trn";
 const HDLD_SHTPSTL = "6ps";
 const HDLD_CURRAWONG = "cwn";
+const HDLD_JUNCO = "jnk";
 
 const HDLD_CURRAWONGMAG = "c25";
 const HDLD_066MAG10 = "6m1";
+const HDLD_4M25 = "425";
