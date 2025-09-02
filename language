@@ -7,7 +7,7 @@ MENU_ADVANCEDHELPTEXT = "Advanced Help Text: ";
 WEPHELP_INFO = "\n\cuExtra Info\n\c-";
 
 // Taronga 6mm SAW
-TAG_TARONGA = "P.M.I 'Taronga' 6mm SAW";
+TAG_TARONGA = "P.M.I. 'Taronga' 6mm SAW";
 
 PICKUP_TARONGA_PREFIX = "You got a ";
 PICKUP_TARONGA_GL = " with a 20mm Grenade Launcher";
@@ -25,3 +25,11 @@ TARONGA_HELPTEXT_7 = " - Weapon Type: Heavy Weapon";
 MERCH_FLAVOR_TARONGA = "Hot, jammy and ready for tons of penetrative fun! Till you run out of ammo, that is.";
 MERCH_TAG_TARONGA = "P.M.I. 'Taronga' 6mm SAW";
 MERCH_CAT_MORTISMUNITIONS = "Mortis Munitions";
+
+// Junco 4mm Self-Defense Weapon
+TAG_JUNCO = "P.M.I. \'Junco\' 4.26mm Pistol";
+TAG_4M25MAG = "4.26mm UAC Non-Standard Pistol Magazine";
+
+PICKUP_JUNCO = "You got the \'Junco\'! Don't burn yourself now!";
+PICKUP_4MMAG="Picked up a 4.26mm UAC Pistol magazine.";
+OB_JUNCO = "%o was shown that even little birds can pack a punch.";
