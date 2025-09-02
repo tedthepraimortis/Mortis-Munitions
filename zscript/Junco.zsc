@@ -384,6 +384,7 @@ class JuncoPistol:HDWeapon{
         }
         JNCO B 4 offset(-12,40){
             A_MuzzleClimb(-0.3,-0.3,wepdot:false);
+            drainheat(JUNCS_HEAT,15);
             A_StartSound("weapons/rifleunload",CHAN_WEAPON);
         }
         JNCO B 20 offset(-14,44){
