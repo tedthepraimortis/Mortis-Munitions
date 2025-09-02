@@ -9,6 +9,7 @@ const HDLD_TARONGA = "trn";
 const HDLD_SHTPSTL = "6ps";
 const HDLD_CURRAWONG = "cwn";
 const HDLD_JUNCO = "jnk";
+const HDLD_SEALANT = "sel";
 
 const HDLD_CURRAWONGMAG = "c25";
 const HDLD_066MAG10 = "6m1";

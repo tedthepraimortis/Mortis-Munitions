@@ -29,7 +29,11 @@ MERCH_CAT_MORTISMUNITIONS = "Mortis Munitions";
 // Junco 4mm Self-Defense Weapon
 TAG_JUNCO = "P.M.I. \'Junco\' 4.26mm Pistol";
 TAG_4M25MAG = "4.26mm UAC Non-Standard Pistol Magazine";
+TAG_4MSEALANT = "4.26mm Aftermarket Mag Sealant";
 
 PICKUP_JUNCO = "You got the \'Junco\'! Don't burn yourself now!";
 PICKUP_4MMAG="Picked up a 4.26mm UAC Pistol magazine.";
+PICKUP_4MSEALANT="Picked up some aftermarket 4.26mm Mag Sealant. Don't let management know!";
 OB_JUNCO = "%o was shown that even little birds can pack a punch.";
+
+MM_DROP_EXCESS_SEALANT = "\cuDrop excess sealant\n with the \cqpickup manager\cu.";

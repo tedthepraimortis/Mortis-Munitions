@@ -689,10 +689,12 @@ class HD4mMag25:HDMagAmmo{
     }
     int breakchance;
     int sealtimer;
+    bool reseal;
     override void doeffect(){
         if(sealtimer>0)sealtimer--;
         if(breakchance>0)breakchance--;
         super.doeffect();
+        reseal = owner && owner.player && owner.player.cmd.buttons&BT_USE;
     }
     override string pickupmessage(){
         string pms=super.pickupmessage();
@@ -717,6 +719,37 @@ class HD4mMag25:HDMagAmmo{
         }
         return true;
     }
+    override void DrawRoundCount(HDStatusBar sb,HDPlayerPawn hpl,name roundsprite,double scl,int offx,int offy){
+		bool helptext=cvar.getcvar("hd_helptext",hpl.player).getbool();
+		offx+=40;
+		scl=1.6;
+		sb.drawstring(
+			sb.pSmallFont,sb.FormatNumber(hpl.countinv(roundtype)),
+			(offx+2,offy),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_LEFT,
+			font.CR_BROWN
+		);
+		sb.drawimage(roundsprite,(offx,offy),
+			sb.DI_SCREEN_CENTER|sb.DI_ITEM_RIGHT_TOP,
+			scale:(scl,scl)
+		);
+		
+		sb.drawstring(
+			sb.pSmallFont,sb.FormatNumber(hpl.countinv("MM_4mmSealant")),
+			(offx+2,offy+9),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_LEFT,
+			font.CR_BROWN
+		);
+		sb.drawimage("SEALA0",(offx+0,offy+10),
+			sb.DI_SCREEN_CENTER|sb.DI_ITEM_RIGHT_TOP,
+			scale:(1.2,1.2)
+		);
+		
+		sb.DrawString(
+			sb.psmallfont,string.format(Stringtable.Localize("$MM_DROP_EXCESS_SEALANT")),
+			(offx-32,offy+20),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_LEFT,
+			wrapwidth:smallfont.StringWidth("m")*80
+		);
+		
+	}
     override bool Extract(){
         SyncAmount();
         int mindex=mags.size()-1;
@@ -738,7 +771,7 @@ class HD4mMag25:HDMagAmmo{
                 return false;
             }
         }else extracttime=default.extracttime;
-        int totake=min(random(1,24),mags[mindex]);
+        int totake=min(random(1,9),mags[mindex]);
         if(totake<HDPickup.MaxGive(owner,roundtype,roundbulk))HDF.Give(owner,roundtype,totake);
         else HDPickup.DropItem(owner,roundtype,totake);
         owner.A_StartSound("magmanager/extract",CHAN_WEAPON);
@@ -748,9 +781,15 @@ class HD4mMag25:HDMagAmmo{
     }
     override bool Insert(){
         SyncAmount();
+        if(reseal && mags[mags.size()-1]==25 && owner.countinv("MM_4mmSealant"))
+        {
+            mags[mags.size()-1]++;
+            owner.A_StartSound("magmanager/insert",16);
+            owner.A_TakeInventory("MM_4mmSealant",1,TIF_NOTAKEINFINITE);
+        }
         if(
             mags.size()<1
-            ||mags[mags.size()-1]>=25
+            ||mags[mags.size()-1]>25
             ||!owner.countinv(roundtype)
         )return false;
         owner.A_TakeInventory(roundtype,1,TIF_NOTAKEINFINITE);
@@ -802,5 +841,26 @@ class HD4mMag25:HDMagAmmo{
     spawnempty:
         ZMAG C -1 A_SpawnEmpty();
         stop;
+    }
+}
+
+class MM_4mmSealant : HDAmmo
+{
+    Default
+    {
+        Tag "$TAG_4MSEALANT";
+        Inventory.Icon "SEALA0";
+        Inventory.PickupMessage "$PICKUP_4MSEALANT";
+        HDPickup.Bulk 0.425;
+        HDPickup.refid HDLD_SEALANT;
+        +FORCEXYBILLBOARD
+		+HDPICKUP.MULTIPICKUP
+    }
+
+    States
+    {
+        Spawn:
+            SEAL A -1;
+            Stop;
     }
 }
