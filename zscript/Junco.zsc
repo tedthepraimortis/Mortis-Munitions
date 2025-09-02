@@ -49,10 +49,16 @@ class JuncoPistol:HDWeapon{
         )weaponstatus[0]|=JUNCF_CHAMBERBROKEN;
         if(owner&&weaponstatus[JUNCS_HEAT]>HDCONST_ZM66COOKOFF)owner.dropinventory(self);
     }
+    override string pickupmessage(){
+        if(weaponstatus[0]&JUNCF_NOFIRESELECT)return Stringtable.Localize("$PICKUP_SEMIJUNCO");
+        return super.pickupmessage();
+    }
     override string,double getpickupsprite(bool usespare){
         string spr;
         int wep0=GetSpareWeaponValue(0,usespare);
-        spr="RIGL";
+        if(wep0&JUNCF_NOFIRESELECT)
+            spr="RIGS";
+        else spr="RIGL";
         //set to no-mag frame
         if(GetSpareWeaponValue(JUNCS_MAG,usespare)<0)spr=spr.."D";
         else spr=spr.."A";
@@ -75,6 +81,7 @@ class JuncoPistol:HDWeapon{
             sb.drawnum(hpl.countinv("HD4mMag25"),-43,-8,sb.DI_SCREEN_CENTER_BOTTOM);
         }
 
+        if(!(hdw.weaponstatus[0]&JUNCF_NOFIRESELECT))
         sb.drawwepcounter(hdw.weaponstatus[JUNCS_AUTO],
             -22,-10,"STFULAUT","STBURAUT"
         );
@@ -232,7 +239,8 @@ class JuncoPistol:HDWeapon{
             A_AlertMonsters(HDCONST_ONEMETRE * (9 + heat));
 
             invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_CHAMBER;
-            invoker.weaponstatus[JUNCS_HEAT]+=random(5,9);
+            if(!JUNCF_NOFIRESELECT)invoker.weaponstatus[JUNCS_HEAT]+=random(5,9);
+            else invoker.WeapoNStatus[JUNCS_HEAT]+=random(2,4);
         }
         goto lightdone;
 
@@ -241,6 +249,7 @@ class JuncoPistol:HDWeapon{
         JNCO A 3;
         goto shootgun;
     hold:
+        JNCO A 0 A_JumpIf(invoker.weaponstatus[0]&JUNCF_NOFIRESELECT,"nope");
         JNCO A 0 A_JumpIf(invoker.weaponstatus[JUNCS_AUTO]>3,"nope");
         goto shootgun;
     althold:
@@ -546,7 +555,9 @@ class JuncoPistol:HDWeapon{
     spawn2:
         ---- A -1{
             //set sprite
-            sprite=getspriteindex("RIGLA0");
+            if(invoker.weaponstatus[0]&JUNCF_NOFIRESELECT)
+                sprite=getspriteindex("RIGSA0");
+            else sprite=getspriteindex("RIGLA0");
 
             //set to no-mag frame
             if(invoker.weaponstatus[JUNCS_MAG]<0){
@@ -566,7 +577,7 @@ class JuncoPistol:HDWeapon{
             //shoot the bullet
             //copy any changes to flash as well!
             double brnd=max(invoker.weaponstatus[JUNCS_HEAT],invoker.weaponstatus[JUNCS_BORESTRETCHED])*0.01;
-            HDBulletActor.FireBullet(self,"HDB_426",spread:brnd>1.2?brnd:0,speedfactor: 0.666);
+            let bbb=HDBulletActor.FireBullet(self,"HDB_426",spread:brnd>1.2?brnd:0,speedfactor: 0.666);
 
             //if overlapping owner, treat owner as shooter
             let targ=invoker.target;
@@ -614,10 +625,18 @@ class JuncoPistol:HDWeapon{
         if(idfa)weaponstatus[0]&=~JUNCF_CHAMBERBROKEN;
     }
     override void loadoutconfigure(string input){
-        int firemode=getloadoutvar(input,"firemode",1);
-        if(firemode>=0){
-            weaponstatus[JUNCS_AUTO]=clamp(firemode,0,1);
-        }
+        int semi=getloadoutvar(input,"semi",1);
+        int suppressor=getloadoutvar(input, "suppressor", 1);
+		if(semi>0 || suppressor>0){
+			weaponstatus[JUNCS_AUTO]=-1;
+			weaponstatus[0]|=JUNCF_NOFIRESELECT;
+		}else{
+			int firemode=getloadoutvar(input,"firemode",1);
+			if(firemode>=0){
+				weaponstatus[0]&=~JUNCF_NOFIRESELECT;
+				weaponstatus[JUNCS_AUTO]=clamp(firemode,0,1);
+			}
+		}
         if(
             !(weaponstatus[0]&JUNCF_CHAMBER)
             &&weaponstatus[JUNCS_MAG]>0
@@ -625,6 +644,9 @@ class JuncoPistol:HDWeapon{
             weaponstatus[0]|=JUNCF_CHAMBER;
             if(weaponstatus[JUNCS_MAG]==26)weaponstatus[JUNCS_MAG]=24;
             else weaponstatus[JUNCS_MAG]--;
+        }
+        if(suppressor>0){
+            weaponstatus[JUNCS_SUPPRESSOR]=1;
         }
     }
 }
@@ -635,12 +657,14 @@ enum juncostatus{
     JUNCF_UNLOADONLY=8,
     JUNCF_STILLPRESSINGRELOAD=16,
     JUNCF_LOADINGDIRTY=32,
+    JUNCF_NOFIRESELECT=64,
 
     JUNCS_FLAGS=0,
     JUNCS_MAG=1, //-1 is empty
     JUNCS_AUTO=2, //2 is burst, 2-5 counts ratchet
     JUNCS_HEAT=3,
     JUNCS_BORESTRETCHED=4,
+    JUNCS_SUPPRESSOR=5,
 };
 
 class HD4mMag25:HDMagAmmo{
