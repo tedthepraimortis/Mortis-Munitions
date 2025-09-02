@@ -239,14 +239,13 @@ class JuncoPistol:HDWeapon{
             A_AlertMonsters(HDCONST_ONEMETRE * (9 + heat));
 
             invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_CHAMBER;
-            if(!JUNCF_NOFIRESELECT)invoker.weaponstatus[JUNCS_HEAT]+=random(5,9);
-            else invoker.WeapoNStatus[JUNCS_HEAT]+=random(2,4);
+            invoker.weaponstatus[JUNCS_HEAT]+=random(5,9);
         }
         goto lightdone;
 
 
     fire:
-        JNCO A 3;
+        JNCO A 3 {if(invoker.weaponstatus[0]&JUNCF_NOFIRESELECT)A_SetTics(1);}
         goto shootgun;
     hold:
         JNCO A 0 A_JumpIf(invoker.weaponstatus[0]&JUNCF_NOFIRESELECT,"nope");
