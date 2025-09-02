@@ -11,7 +11,8 @@ class JuncoPistol:HDWeapon{
         inventory.pickupsound "misc/w_pkup";
         inventory.pickupmessage "$PICKUP_JUNCO";
         scale 0.7;
-        weapon.bobrangex 0.1;
+        hdweapon.barrelsize 18,0.4,0.7;
+        weapon.bobrangex 0.3;
         weapon.bobrangey 0.6;
         weapon.bobspeed 1.95;
         obituary "$OB_JUNCO";
@@ -25,23 +26,15 @@ class JuncoPistol:HDWeapon{
     }
     override void tick(){
         super.tick();
-        drainheat(JUNCS_HEAT,3);
+        drainheat(JUNCS_HEAT,WeaponStatus[JUNCS_MAG]==0?25:3);
 
-        if(owner && WeaponStatus[JUNCS_HEAT] > HDCONST_ZM66COOKOFF && !(Level.time % TICRATE))
+        if(owner && WeaponStatus[JUNCS_HEAT] > HDCONST_ZM66COOKOFF * 2 && !(Level.time % TICRATE))
         {
-            owner.damagemobj(owner, owner, 5, "electrical");
+            owner.damagemobj(owner, owner, 3, "electrical");
         }
     }
     override bool AddSpareWeapon(actor newowner){return AddSpareWeaponRegular(newowner);}
     override hdweapon GetSpareWeapon(actor newowner,bool reverse,bool doselect){return GetSpareWeaponRegular(newowner,reverse,doselect);}
-    override void postbeginplay(){
-        super.postbeginplay();
-        barrellength=18;
-        barrelwidth=0.4;
-        barreldepth=0.7;
-        bobrangex*=1.05;
-        bobrangey*=1.2;
-    }
     override double gunmass(){
         return 5.3+weaponstatus[JUNCS_MAG]*0.01;
     }
@@ -384,7 +377,7 @@ class JuncoPistol:HDWeapon{
         }
         JNCO B 4 offset(-12,40){
             A_MuzzleClimb(-0.3,-0.3,wepdot:false);
-            drainheat(JUNCS_HEAT,15);
+            invoker.drainheat(JUNCS_HEAT,15);
             A_StartSound("weapons/rifleunload",CHAN_WEAPON);
         }
         JNCO B 20 offset(-14,44){
@@ -572,10 +565,8 @@ class JuncoPistol:HDWeapon{
 
             //shoot the bullet
             //copy any changes to flash as well!
-            double brnd=invoker.weaponstatus[JUNCS_HEAT]*0.01;
-            let bbb=HDBulletActor.FireBullet(self,"HDB_426",
-                spread:brnd>1.2?invoker.weaponstatus[JUNCS_HEAT]*0.1:0
-            );
+            double brnd=max(invoker.weaponstatus[JUNCS_HEAT],invoker.weaponstatus[JUNCS_BORESTRETCHED])*0.01;
+            HDBulletActor.FireBullet(self,"HDB_426",spread:brnd>1.2?brnd:0,speedfactor: 0.666);
 
             //if overlapping owner, treat owner as shooter
             let targ=invoker.target;
