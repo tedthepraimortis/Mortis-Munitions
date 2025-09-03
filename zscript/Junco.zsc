@@ -26,11 +26,11 @@ class JuncoPistol:HDWeapon{
     }
     override void tick(){
         super.tick();
-        drainheat(JUNCS_HEAT,WeaponStatus[JUNCS_MAG]==0?25:3);
+        drainheat(JUNCS_HEAT,5);
 
         if(owner && WeaponStatus[JUNCS_HEAT] > HDCONST_ZM66COOKOFF * 2 && !(Level.time % TICRATE))
         {
-            owner.damagemobj(owner, owner, 3, "electrical");
+            owner.damagemobj(owner, owner, 2, "electrical");
         }
     }
     override bool AddSpareWeapon(actor newowner){return AddSpareWeaponRegular(newowner);}
