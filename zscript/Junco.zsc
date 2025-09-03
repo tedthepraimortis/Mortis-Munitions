@@ -239,7 +239,7 @@ class JuncoPistol:HDWeapon{
             A_AlertMonsters(HDCONST_ONEMETRE * (9 + heat));
 
             invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_CHAMBER;
-            invoker.weaponstatus[JUNCS_HEAT]+=random(5,9);
+            invoker.weaponstatus[JUNCS_HEAT]+=random(2,5);
         }
         goto lightdone;
 
@@ -719,8 +719,7 @@ class HD4mMag25:HDMagAmmo{
         }
         return true;
     }
-    override void DrawRoundCount(HDStatusBar sb,HDPlayerPawn hpl,name roundsprite,double scl,int offx,int offy){
-		bool helptext=cvar.getcvar("hd_helptext",hpl.player).getbool();
+    override void DrawRoundCount(HDStatusBar sb,HDPlayerPawn hpl,name roundsprite,double scl,int offx,int offy,MagManager magman){
 		offx+=40;
 		scl=1.6;
 		sb.drawstring(
@@ -728,27 +727,51 @@ class HD4mMag25:HDMagAmmo{
 			(offx+2,offy),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_LEFT,
 			font.CR_BROWN
 		);
+
+
+		if(!!magman){
+			int rounddir=magman.weaponstatus[MMSS_ROUNDDIR];
+			if(rounddir!=0){
+				int broffx=offx;
+				int broffy=offy;
+				if(rounddir<0)broffx+=rounddir;
+				else broffx=rounddir+offx-40;
+				if(bseesdaggers){
+					broffy+=20;
+					if(
+						rounddir<-20
+						||(
+							rounddir>0
+							&&rounddir<20
+						)
+					){
+						broffy+=((broffx-offx)>>1);
+					}
+				}
+				broffy+=abs(abs(rounddir)-20)-20;
+				sb.drawimage(roundsprite,(broffx,broffy),
+					sb.DI_SCREEN_CENTER|sb.DI_ITEM_RIGHT_TOP,
+					scale:(scl,scl)
+				);
+			}
+		}
+
 		sb.drawimage(roundsprite,(offx,offy),
 			sb.DI_SCREEN_CENTER|sb.DI_ITEM_RIGHT_TOP,
 			scale:(scl,scl)
 		);
-		
-		sb.drawstring(
-			sb.pSmallFont,sb.FormatNumber(hpl.countinv("MM_4mmSealant")),
-			(offx+2,offy+9),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_LEFT,
-			font.CR_BROWN
-		);
-		sb.drawimage("SEALA0",(offx+0,offy+10),
-			sb.DI_SCREEN_CENTER|sb.DI_ITEM_RIGHT_TOP,
-			scale:(1.2,1.2)
-		);
-		
-		sb.DrawString(
-			sb.psmallfont,string.format(Stringtable.Localize("$MM_DROP_EXCESS_SEALANT")),
-			(offx-32,offy+20),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_LEFT,
-			wrapwidth:smallfont.StringWidth("m")*80
-		);
-		
+		if(!!hpl.countinv("MM_4mmSealant")){
+			offy+=14;
+			sb.drawstring(
+				sb.pSmallFont,sb.FormatNumber(hpl.countinv("MM_4mmSealant")).." \cu[Use] Reseal Full Mag",
+				(offx+2,offy),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_LEFT,
+				font.CR_BROWN
+			);
+			sb.drawimage("SEALA0",(offx,offy),
+				sb.DI_SCREEN_CENTER|sb.DI_ITEM_RIGHT_TOP,
+				scale:(scl,scl)
+			);
+		}
 	}
     override bool Extract(){
         SyncAmount();
