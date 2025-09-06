@@ -42,7 +42,7 @@ class HDShotPistol:HDHandgun{
 		spread*=shotpower;
 		speedfactor*=shotpower;
 		HDBulletActor.FireBullet(caller,"HDB_wad");
-		let p=HDBulletActor.FireBullet(caller,"HDB_000",spread:spread,speedfactor:speedfactor,amount:6);
+		let p=HDBulletActor.FireBullet(caller,"HDB_000",spread:spread,speedfactor:speedfactor,amount:5);
 		if(!suppressor)distantnoise.make(caller,"world/shotgunfar");
 		caller.A_StartSound(suppressor?"weapons/smg":"weapons/hunter",CHAN_WEAPON,CHANF_OVERLAP);
 		return shotpower;
