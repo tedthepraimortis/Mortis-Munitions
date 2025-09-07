@@ -45,3 +45,11 @@ PICKUP_4MSEALANT="Picked up some aftermarket 4.26mm Mag Sealant. Don't let manag
 OB_JUNCO = "%o was shown that even little birds can pack a punch.";
 
 MM_DROP_EXCESS_SEALANT = "\cuDrop excess sealant\n with the \cqpickup manager\cu.";
+
+// Currawong 10mm PDW
+TAG_CURRAWONG = "P.M.I. \'Currawong\' 10mm P.D.W.";
+PICKUP_CURRAWONG = "You got a \'Currawong\'! Show 'em what it's made of.";
+OB_CURRAWONG = "%o saw what %k's talons do.";
+
+TAG_10M25MAG = "P.M.I. \'Currawong\' 10mm Magazine";
+PICKUP_10M25MAG = "Picked up a \'Currawong\' magazine.";
