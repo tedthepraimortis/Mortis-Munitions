@@ -67,9 +67,21 @@ class HDShotPistol:HDHandgun{
     override void failedpickupunload(){
         failedpickupunloadmag(SPSTS_MAG,"HD066Clip10");
     }
-    override string,double getpickupsprite(bool usespare){
-        return "SPSTP0",1.;
-    }
+   	override string,double getpickupsprite(){
+		string spr;
+		string type;
+		if(weaponstatus[0]&SPSTS_SUPPRESSOR){
+			type="SPPS";
+		}else{
+			type="SPIP";
+		}
+		if(weaponstatus[SPSTS_CHAMBER]<1){
+			spr="B";
+		}else{
+			spr="A";
+		}
+		return type..spr.."0",1.;
+	}
     override void DrawHUDStuff(HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl){
         if(sb.hudlevel==1){
 			int nextmagloaded=sb.GetNextLoadMag(hdmagammo(hpl.findinventory("HD066Clip10")));
@@ -463,7 +475,7 @@ class HDShotPistol:HDHandgun{
         goto nope;
 
     spawn:
-        SPST P -1 nodelay;
+        SPIP # -1 nodelay;
         stop;
     }
     override void initializewepstats(bool idfa){

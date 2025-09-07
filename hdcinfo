@@ -27,7 +27,7 @@ addBPSpawnPoolFilter => { "name": "HD066Clip10", "allowed": "#shotpistol_allowBa
 addBPSpawnPoolFilter => { "name": "HDShotPistol", "allowed": "#shotpistol_allowBackpacks" }
 addWeaponCrateFilter => { "name": "HDShotPistol", "allowed": "#shotpistol_allowBackpacks" }
 
-newMerchantStoreItem => { "enabled": "#hdm_enable_shotpistol", "type": "weapon", "category": "$MERCH_CAT_MORTISMUNITIONS", "item": "HDShotPistol", "icon": "SPSTP0", "displayName": "$MERCH_TAG_SHOTPISTOL", "basePrice": "#hdm_shotpistol_price", "flavorText": "$MERCH_FLAVOR_SHOTPISTOL" }
+newMerchantStoreItem => { "enabled": "#hdm_enable_shotpistol", "type": "weapon", "category": "$MERCH_CAT_MORTISMUNITIONS", "item": "HDShotPistol", "icon": "SPIPA0", "displayName": "$MERCH_TAG_SHOTPISTOL", "basePrice": "#hdm_shotpistol_price", "flavorText": "$MERCH_FLAVOR_SHOTPISTOL" }
 
 // Junco
 addAmmoUser => { "ammoName": "FourMilAmmo", "name": "JuncoPistol" }
