@@ -475,9 +475,17 @@ class HDShotPistol:HDHandgun{
         goto nope;
 
     spawn:
-        SPIP # -1 nodelay;
-        stop;
-    }
+	SPIP AB -1 nodelay{
+			if(invoker.weaponstatus[SPSTS_CHAMBER]<1){
+			frame=1;
+			}else{
+			frame=0;
+			}
+			if(invoker.weaponstatus[SPSTS_SUPPRESSOR])invoker.sprite=getspriteindex("SPPSA0");
+		}
+		SPPS # -1;
+		stop;
+	}
     override void initializewepstats(bool idfa){
         weaponstatus[SPSTS_MAG]=10;
         weaponstatus[SPSTS_CHAMBER]=2;
