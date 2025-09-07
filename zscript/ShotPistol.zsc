@@ -514,6 +514,21 @@ enum Shotpistolstatus{
     SPSTS_SUPPRESSOR=4,
 };
 
+class HDShotpistolRandom:IdleDummy{
+	states{
+	spawn:
+		TNT1 A 0 nodelay{
+			let zzz=HDShotPistol(spawn("HDShotPistol",pos,ALLOW_REPLACE));
+			if(!zzz)return;
+			HDF.TransferSpecials(self,zzz,HDF.TS_ALL);
+			if(!random(0,4))zzz.weaponstatus[SPSTS_CHOKE]=random(random(0,4),4);
+			else if(!random(0,3))zzz.weaponstatus[0]|=SPSTS_SUPPRESSOR;
+			spawn("HD066Clip10",pos+(7,0,0),ALLOW_REPLACE);
+			spawn("HD066Clip10",pos+(5,0,0),ALLOW_REPLACE);
+		}stop;
+	}
+}
+
 class HD066Clip10:HDMagAmmo{
 	default{
 		//$Category "Ammo/Hideous Destructor/"

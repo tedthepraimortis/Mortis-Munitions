@@ -667,6 +667,21 @@ enum juncostatus{
     JUNCS_SUPPRESSOR=5,
 };
 
+class HDJuncoRandom:IdleDummy{
+	states{
+	spawn:
+		TNT1 A 0 nodelay{
+			let zzz=JuncoPistol(spawn("JuncoPistol",pos,ALLOW_REPLACE));
+			if(!zzz)return;
+			zzz.special=special;
+			for(int i=0;i<5;i++)zzz.args[i]=args[i];
+            if(!random(0,3))zzz.weaponstatus[0]|=JUNCF_NOFIRESELECT;
+			spawn("HD4mMag25",pos+(7,0,0),ALLOW_REPLACE);
+			spawn("HD4mMag25",pos+(5,0,0),ALLOW_REPLACE);
+		}stop;
+	}
+}
+
 class HD4mMag25:HDMagAmmo{
     default{
         //$Category "Ammo/Hideous Destructor/"

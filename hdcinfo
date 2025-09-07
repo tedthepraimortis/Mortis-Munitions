@@ -23,6 +23,8 @@ newMerchantStoreItem => { "enabled": "#hdm_enable_currawong", "type": "weapon", 
 // Featherduster
 addAmmoUser => { "ammoName": "HD069BoreAmmo", "name": "HDShotPistol" }
 
+addSpawnTableSingleEntry => { "tableName": "ClipMagReplaces", "name": "HDSShotpistolRandom", "weight": "#junco_clipmag_spawn_weight", "persists": "#mm_weapon_persistency" }
+
 addBPSpawnPoolFilter => { "name": "HD066Clip10", "allowed": "#shotpistol_allowBackpacks" }
 addBPSpawnPoolFilter => { "name": "HDShotPistol", "allowed": "#shotpistol_allowBackpacks" }
 addWeaponCrateFilter => { "name": "HDShotPistol", "allowed": "#shotpistol_allowBackpacks" }
@@ -31,6 +33,8 @@ newMerchantStoreItem => { "enabled": "#hdm_enable_shotpistol", "type": "weapon",
 
 // Junco
 addAmmoUser => { "ammoName": "FourMilAmmo", "name": "JuncoPistol" }
+
+addSpawnTableSingleEntry => { "tableName": "ClipMagReplaces", "name": "HDJuncoRandom", "weight": "#junco_clipmag_spawn_weight", "persists": "#mm_weapon_persistency" }
 
 addBPSpawnPoolFilter => { "name": "HD4mMag25", "allowed": "#junco_allowBackpacks" }
 addBPSpawnPoolFilter => { "name": "JuncoPistol", "allowed": "#junco_allowBackpacks" }
