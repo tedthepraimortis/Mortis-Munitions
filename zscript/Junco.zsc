@@ -22,7 +22,7 @@ class JuncoPistol:HDWeapon{
 
         hdweapon.ammo1 "HD4mMag25",1;
 
-        hdweapon.loadoutcodes "\n\cu   firemode - 0/1, Automatic/Burst Fire";
+        hdweapon.loadoutcodes "\n\cu   firemode - 0/1, automatic/burst fire \n\cu   semi - 0/1, semi-auto lock";
     }
     override void tick(){
         super.tick();

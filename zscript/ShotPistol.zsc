@@ -20,7 +20,7 @@ class HDShotPistol:HDHandgun{
         hdweapon.ammo1 "HD066Clip10",1;
 
 		hdweapon.loadoutcodes "
-			\cusuppressor - 0/1, Significantly quieter shots at the cost of lower shotpower
+			\cusuppressor - 0/1, significantly quieter shots at the cost of low shotpower
 			\cuchoke - 0-4, 0 skeet, 4 full; incompatible with suppressor";
     }
 	double shotpower;

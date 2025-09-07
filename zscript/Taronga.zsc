@@ -419,7 +419,7 @@ class HDTaronga : WAN_20mmLauncher
         Tag "$TAG_TARONGA";
         HDWeapon.Refid HDLD_TARONGA;
         HDWeapon.Loadoutcodes
-        "\n\cu   gl - 0/1, Grenade Launcher \n\cu   stock - 0-2, Stock/Light/Heavy \n\cu   barrel - 0-2, Stock/Short/Long \n\cu   bolt - 0-2, Stock/Light/Heavy";
+        "\n\cu   gl - 0/1, grenade launcher \n\cu   stock - 0-2, stock/light/heavy \n\cu   barrel - 0-2, stock/short/long \n\cu   bolt - 0-2, stock/light/heavy";
     }
 
     States
