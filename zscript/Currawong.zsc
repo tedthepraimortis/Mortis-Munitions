@@ -17,7 +17,7 @@ class HDCurrawong:HDWeapon{
 		hdweapon.ammo1 "HD10mMag25",1;
 
 		hdweapon.loadoutcodes "
-			\cunogl - 0/1, whether it has a 4-gauge shotgun
+			\cunoshot - 0/1, whether it has a 4-gauge shotgun
 			\cusemi - 0/1, whether it has a fire selector enabled
 			\cufiremode - 0-2, semi/auto/burst
 			\cudot - 0-5";
@@ -760,13 +760,10 @@ class HDCurrawong:HDWeapon{
 		if(idfa)weaponstatus[0]&=~CURWF_CHAMBERBROKEN;
 	}
 	override void loadoutconfigure(string input){
-		int nogl=getloadoutvar(input,"nogl",1);
-		//disable launchers if rocket grenades denylisted
-		string denylist=hd_noloadout;
-		if(denylist.IndexOf(HDLD_BLOOPER)>=0)nogl=1;
-		if(!nogl){
+		int noshot=getloadoutvar(input,"noshot",1);
+		if(!noshot){
 			weaponstatus[0]&=~CUWF_NOSHOTGUN;
-		}else if(nogl>0){
+		}else if(noshot>0){
 			weaponstatus[0]|=CUWF_NOSHOTGUN;
 			weaponstatus[0]&=~CURWF_4GAUGELOADED;
 		}
