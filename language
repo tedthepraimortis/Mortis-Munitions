@@ -51,5 +51,5 @@ TAG_CURRAWONG = "P.M.I. \'Currawong\' 10mm P.D.W.";
 PICKUP_CURRAWONG = "You got a \'Currawong\'! Show 'em what it's made of.";
 OB_CURRAWONG = "%o saw what %k's talons do.";
 
-TAG_10M25MAG = "P.M.I. \'Currawong\' 10mm Magazine";
-PICKUP_10M25MAG = "Picked up a \'Currawong\' magazine.";
+TAG_10M30MAG = "P.M.I. \'Currawong\' 30-Round 10mm Magazine";
+PICKUP_10M30MAG = "Picked up a 30-round \'Currawong\' magazine.";

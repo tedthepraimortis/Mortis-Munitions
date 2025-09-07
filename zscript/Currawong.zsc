@@ -14,7 +14,7 @@ class HDCurrawong:HDWeapon{
 		tag "$TAG_CURRAWONG";
 		inventory.icon "CWRPA0";
 
-		hdweapon.ammo1 "HD10mMag25",1;
+		hdweapon.ammo1 "HD10mMag30",1;
 
 		hdweapon.loadoutcodes "
 			\cunoshot - 0/1, whether it has a 4-gauge shotgun
@@ -82,18 +82,18 @@ class HDCurrawong:HDWeapon{
 	}
 	override void DrawHUDStuff(HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl){
 		if(sb.hudlevel==1){
-			int nextmagloaded=sb.GetNextLoadMag(hdmagammo(hpl.findinventory("HD10mMag25")));
-            if(nextmagloaded>25){
+			int nextmagloaded=sb.GetNextLoadMag(hdmagammo(hpl.findinventory("HD10mMag30")));
+            if(nextmagloaded>30){
                 sb.drawimage("CWNMA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM);
             }else if(nextmagloaded<1){
                 sb.drawimage("CWNMB0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.);
             }else sb.drawbar(
                 "CWNMA0","CWNMGREY",
-                nextmagloaded,25,
+                nextmagloaded,30,
                 (-46,-3),-1,
                 sb.SHADER_VERT,sb.DI_SCREEN_CENTER_BOTTOM
             );
-			sb.drawnum(hpl.countinv("HD10mMag25"),-43,-8,sb.DI_SCREEN_CENTER_BOTTOM);
+			sb.drawnum(hpl.countinv("HD10mMag30"),-43,-8,sb.DI_SCREEN_CENTER_BOTTOM);
 			if(!(hdw.weaponstatus[0]&CUWF_NOSHOTGUN)){
 				sb.drawimage("4GSIA0",(-62,-4),sb.DI_SCREEN_CENTER_BOTTOM,scale:(0.6,0.6));
 				sb.drawnum(hpl.countinv("HD4GBAmmo"),-56,-8,sb.DI_SCREEN_CENTER_BOTTOM);
@@ -105,8 +105,8 @@ class HDCurrawong:HDWeapon{
 			-22,-10,"RBRSA3A7","STFULAUT","STBURAUT"
 		);
 		if(hdw.weaponstatus[0]&CURWF_4GAUGELOADED)sb.drawrect(-20,-14,4,2.6);
-		int lod=clamp(hdw.weaponstatus[CURWS_MAG]%100,0,25);
-		sb.drawwepnum(lod,25);
+		int lod=clamp(hdw.weaponstatus[CURWS_MAG]%100,0,30);
+		sb.drawwepnum(lod,30);
 		if(hdw.weaponstatus[0]&CURWF_CHAMBER){
 			sb.drawrect(-19,-10,3,1);
 			lod++;
@@ -193,16 +193,16 @@ class HDCurrawong:HDWeapon{
 		return blx+(mgg<0?0:(ENC_426MAG_LOADED+mgg*ENC_426_LOADED));
 	}
 	override void failedpickupunload(){
-		failedpickupunloadmag(CURWS_MAG,"HD10mMag25");
+		failedpickupunloadmag(CURWS_MAG,"HD10mMag30");
 	}
 	override void DropOneAmmo(int amt){
 		if(owner){
 			amt=clamp(amt,1,10);
-			if(owner.countinv("HD10mAmmo"))owner.A_DropInventory("HD10mAmmo",amt*25);
+			if(owner.countinv("HD10mAmmo"))owner.A_DropInventory("HD10mAmmo",amt*30);
 			else{
 				double angchange=(weaponstatus[0]&CUWF_NOSHOTGUN)?0:-10;
 				if(angchange)owner.angle-=angchange;
-				owner.A_DropInventory("HD10mMag25",amt);
+				owner.A_DropInventory("HD10mMag30",amt);
 				if(angchange){
 					owner.angle+=angchange*2;
 					owner.A_DropInventory("HD4GBAmmo",amt);
@@ -215,7 +215,7 @@ class HDCurrawong:HDWeapon{
 		owner.A_TakeInventory("HD10mAmmo");
 		if(weaponstatus[0]&CUWF_NOSHOTGUN)hdammotype2=null;
 		else owner.A_SetInventory("HD4GBAmmo",1);
-		ForceOneBasicAmmo("HD10mMag25");
+		ForceOneBasicAmmo("HD10mMag30");
 	}
 	action bool brokenround(){
 		if(!(invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBERBROKEN)){
@@ -265,6 +265,7 @@ class HDCurrawong:HDWeapon{
 		}goto deselect0big;
 	flash:
 		CURW F 1 bright{
+            int heat = min(50, invoker.weaponStatus[CURWS_HEAT]);
 			A_Light1();
 			HDFlashAlpha(-16);
 			A_StartSound("weapons/currawong",CHAN_WEAPON);
@@ -287,7 +288,7 @@ class HDCurrawong:HDWeapon{
 
 			invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_CHAMBER;
 			invoker.weaponstatus[CURWS_HEAT]+=random(3,5);
-			A_AlertMonsters();
+			A_AlertMonsters(HDCONST_ONEMETRE * (22 + heat));
 		}
 		goto lightdone;
 
@@ -347,7 +348,7 @@ class HDCurrawong:HDWeapon{
 				return;
 			}
 			if(invoker.weaponstatus[CURWS_MAG]%100>0){
-				if(invoker.weaponstatus[CURWS_MAG]==26)invoker.weaponstatus[CURWS_MAG]=25;
+				if(invoker.weaponstatus[CURWS_MAG]==31)invoker.weaponstatus[CURWS_MAG]=30;
 				invoker.weaponstatus[CURWS_MAG]--;
 				invoker.weaponstatus[CURWS_FLAGS]|=CURWF_CHAMBER;
 			}else{
@@ -367,7 +368,7 @@ class HDCurrawong:HDWeapon{
 		goto ready;
 
 	user3:
-		CURW A 0 A_MagManager("HD10mMag25");
+		CURW A 0 A_MagManager("HD10mMag30");
 		goto ready;
 
 	user4:
@@ -396,7 +397,7 @@ class HDCurrawong:HDWeapon{
 			invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_UNLOADONLY;
 			if(	//full mag, no jam, not unload-only - why hit reload at all?
 				!(invoker.weaponstatus[0]&CURWF_CHAMBERBROKEN)
-				&&invoker.weaponstatus[CURWS_MAG]%100>=25
+				&&invoker.weaponstatus[CURWS_MAG]%100>=30
 				&&!(invoker.weaponstatus[CURWS_FLAGS]&CURWF_UNLOADONLY)
 			){
 				setweaponstate("nope");
@@ -406,7 +407,7 @@ class HDCurrawong:HDWeapon{
 			){
 				invoker.weaponstatus[CURWS_FLAGS]|=CURWF_UNLOADONLY;
 				setweaponstate("unloadchamber");
-			}else if(!HDMagAmmo.NothingLoaded(self,"HD10mMag25")){
+			}else if(!HDMagAmmo.NothingLoaded(self,"HD10mMag30")){
 				setweaponstate("unloadmag");
 			}
 		}goto nope;
@@ -431,30 +432,30 @@ class HDCurrawong:HDWeapon{
 		}
 		CURW B 20 offset(-14,44){
 			int inmag=invoker.weaponstatus[CURWS_MAG];
-			if(inmag>26)inmag=min(25,inmag%100);
+			if(inmag>31)inmag=min(30,inmag%100);
 			invoker.weaponstatus[CURWS_MAG]=-1;
 			if(
 				!PressingUnload()&&!PressingReload()
-				||A_JumpIfInventory("HD10mMag25",0,"null")
+				||A_JumpIfInventory("HD10mMag30",0,"null")
 			){
-				HDMagAmmo.SpawnMag(self,"HD10mMag25",inmag);
+				HDMagAmmo.SpawnMag(self,"HD10mMag30",inmag);
 				A_SetTics(1);
 			}else{
-				HDMagAmmo.GiveMag(self,"HD10mMag25",inmag);
+				HDMagAmmo.GiveMag(self,"HD10mMag30",inmag);
 				A_StartSound("weapons/pocket",CHAN_WEAPON);
-				if(inmag<26)A_Log(StringTable.Localize("$426MAGMSG"),true);
+				if(inmag<31)A_Log(StringTable.Localize("$426MAGMSG"),true);
 			}
 		}
 	magout:
 		CURW B 0{
 			if(
 				invoker.weaponstatus[CURWS_FLAGS]&CURWF_UNLOADONLY
-				||!countinv("HD10mMag25")
+				||!countinv("HD10mMag30")
 			)setweaponstate("reloadend");
 		} //fallthrough to loadmag
 	loadmag:
 		---- A 12 offset(-15,44){
-			let zmag=HD10mMag25(findinventory("HD10mMag25"));
+			let zmag=HD10mMag30(findinventory("HD10mMag30"));
 			if(!zmag){setweaponstate("reloadend");return;}
 			A_StartSound("weapons/pocket",CHAN_WEAPON);
 			if(zmag.DirtyMagsOnly())invoker.weaponstatus[0]|=CURWF_LOADINGDIRTY;
@@ -467,7 +468,7 @@ class HDCurrawong:HDWeapon{
 	loadmagclean:
 		CURW B 8 offset(-15,45)A_StartSound("weapons/currawongmagin",CHAN_WEAPON);
 		CURW B 1 offset(-14,44){
-			let zmag=HD10mMag25(findinventory("HD10mMag25"));
+			let zmag=HD10mMag30(findinventory("HD10mMag30"));
 			if(!zmag){setweaponstate("reloadend");return;}
 			if(zmag.DirtyMagsOnly()){
 				setweaponstate("loadmagdirty");
@@ -497,7 +498,7 @@ class HDCurrawong:HDWeapon{
 	reallyloadmagdirty:
 		CURW B 1 offset(-14,44)A_StartSound("weapons/currawongmagmove",CHAN_WEAPON);
 		CURW A 8 offset(-18,50){
-			let zmag=HD10mMag25(findinventory("HD10mMag25"));
+			let zmag=HD10mMag30(findinventory("HD10mMag30"));
 			if(!zmag){setweaponstate("reloadend");return;}
 			invoker.weaponstatus[CURWS_MAG]=zmag.TakeMag(true)+100;
 			A_MuzzleClimb(
@@ -533,7 +534,7 @@ class HDCurrawong:HDWeapon{
 				&& invoker.weaponstatus[CURWS_MAG]%100>0
 			){
 				A_StartSound("weapons/currawongchamber",CHAN_WEAPON);
-				if(invoker.weaponstatus[CURWS_MAG]==26)invoker.weaponstatus[CURWS_MAG]=24;
+				if(invoker.weaponstatus[CURWS_MAG]==31)invoker.weaponstatus[CURWS_MAG]=29;
 				else invoker.weaponstatus[CURWS_MAG]--;
 				invoker.weaponstatus[CURWS_FLAGS]|=CURWF_CHAMBER;
 				brokenround();
@@ -554,7 +555,7 @@ class HDCurrawong:HDWeapon{
 				invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBER
 				&&!(invoker.weaponstatus[0]&CURWF_CHAMBERBROKEN)
 			){
-				A_SpawnItemEx("ZM66DroppedRound",0,0,20,
+				A_SpawnItemEx("HDCrushed10mm",0,0,20,
 					random(4,7),random(-2,2),random(-2,1),0,
 					SXF_NOCHECKPOSITION
 				);
@@ -564,7 +565,7 @@ class HDCurrawong:HDWeapon{
 				invoker.weaponstatus[0]&=~CURWF_CHAMBERBROKEN;
 				invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_CHAMBER;
 				A_StartSound("weapons/currawongchamber",CHAN_WEAPON,CHANF_OVERLAP);
-				for(int i=0;i<5;i++)A_SpawnItemEx("FourMilChunk",0,0,20,
+				for(int i=0;i<5;i++)A_SpawnItemEx("HDSpent10mm",0,0,20,
 					random(4,7),random(-2,2),random(-2,1),0,SXF_NOCHECKPOSITION
 				);
 				if(!random(0,5))A_SpawnItemEx("HDSmokeChunk",12,0,gunheight()-10,4,frandom(-2,2),frandom(2,4));
@@ -675,7 +676,7 @@ class HDCurrawong:HDWeapon{
 				!(invoker.weaponstatus[0]&CURWF_CHAMBER)
 				&&!(invoker.weaponstatus[0]&CURWF_CHAMBERBROKEN)
 				&&invoker.weaponstatus[CURWS_MAG]>0
-				&&invoker.weaponstatus[CURWS_MAG]<26
+				&&invoker.weaponstatus[CURWS_MAG]<31
 			){
 				invoker.weaponstatus[CURWS_MAG]--;
 				invoker.weaponstatus[0]|=CURWF_CHAMBER;
@@ -704,7 +705,7 @@ class HDCurrawong:HDWeapon{
 
 	override inventory CreateTossable(int amt){
 		let owner=self.owner;
-		let zzz=zm66assaultrifle(super.createtossable());
+		let zzz=HDCurrawong(super.createtossable());
 		if(!zzz)return null;
 		zzz.target=owner;
 		return zzz;
@@ -712,7 +713,7 @@ class HDCurrawong:HDWeapon{
 
 	override void InitializeWepStats(bool idfa){
 		if(!(weaponstatus[0]&CUWF_NOSHOTGUN))weaponstatus[0]|=CURWF_4GAUGELOADED;
-		weaponstatus[CURWS_MAG]=26;
+		weaponstatus[CURWS_MAG]=31;
 		if(!idfa && !owner){
 			weaponstatus[CURWS_AUTO]=0;
 			weaponstatus[CURWS_HEAT]=0;
@@ -750,7 +751,7 @@ class HDCurrawong:HDWeapon{
 			&&weaponstatus[CURWS_MAG]>0
 		){
 			weaponstatus[0]|=CURWF_CHAMBER;
-			if(weaponstatus[CURWS_MAG]==26)weaponstatus[CURWS_MAG]=24;
+			if(weaponstatus[CURWS_MAG]==31)weaponstatus[CURWS_MAG]=29;
 			else weaponstatus[CURWS_MAG]--;
 		}
 	}
@@ -789,32 +790,32 @@ class HDCurrawongRandom:IdleDummy{
 				if(!random(0,3))zzz.weaponstatus[0]|=CURWF_NOFIRESELECT;
 			}
 			if(zzz.weaponstatus[0]&CUWF_NOSHOTGUN){
-				spawn("HD10mMag25",pos+(7,0,0),ALLOW_REPLACE);
-				spawn("HD10mMag25",pos+(5,0,0),ALLOW_REPLACE);
+				spawn("HD10mMag30",pos+(7,0,0),ALLOW_REPLACE);
+				spawn("HD10mMag30",pos+(5,0,0),ALLOW_REPLACE);
 			}else{
 				spawn("HD4GBAmmo",pos+(10,0,0),ALLOW_REPLACE);
 				spawn("HD4GBAmmo",pos+(8,0,0),ALLOW_REPLACE);
-				spawn("HD10mMag25",pos+(5,0,0),ALLOW_REPLACE);
+				spawn("HD10mMag30",pos+(5,0,0),ALLOW_REPLACE);
 			}
 		}stop;
 	}
 }
 
-class HD10mMag25:HDMagAmmo{
+class HD10mMag30:HDMagAmmo{
     default{
         //$Category "Ammo/Hideous Destructor/"
         //$Title "4.26mm UAC Standard Mag"
         //$Sprite "CLIPB0"
 
-        hdmagammo.maxperunit 26;  //NOTE: *only* the guns do the "+100 for dirty mag" thing
+        hdmagammo.maxperunit 31;  //NOTE: *only* the guns do the "+100 for dirty mag" thing
         hdmagammo.roundtype "HD10mAmmo";
         hdmagammo.roundbulk ENC_10_LOADED;
         hdmagammo.magbulk ENC_9MAG_EMPTY;
         hdmagammo.extracttime 4;
 
-        tag "$TAG_10M25MAG";
+        tag "$TAG_10M30MAG";
         hdpickup.refid HDLD_CURRAWONGMAG;
-        inventory.pickupmessage "$PICKUP_10M25MAG";
+        inventory.pickupmessage "$PICKUP_10M30MAG";
     }
     override void postbeginplay(){
         super.postbeginplay();
@@ -832,24 +833,24 @@ class HD10mMag25:HDMagAmmo{
     }
     override string pickupmessage(){
         string pms=super.pickupmessage();
-        if(mags[0]<26)pms.appendformat(" %s",StringTable.Localize("$426MAGMSG"));
+        if(mags[0]<31)pms.appendformat(" %s",StringTable.Localize("$426MAGMSG"));
         return pms;
     }
     override string,string,name,double getmagsprite(int thismagamt){
         string magsprite;
-        if(thismagamt>=26)magsprite="CWNMA0";
+        if(thismagamt>=31)magsprite="CWNMA0";
         else if(thismagamt>0)magsprite="CWNMB0";
         else magsprite="CWNMC0";
         return magsprite,"PBRSA0","HD10mAmmo",0.6;
     }
     override int GetMagHudCount(int input){
-        if(input==26)return 25;
+        if(input==31)return 30;
         return input;
     }
     bool DirtyMagsOnly(){
         if(mags.size()!=amount)return false;
         for(int i=0;i<amount;i++){
-            if(mags[i]>=26)return false;
+            if(mags[i]>=31)return false;
         }
         return true;
     }
@@ -915,14 +916,14 @@ class HD10mMag25:HDMagAmmo{
             ||mags[mindex]<1
             ||owner.A_JumpIfInventory(roundtype,0,"null")
         )return false;
-        if(mags[mindex]==26){
+        if(mags[mindex]==31){
             if(sealtimer<1){
                 owner.A_Log(string.format(StringTable.Localize("$426MAGREALLY"),StringTable.Localize("$426MAGMSG")),true);
                 sealtimer=10;
                 extracttime=9;
                 return false;
             }else{
-                mags[mindex]=25;
+                mags[mindex]=30;
                 extracttime=12;
                 owner.A_StartSound("magmanager/426open",CHAN_WEAPON,CHANF_OVERLAP);
                 return false;
@@ -938,7 +939,7 @@ class HD10mMag25:HDMagAmmo{
     }
     override bool Insert(){
         SyncAmount();
-        if(reseal && mags[mags.size()-1]==25 && owner.countinv("MM_4mmSealant"))
+        if(reseal && mags[mags.size()-1]==30 && owner.countinv("MM_4mmSealant"))
         {
             mags[mags.size()-1]++;
             owner.A_StartSound("magmanager/insert",16);
@@ -946,7 +947,7 @@ class HD10mMag25:HDMagAmmo{
         }
         if(
             mags.size()<1
-            ||mags[mags.size()-1]>=25
+            ||mags[mags.size()-1]>=30
             ||!owner.countinv(roundtype)
         )return false;
         owner.A_TakeInventory(roundtype,1,TIF_NOTAKEINFINITE);
@@ -964,16 +965,16 @@ class HD10mMag25:HDMagAmmo{
             int thismag=mags[i];
             if(
                 !thismag
-                ||thismag>=25
+                ||thismag>=30
             )continue;
             howmanymags++;
-            totalrounds+=mags[i]%25;
+            totalrounds+=mags[i]%30;
             mags[i]=0; //keep the empties, do NOT call clear()!
         }
         if(howmanymags>1)totalrounds=int(totalrounds*frandom(0.9,1.));
         for(int i=0;i<amount;i++){
-            if(mags[i]>=25)continue;
-            int toinsert=clamp(totalrounds,mags[i],25);
+            if(mags[i]>=30)continue;
+            int toinsert=clamp(totalrounds,mags[i],30);
             mags[i]=toinsert;
             totalrounds-=toinsert;
             if(totalrounds<1)break;
@@ -984,11 +985,13 @@ class HD10mMag25:HDMagAmmo{
         CWNM AB -1 nodelay{
             if(!mags.size()){destroy();return;}
             int mmm=mags[0];
-            if(mmm>26)mags[0]=min(25,mmm%100);
-            if(mmm<26)frame=1;
+            if(mmm>31)mags[0]=min(30,mmm%100);
+            if(mmm<31)frame=1;
         }stop;
     spawnempty:
         CWNM C -1 A_SpawnEmpty();
         stop;
     }
 }
+
+class HDCrushed10mm : HDSpent10mm{}
