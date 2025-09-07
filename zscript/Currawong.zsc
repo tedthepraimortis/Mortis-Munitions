@@ -1,327 +1,337 @@
-// ------------------------------------------------------------
-// SMG
-// ------------------------------------------------------------
-class HDCurrawong:HDWeapon{
-    default{
-        //$Category "Weapons/Hideous Destructor"
-        //$Title "SMG"
-        //$Sprite "CURNA0"
+class HDCurrawong:ZM66ScopeHaver{
+	default{
+		+hdweapon.fitsinbackpack
+		weapon.selectionorder 20;
+		weapon.slotnumber 4;
+		weapon.slotpriority 2;
+		inventory.pickupsound "misc/w_pkup";
+		inventory.pickupmessage "$PICKUP_CURRAWONG";
+		scale 0.7;
+		weapon.bobrangex 0.2;
+		weapon.bobrangey 0.8;
+		obituary "$OB_CURRAWONG";
+		hdweapon.refid HDLD_CURRAWONG;
+		tag "$TAG_CURRAWONG";
+		inventory.icon "CWRPA0";
 
-        +hdweapon.fitsinbackpack
-        obituary "$OB_CURRAWONG";
-        weapon.selectionorder 34;
-        weapon.slotnumber 2;
-        weapon.slotpriority 4;
-        weapon.kickback 30;
-        weapon.bobrangex 0.5;
-        weapon.bobrangey 0.9;
-        weapon.bobspeed 2.5;
-        scale 0.55;
-        inventory.pickupmessage "$PICKUP_CURRAWONG";
-        hdweapon.barrelsize 36,1.5,2;
-        hdweapon.refid HDLD_CURRAWONG;
-        tag "$TAG_CURRAAWONG";
-        inventory.icon "CWRPA0";
+		hdweapon.ammo1 "HD10mMag25",1;
 
-        hdweapon.ammo1 "HD10mMag25",1;
-
-        hdweapon.loadoutcodes "
-            \cufiremode - 0-2, semi/burst/auto
-            \cufireswitch - 0-4, default/semi/auto/full/all";
-    }
-    override bool AddSpareWeapon(actor newowner){return AddSpareWeaponRegular(newowner);}
-    override hdweapon GetSpareWeapon(actor newowner,bool reverse,bool doselect){return GetSpareWeaponRegular(newowner,reverse,doselect);}
-    override double gunmass(){
-        return 5+((weaponstatus[CURS_MAG]<0)?-0.5:(weaponstatus[CURS_MAG]*0.05));
-    }
+		hdweapon.loadoutcodes "
+			\cunogl - 0/1, whether it has a launcher
+			\cusemi - 0/1, whether it has a fire selector enabled
+			\cufiremode - 0-2, semi/auto/burst
+			\cuzoom - 16-70, 10x the resulting FOV in degrees
+			\cudot - 0-5";
+	}
+	override void tick(){
+		super.tick();
+		drainheat(CURWS_HEAT,12);
+	}
+	override bool AddSpareWeapon(actor newowner){return AddSpareWeaponRegular(newowner);}
+	override hdweapon GetSpareWeapon(actor newowner,bool reverse,bool doselect){return GetSpareWeaponRegular(newowner,reverse,doselect);}
+	override void postbeginplay(){
+		super.postbeginplay();
+		barrellength=25; //look at the sprites - GL does not extend beyond muzzle
+		if(weaponstatus[0]&CUWF_NOSHOTGUN){
+			barrelwidth=0.5;
+			barreldepth=1;
+			weaponstatus[0]&=~(CUWF_SHOTMODE|CURWF_4GAUGELOADED);
+		}else{
+			barrelwidth=1;
+			barreldepth=3;
+			bobrangex*=1.05;
+			bobrangey*=1.2;
+		}
+	}
+	override double gunmass(){
+		if(weaponstatus[0]&CUWF_NOSHOTGUN){
+			return 6.2+weaponstatus[CURWS_MAG]*0.02;
+		}else{
+			return 7.7+weaponstatus[CURWS_MAG]*0.01+(weaponstatus[0]&CURWF_4GAUGELOADED?1.:0.);
+		}
+	}
 	override void GunBounce(){
 		super.GunBounce();
-		if(!random(0,5))weaponstatus[0]&=~CURS_CHAMBERBROKEN;
+		if(!random(0,5))weaponstatus[0]&=~CURWF_CHAMBERBROKEN;
 	}
-    override void tick()
-    {
-        super.tick();
-        drainheat(CURS_HEAT, 1);
-    }
-    override double weaponbulk(){
-        int mg=weaponstatus[CURS_MAG];
-        if(mg<0)return 110;
-        else return (110+ENC_9MAG30_LOADED)+mg*enc_10_loaded;
-    }
-    override void failedpickupunload(){
-        failedpickupunloadmag(CURS_MAG,"HD10mMag25");
-    }
-    override void DropOneAmmo(int amt){
-        if(owner){
-            amt=clamp(amt,1,10);
-            if(owner.countinv("HD10mAmmo"))owner.A_DropInventory("HD10mAmmo",amt*25);
-            else owner.A_DropInventory("HD10mMag25",amt);
-        }
-    }
-    override void postbeginplay(){
-        super.postbeginplay();
-        if(weaponstatus[CURS_AUTO]>0){
-        switch(weaponstatus[CURS_SWITCHTYPE]){
-        case 1:
-            weaponstatus[CURS_AUTO]=0;
-            break;
-        case 2:
-            weaponstatus[CURS_AUTO]=1;
-            break;
-        case 3:
-            weaponstatus[CURS_AUTO]=2;
-            break;
-        default:
-            break;
-        }}
-    }
-    override void ForceBasicAmmo(){
-        owner.A_TakeInventory("HD10mAmmo");
-        ForceOneBasicAmmo("HD10mMag25");
-    }
-    override string,double getpickupsprite(bool usespare){
-        int wep0=GetSpareWeaponValue(0,usespare);
-        return ("CWRP")..((GetSpareWeaponValue(CURS_MAG,usespare)<0)?"B":"A").."0",1.;
-    }
+	override void OnPlayerDrop(){
+		if(
+			weaponstatus[0]&CURWF_CHAMBER
+			&&!random(0,15)
+		)weaponstatus[0]|=CURWF_CHAMBERBROKEN;
+	}
+	override string,double getpickupsprite(bool usespare){
+		string spr;
 
+		int wep0=GetSpareWeaponValue(0,usespare);
+
+		if(wep0&CUWF_NOSHOTGUN){
+			if(wep0&CURWF_NOFIRESELECT)
+				spr="CWRP";
+			else spr="CWRP";
+		}else{
+			if(wep0&CURWF_NOFIRESELECT)
+				spr="CWRP";
+			else spr="CWRP";
+		}
+
+		//set to no-mag frame
+		if(GetSpareWeaponValue(CURWS_MAG,usespare)<0)spr=spr.."D";
+		else spr=spr.."A";
+
+		return spr.."0",1.;
+	}
 	override void DrawHUDStuff(HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl){
 		if(sb.hudlevel==1){
 			int nextmagloaded=sb.GetNextLoadMag(hdmagammo(hpl.findinventory("HD10mMag25")));
-			if(nextmagloaded>25){
-				sb.drawimage("CWNMA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,scale:(2,2));
-			}else if(nextmagloaded<1){
-				sb.drawimage("CWNMC0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.,scale:(2,2));
-			}else sb.drawbar(
-				"CWNMA0","CWNMGREY",
-				nextmagloaded,25,
-				(-46,-3),-1,
-				sb.SHADER_VERT,sb.DI_SCREEN_CENTER_BOTTOM
-			);
+            if(nextmagloaded>25){
+                sb.drawimage("CWNMA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,scale:(2,2));
+            }else if(nextmagloaded<1){
+                sb.drawimage("CWNMC0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.,scale:(2,2));
+            }else sb.drawbar(
+                "CWNMA0","CWNMGREY",
+                nextmagloaded,25,
+                (-46,-3),-1,
+                sb.SHADER_VERT,sb.DI_SCREEN_CENTER_BOTTOM
+            );
 			sb.drawnum(hpl.countinv("HD10mMag25"),-43,-8,sb.DI_SCREEN_CENTER_BOTTOM);
-            sb.drawimage("4GSIA0",(-62,-4),sb.DI_SCREEN_CENTER_BOTTOM,scale:(0.6,0.6));
-			sb.drawnum(hpl.countinv("HD4GBAmmo"),-56,-8,sb.DI_SCREEN_CENTER_BOTTOM);
+			if(!(hdw.weaponstatus[0]&CUWF_NOSHOTGUN)){
+				sb.drawimage("4GSIA0",(-62,-4),sb.DI_SCREEN_CENTER_BOTTOM,scale:(0.6,0.6));
+				sb.drawnum(hpl.countinv("HD4GBAmmo"),-56,-8,sb.DI_SCREEN_CENTER_BOTTOM);
+			}
 		}
 
-        if(weaponstatus[CURS_SWITCHTYPE]!=1)sb.drawwepcounter(hdw.weaponstatus[CURS_AUTO],
-            -22,-10,"RBRSA3A7","STBURAUT","STFULAUT"
-        );
-		if(hdw.weaponstatus[0]&CURF_4GAUGELOADED)sb.drawrect(-20,-14,4,2.6);
-		int lod=clamp(hdw.weaponstatus[CURS_MAG]%100,0,25);
+		if(!(hdw.weaponstatus[0]&CURWF_NOFIRESELECT))
+		sb.drawwepcounter(hdw.weaponstatus[CURWS_AUTO],
+			-22,-10,"RBRSA3A7","STFULAUT","STBURAUT"
+		);
+		if(hdw.weaponstatus[0]&CURWF_4GAUGELOADED)sb.drawrect(-20,-14,4,2.6);
+		int lod=clamp(hdw.weaponstatus[CURWS_MAG]%100,0,25);
 		sb.drawwepnum(lod,25);
-		if(hdw.weaponstatus[0]&CURS_CHAMBER){
+		if(hdw.weaponstatus[0]&CURWF_CHAMBER){
 			sb.drawrect(-19,-10,3,1);
 			lod++;
 		}
-		if(hdw.weaponstatus[CURS_MAG]>75)lod=random[shitgun](10,99);
+		if(hdw.weaponstatus[CURWS_MAG]>100)lod=random[shitgun](10,99);
 		sb.drawnum(lod,-16,-22,sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_TEXT_ALIGN_RIGHT,Font.CR_RED);
+		if(hdw.weaponstatus[0]&CUWF_SHOTMODE){
+			DrawRifleGrenadeStatus(sb,hdw);
+		}else sb.drawnum(hdw.weaponstatus[CURWS_ZOOM],
+			-30,-22,sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_TEXT_ALIGN_RIGHT,Font.CR_DARKGRAY
+		);
 	}
-    override string gethelptext(){
-        LocalizeHelp();
-        return
-        LWPHELP_FIRESHOOT
-        ..LWPHELP_RELOAD..StringTable.Localize("$SMGWH_FIRE")
-        ..LWPHELP_USE.."+"..LWPHELP_RELOAD..StringTable.Localize("$SMGWH_UPRELOAD")
-        ..LWPHELP_FIREMODE..StringTable.Localize("$SMGWH_FMODE")
-        ..LWPHELP_MAGMANAGER
-        ..LWPHELP_UNLOADUNLOAD;
-    }
-    override void DrawSightPicture(
-        HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl,
-        bool sightbob,vector2 bob,double fov,bool scopeview,actor hpc
-    ){
-        vector2 bobb=bob*1.18;
-        int cx,cy,cw,ch;
-        [cx,cy,cw,ch]=screen.GetClipRect();
-        sb.SetClipRect(
-            -16+bob.x,-4+bob.y,32,16,
-            sb.DI_SCREEN_CENTER
-        );
-        sb.drawimage(
-            "smgfrntsit",(0,0)+bobb,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP
-        );
-        sb.SetClipRect(cx,cy,cw,ch);
-        sb.drawimage(
-            "smgbaksit",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
-            alpha:0.9
-        );
-    }
+	override string gethelptext(){
+		bool gl=!(weaponstatus[0]&CUWF_NOSHOTGUN);
+		bool glmode=gl&&(weaponstatus[0]&CUWF_SHOTMODE);
+		LocalizeHelp();
+		return
+		LWPHELP_FIRESHOOT
+		..(gl?(LWPHELP_ALTFIRE..(glmode?(StringTable.Localize("$ZMWH_ALTFIRE1")):(StringTable.Localize("$ZMWH_ALTFIRE2")))):"")
+		..LWPHELP_RELOAD..StringTable.Localize("$ZMWH_RELOAD")
+		..(gl?(LWPHELP_ALTRELOAD..StringTable.Localize("$ZMWH_ALTRELOAD")):"")
+		..(glmode?(LWPHELP_FIREMODE.."+"..LWPHELP_UPDOWN..StringTable.Localize("$ZMWH_FMODPUD"))
+			:(
+			((weaponstatus[0]&CURWF_NOFIRESELECT)?"":LWPHELP_FIREMODE..StringTable.Localize("$ZMWH_FMODE"))
+			..LWPHELP_ZOOM.."+"..LWPHELP_FIREMODE.."+"..LWPHELP_UPDOWN..StringTable.Localize("$ZMWH_ZPFMOD")))
+		..LWPHELP_MAGMANAGER
+		..LWPHELP_UNLOAD..StringTable.Localize("$ZMWH_UNLOAD")..(glmode?StringTable.Localize("$ZMWH_GL"):StringTable.Localize("$ZMWH_MAG"))
+		;
+	}
+	override void DrawSightPicture(
+		HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl,
+		bool sightbob,vector2 bob,double fov,bool scopeview,actor hpc
+	){
+		int scaledyoffset=47;
+		if(hdw.weaponstatus[0]&CUWF_SHOTMODE)sb.drawgrenadeladder(hdw.airburst,bob);
+		else{
+			double dotoff=max(abs(bob.x),abs(bob.y));
+			if(dotoff<40){
+				string whichdot=sb.ChooseReflexReticle(hdw.weaponstatus[CURWS_DOT]);
+				sb.drawimage(
+					whichdot,(0,0)+bob*1.1,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,
+					alpha:0.8-dotoff*0.01,
+					col:0xFF000000|sb.crosshaircolor.GetInt()
+				);
+			}
+			sb.drawimage(
+				"z66site",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER
+			);
+			if(scopeview)ShowZMScope(hdw.weaponstatus[CURWS_ZOOM],hpc,sb,scaledyoffset,bob);
+		}
+	}
     //returns the power of the load just fired
-	static double FireShell(actor caller){
-		double shotpower=1.0;
-		HDBulletActor.FireBullet(caller,"HDB_4wad");
-		let p=HDBulletActor.FireBullet(caller,"HDB_400",spread:6.0,speedfactor:0.98,amount:40);
-		caller.A_StartSound("weapons/cur4gaugeshot",9,CHANF_DEFAULT);
-		return shotpower;
+    static double FireShell(actor caller){
+        double shotpower=1.0;
+        HDBulletActor.FireBullet(caller,"HDB_4wad");
+        let p=HDBulletActor.FireBullet(caller,"HDB_400",spread:6.0,speedfactor:0.98,amount:40);
+        caller.A_StartSound("weapons/cur4gaugeshot",9,CHANF_DEFAULT);
+        return shotpower;
+    }
+	override void SetReflexReticle(int which){weaponstatus[CURWS_DOT]=which;}
+	override double weaponbulk(){
+		double blx=90;
+		if(!(weaponstatus[0]&CUWF_NOSHOTGUN)){
+			blx+=25;
+			if(weaponstatus[0]&CURWF_4GAUGELOADED)blx+=ENC_ROCKETLOADED;
+		}
+		int mgg=weaponstatus[CURWS_MAG];
+		return blx+(mgg<0?0:(ENC_426MAG_LOADED+mgg*ENC_426_LOADED));
 	}
-
+	override void failedpickupunload(){
+		failedpickupunloadmag(CURWS_MAG,"HD10mMag25");
+	}
+	override void DropOneAmmo(int amt){
+		if(owner){
+			amt=clamp(amt,1,10);
+			if(owner.countinv("HD10mAmmo"))owner.A_DropInventory("HD10mAmmo",amt*25);
+			else{
+				double angchange=(weaponstatus[0]&CUWF_NOSHOTGUN)?0:-10;
+				if(angchange)owner.angle-=angchange;
+				owner.A_DropInventory("HD10mMag25",amt);
+				if(angchange){
+					owner.angle+=angchange*2;
+					owner.A_DropInventory("HD4GBAmmo",amt);
+					owner.angle-=angchange;
+				}
+			}
+		}
+	}
+	override void ForceBasicAmmo(){
+		owner.A_TakeInventory("HD10mAmmo");
+		if(weaponstatus[0]&CUWF_NOSHOTGUN)hdammotype2=null;
+		else owner.A_SetInventory("HD4GBAmmo",1);
+		ForceOneBasicAmmo("HD10mMag25");
+	}
 	action bool brokenround(){
-		if(!(invoker.weaponstatus[CURS_FLAGS]&CURS_CHAMBERBROKEN)){
-			int hht=invoker.weaponstatus[CURS_HEAT];
-			if(hht>240)invoker.weaponstatus[CURS_BORESTRETCHED]++;
+		if(!(invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBERBROKEN)){
+			int hht=invoker.weaponstatus[CURWS_HEAT];
+			if(hht>140)invoker.weaponstatus[CURWS_BORESTRETCHED]++;
 			hht*=hht;hht>>=10;
 			int rnd=
 				(invoker.owner?1:10)
-				+max(invoker.weaponstatus[CURS_AUTO],hht)
-				+invoker.weaponstatus[CURS_BORESTRETCHED]
-				+(invoker.weaponstatus[CURS_MAG]>75?10:0);
-			if(random(0,2000)<rnd){
-				invoker.weaponstatus[CURS_FLAGS]|=CURS_CHAMBERBROKEN;
+				+max(invoker.weaponstatus[CURWS_AUTO],hht)
+				+invoker.weaponstatus[CURWS_BORESTRETCHED]
+				+(invoker.weaponstatus[CURWS_MAG]>100?10:0);
+			if(random(0,250)<rnd){
+				invoker.weaponstatus[CURWS_FLAGS]|=CURWF_CHAMBERBROKEN;
 			}
-		}return invoker.weaponstatus[CURS_FLAGS]&CURS_CHAMBERBROKEN;
+		}return invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBERBROKEN;
 	}
-    states{
-    select0:
-        CURW A 0;
-        goto select0small;
-    deselect0:
-        CURW A 0;
-        goto deselect0small;
-        CURW A 0;
+	states{
+	ready:
+		CURW A 1{
+			if(pressingzoom())A_ZoomAdjust(CURWS_ZOOM,16,70);
+			else A_WeaponReady(WRF_ALL);
+			if(invoker.weaponstatus[CURWS_AUTO]>2)invoker.weaponstatus[CURWS_AUTO]=2;
+		}goto readyend;
+	firemode:
+		CURW A 1{
+			if(invoker.weaponstatus[0]&CURWF_NOFIRESELECT){
+				invoker.weaponstatus[CURWS_AUTO]=0;
+				return;
+			}
+			if(invoker.weaponstatus[CURWS_AUTO]>=2)invoker.weaponstatus[CURWS_AUTO]=0;
+			else invoker.weaponstatus[CURWS_AUTO]++;
+			A_WeaponReady(WRF_NOFIRE);
+		}goto nope;
 
-    ready:
-        #### A 1{
-            A_SetCrosshair(21);
-            invoker.weaponstatus[CURS_RATCHET]=0;
-            A_WeaponReady(WRF_ALL);
-            if(invoker.weaponstatus[CURS_AUTO]>2)invoker.weaponstatus[CURS_AUTO]=2;
-        }
-        goto readyend;
-    user3:
-        ---- A 0 A_MagManager("HD10mMag25");
-        goto ready;
 
-    althold:
-        goto nope;
-    hold:
-        #### A 0{
-            if(
-                invoker.weaponstatus[CURS_CHAMBER]==2  //live round chambered
-                &&(
-                    invoker.weaponstatus[CURS_AUTO]==2  //full auto
-                    ||(
-                        invoker.weaponstatus[CURS_AUTO]==1  //burst
-                        &&invoker.weaponstatus[CURS_RATCHET]<=2
-                    )
-                )
-            )setweaponstate("fire");
-        }goto nope;
-    user2:
-    firemode:
-        ---- A 1{
-            int canaut=invoker.weaponstatus[CURS_SWITCHTYPE];
-            if(canaut==1){
-                invoker.weaponstatus[CURS_AUTO]=0;
-                return;
-            }
-            int maxmode=(canaut>0)?(canaut-1):2;
-            int aut=invoker.weaponstatus[CURS_AUTO];
-            if(aut>=maxmode)invoker.weaponstatus[CURS_AUTO]=0;
-            else if(aut<0)invoker.weaponstatus[CURS_AUTO]=0;
-            else if(canaut>0)invoker.weaponstatus[CURS_AUTO]=maxmode;
-            else invoker.weaponstatus[CURS_AUTO]++;
-        }goto nope;
-	jam:
-		#### B 1 offset(-1,36){
-			A_StartSound("weapons/riflejam",CHAN_WEAPON,CHANF_OVERLAP);
-			invoker.weaponstatus[0]|=CURS_CHAMBERBROKEN;
-			invoker.weaponstatus[CURS_FLAGS]&=~CURS_CHAMBER;
+	select0:
+		CURW A 0{
+			A_CheckDefaultReflexReticle(CURWS_DOT);
+			if(!countinv("NulledWeapon"))invoker.weaponstatus[0]&=~CUWF_SHOTMODE;
+			if(invoker.weaponstatus[0]&CUWF_NOSHOTGUN){
+				invoker.weaponstatus[0]&=~CURWF_4GAUGELOADED;
+				setweaponstate("select0small");
+			}
+		}goto select0big;
+	deselect0:
+		CURW A 0{
+			if(invoker.weaponstatus[0]&CUWF_NOSHOTGUN)setweaponstate("deselect0small");
+		}goto deselect0big;
+	flash:
+		CURW F 1 bright{
+			A_Light1();
+			HDFlashAlpha(-16);
+			A_StartSound("weapons/rifle",CHAN_WEAPON);
+			A_ZoomRecoil(max(0.95,1.-0.05*min(invoker.weaponstatus[CURWS_AUTO],3)));
+
+			double brnd=max(invoker.weaponstatus[CURWS_HEAT],invoker.weaponstatus[CURWS_BORESTRETCHED])*0.01;
+			let bbb=HDBulletActor.FireBullet(self,"HDB_10",speedfactor:1.25,spread:brnd>1.2?brnd:0);
+
+			A_MuzzleClimb(
+				-frandom(0.1,0.1),-frandom(0,0.1),
+				-0.2,-frandom(0.3,0.4),
+				-frandom(0.4,1.4),-frandom(1.3,2.6)
+			);
+
+            A_EjectCasing("HDSpent10mm",
+                frandom(-1,2),
+                (frandom(0.2,0.3),-frandom(7,7.5),frandom(0,0.2)),
+                (0,0,-2)
+            );
+
+			invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_CHAMBER;
+			invoker.weaponstatus[CURWS_HEAT]+=random(3,5);
+			A_AlertMonsters();
 		}
-		#### B 1 offset(1,30) A_StartSound("weapons/riflejam",CHAN_WEAPON,CHANF_OVERLAP);
+		goto lightdone;
+
+
+	fire:
+		CURW A 2{
+			if(invoker.weaponstatus[CURWS_FLAGS]&CUWF_SHOTMODE)setweaponstate("firefrag");
+			else if(invoker.weaponstatus[CURWS_AUTO]>0)A_SetTics(3);
+		}goto shootgun;
+	hold:
+		CURW A 0 A_JumpIf(invoker.weaponstatus[0]&CUWF_SHOTMODE,"FireFrag");
+		CURW A 0 A_JumpIf(invoker.weaponstatus[0]&CURWF_NOFIRESELECT,"nope");
+		CURW A 0 A_JumpIf(invoker.weaponstatus[CURWS_AUTO]>4,"nope");
+		CURW A 0 A_JumpIf(invoker.weaponstatus[CURWS_AUTO],"shootgun");
+	althold:
+		---- A 0 A_Refire();
+		goto ready;
+	jam:
+		CURW B 1 offset(-1,36){
+			A_StartSound("weapons/riflejam",CHAN_WEAPON,CHANF_OVERLAP);
+			invoker.weaponstatus[0]|=CURWF_CHAMBERBROKEN;
+			invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_CHAMBER;
+		}
+		CURW B 1 offset(1,30) A_StartSound("weapons/riflejam",CHAN_WEAPON,CHANF_OVERLAP);
 		goto nope;
 
-    fire:
-        #### B 1{
-            if(invoker.weaponstatus[CURS_CHAMBER]==2)A_GunFlash();
-            else setweaponstate("chamber_manual");
-        }
-        #### A 1;
-        #### A 0{
-            if(invoker.weaponstatus[CURS_CHAMBER]==1){
-                A_EjectCasing("HDSpent10mm",
-                    frandom(-1,2),
-                    (frandom(0.2,0.3),-frandom(7,7.5),frandom(0,0.2)),
-                    (0,0,-2)
-                );
-                invoker.weaponstatus[CURS_CHAMBER]=0;
-            }
-            if(invoker.weaponstatus[CURS_MAG]>0){
-                invoker.weaponstatus[CURS_MAG]--;
-                invoker.weaponstatus[CURS_CHAMBER]=2;
-            }
-            if(invoker.weaponstatus[CURS_AUTO]==2 || invoker.weaponstatus[CURS_AUTO]==1)
-            {
-                A_SetTics((invoker.WeaponStatus[CURS_WEIRDFIRE]*invoker.WeaponStatus[CURS_HEAT]/5)+1);
-                if(invoker.WeaponStatus[CURS_WEIRDFIRE]<2)invoker.WeaponStatus[CURS_WEIRDFIRE]++;
-                else invoker.WeaponStatus[CURS_WEIRDFIRE]--;
-            }
-            invoker.WeaponStatus[CURS_HEAT] += random(3, 5);
-
-            //don't allow firing if supposed to be lowered
-            A_WeaponReady(WRF_NOFIRE);
-        }
-        #### A 0 A_ReFire();
-        goto ready;
-    flash:
-        #### F 0 bright{
-            double brnd=max(invoker.weaponstatus[CURS_HEAT],invoker.weaponstatus[CURS_BORESTRETCHED])*0.01;
-            let bbb=HDBulletActor.FireBullet(self,"HDB_10",speedfactor:1.25,spread:brnd>1.2?brnd:0);
-            A_Log("Mag: "..invoker.WeaponStatus[CURS_MAG]);
-            if(
-                frandom(16,ceilingz-floorz)<bbb.speed*0.1
-            )A_AlertMonsters(HDCONST_ONEMETRE * (15));
-
-            A_ZoomRecoil(0.985);
-            A_StartSound("weapons/currawong",CHAN_WEAPON,volume:0.7);
-            invoker.weaponstatus[CURS_RATCHET]++;
-            invoker.weaponstatus[CURS_CHAMBER]=1;
-        }
-        CURF F 1 bright{
-            HDFlashAlpha(-200);
-            A_Light1();
-        }
-        TNT1 A 0 A_MuzzleClimb(-frandom(0.4,0.44),-frandom(0.5,0.56),-frandom(0.4,0.44),-frandom(0.5,0.56));
-        goto lightdone;
-
-    unloadchamber:
-        #### A 1 offset(-3,34);
-        #### A 1 offset(-9,39);
-        #### B 3 offset(-19,44) A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
-        #### A 2 offset(-16,42){
-            A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
-            if(
-                invoker.weaponstatus[CURS_FLAGS]&CURS_CHAMBER
-                &&!(invoker.weaponstatus[0]&CURS_CHAMBERBROKEN)
-            ){
-                A_SpawnItemEx("ZM66DroppedRound",0,0,20,
-                    random(4,7),random(-2,2),random(-2,1),0,
-                    SXF_NOCHECKPOSITION
-                );
-                invoker.weaponstatus[CURS_FLAGS]&=~CURS_CHAMBER;
-                A_StartSound("weapons/rifleclick2",CHAN_WEAPON,CHANF_OVERLAP);
-            }else if(!random(0,4)){
-                invoker.weaponstatus[0]&=~CURS_CHAMBERBROKEN;
-                invoker.weaponstatus[CURS_FLAGS]&=~CURS_CHAMBER;
-                A_StartSound("weapons/rifleclick",CHAN_WEAPON,CHANF_OVERLAP);
-                for(int i=0;i<5;i++)A_SpawnItemEx("FourMilChunk",0,0,20,
-                    random(4,7),random(-2,2),random(-2,1),0,SXF_NOCHECKPOSITION
-                );
-                if(!random(0,5))A_SpawnItemEx("HDSmokeChunk",12,0,gunheight()-10,4,frandom(-2,2),frandom(2,4));
-            }else if(invoker.weaponstatus[0]&CURS_CHAMBERBROKEN){
-                A_StartSound("weapons/smack",CHAN_WEAPON,CHANF_OVERLAP);
-            }
-        }goto reloadend;
+	shootgun:
+		CURW A 1{
+			if(
+				//can neither shoot nor chamber
+				invoker.weaponstatus[0]&CURWF_CHAMBERBROKEN
+				||(
+					!(invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBER)
+					&&invoker.weaponstatus[CURWS_MAG]<1
+				)
+			){
+				setweaponstate("nope");
+			}else if(!(invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBER)){
+				//no shot but can chamber
+				setweaponstate("chamber_manual");
+			}else{
+				A_GunFlash();
+				A_WeaponReady(WRF_NOFIRE);
+				if(invoker.weaponstatus[CURWS_AUTO]>=2)invoker.weaponstatus[CURWS_AUTO]++;
+			}
+		}
 	chamber:
-		#### B 0 offset(0,32){
-			if(invoker.weaponstatus[CURS_MAG]<1){
+		CURW B 0 offset(0,32){
+			if(invoker.weaponstatus[CURWS_MAG]<1){
 				setweaponstate("nope");
 				return;
 			}
-			if(invoker.weaponstatus[CURS_MAG]%100>0){
-				if(invoker.weaponstatus[CURS_MAG]==26)invoker.weaponstatus[CURS_MAG]=25;
-				invoker.weaponstatus[CURS_MAG]--;
-				invoker.weaponstatus[CURS_FLAGS]|=CURS_CHAMBER;
+			if(invoker.weaponstatus[CURWS_MAG]%100>0){
+				if(invoker.weaponstatus[CURWS_MAG]==26)invoker.weaponstatus[CURWS_MAG]=25;
+				invoker.weaponstatus[CURWS_MAG]--;
+				invoker.weaponstatus[CURWS_FLAGS]|=CURWF_CHAMBER;
 			}else{
-				invoker.weaponstatus[CURS_MAG]=min(invoker.weaponstatus[CURS_MAG],0);
+				invoker.weaponstatus[CURWS_MAG]=min(invoker.weaponstatus[CURWS_MAG],0);
 				A_StartSound("weapons/rifchamber",CHAN_WEAPON,CHANF_OVERLAP);
 			}
 			if(brokenround()){
@@ -330,22 +340,31 @@ class HDCurrawong:HDWeapon{
 			}
 			A_WeaponReady(WRF_NONE);
 		}
-		#### B 0 A_JumpIf(invoker.weaponstatus[CURS_AUTO]<1,"nope");
-		#### B 0 A_JumpIf(invoker.weaponstatus[CURS_AUTO]>4,"nope");
-		#### B 2 A_JumpIf(invoker.weaponstatus[CURS_AUTO]>1,1);
-		#### B 0 A_Refire();
+		CURW B 0 A_JumpIf(invoker.weaponstatus[CURWS_AUTO]<1,"nope");
+		CURW B 0 A_JumpIf(invoker.weaponstatus[CURWS_AUTO]>4,"nope");
+		CURW B 2 A_JumpIf(invoker.weaponstatus[CURWS_AUTO]>1,1);
+		CURW B 0 A_Refire();
 		goto ready;
-    user4:
+
+	user3:
+		CURW A 0 A_MagManager("HD10mMag25");
+		goto ready;
+
+	user4:
 	unload:
-		#### A 0{
-			invoker.weaponstatus[CURF_FLAGS]|=CURF_UNLOADONLY;
-            if(
-				invoker.weaponstatus[CURS_MAG]>=0
+		CURW A 0{
+			invoker.weaponstatus[CURWS_FLAGS]|=CURWF_UNLOADONLY;
+			if(
+				invoker.weaponstatus[CURWS_FLAGS]&CUWF_SHOTMODE
+			){
+				setweaponstate("unloadgrenade");
+			}else if(
+				invoker.weaponstatus[CURWS_MAG]>=0
 			){
 				setweaponstate("unloadmag");
 			}else if(
-				invoker.weaponstatus[CURF_FLAGS]&CURS_CHAMBER
-				||invoker.weaponstatus[CURF_FLAGS]&CURS_CHAMBERBROKEN
+				invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBER
+				||invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBERBROKEN
 			){
 				setweaponstate("unloadchamber");
 			}else{
@@ -353,47 +372,47 @@ class HDCurrawong:HDWeapon{
 			}
 		}
 	reload:
-		#### A 0{
-			invoker.weaponstatus[CURF_FLAGS]&=~CURF_UNLOADONLY;
+		CURW A 0{
+			invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_UNLOADONLY;
 			if(	//full mag, no jam, not unload-only - why hit reload at all?
-				!(invoker.weaponstatus[0]&CURS_CHAMBERBROKEN)
-				&&invoker.weaponstatus[CURS_MAG]%100>=25
-				&&!(invoker.weaponstatus[CURF_FLAGS]&CURF_UNLOADONLY)
+				!(invoker.weaponstatus[0]&CURWF_CHAMBERBROKEN)
+				&&invoker.weaponstatus[CURWS_MAG]%100>=25
+				&&!(invoker.weaponstatus[CURWS_FLAGS]&CURWF_UNLOADONLY)
 			){
 				setweaponstate("nope");
 			}else if(	//if jammed, treat as unloading
-				invoker.weaponstatus[CURS_MAG]<0
-				&&invoker.weaponstatus[0]&CURS_CHAMBERBROKEN
+				invoker.weaponstatus[CURWS_MAG]<0
+				&&invoker.weaponstatus[0]&CURWF_CHAMBERBROKEN
 			){
-				invoker.weaponstatus[CURF_FLAGS]|=CURF_UNLOADONLY;
+				invoker.weaponstatus[CURWS_FLAGS]|=CURWF_UNLOADONLY;
 				setweaponstate("unloadchamber");
 			}else if(!HDMagAmmo.NothingLoaded(self,"HD10mMag25")){
 				setweaponstate("unloadmag");
 			}
 		}goto nope;
 	unloadmag:
-		#### A 1 offset(0,33);
-		#### A 1 offset(-3,34);
-		#### A 1 offset(-8,37);
-		#### B 2 offset(-11,39){
+		CURW A 1 offset(0,33);
+		CURW A 1 offset(-3,34);
+		CURW A 1 offset(-8,37);
+		CURW B 2 offset(-11,39){
 			if(	//no mag, skip unload
-				invoker.weaponstatus[CURS_MAG]<0
+				invoker.weaponstatus[CURWS_MAG]<0
 			){
 				setweaponstate("magout");
 			}
-			if(invoker.weaponstatus[0]&CURS_CHAMBERBROKEN)
-				invoker.weaponstatus[CURF_FLAGS]|=CURF_UNLOADONLY;
+			if(invoker.weaponstatus[0]&CURWF_CHAMBERBROKEN)
+				invoker.weaponstatus[CURWS_FLAGS]|=CURWF_UNLOADONLY;
 			A_MuzzleClimb(-0.3,-0.3,wepdot:false);
 			A_StartSound("weapons/rifleclick2",CHAN_WEAPON,CHANF_OVERLAP);
 		}
-		#### B 4 offset(-12,40){
+		CURW B 4 offset(-12,40){
 			A_MuzzleClimb(-0.3,-0.3,wepdot:false);
 			A_StartSound("weapons/rifleunload",CHAN_WEAPON);
 		}
-		#### B 20 offset(-14,44){
-			int inmag=invoker.weaponstatus[CURS_MAG];
+		CURW B 20 offset(-14,44){
+			int inmag=invoker.weaponstatus[CURWS_MAG];
 			if(inmag>26)inmag=min(25,inmag%100);
-			invoker.weaponstatus[CURS_MAG]=-1;
+			invoker.weaponstatus[CURWS_MAG]=-1;
 			if(
 				!PressingUnload()&&!PressingReload()
 				||A_JumpIfInventory("HD10mMag25",0,"null")
@@ -407,60 +426,60 @@ class HDCurrawong:HDWeapon{
 			}
 		}
 	magout:
-		#### B 0{
+		CURW B 0{
 			if(
-				invoker.weaponstatus[CURF_FLAGS]&CURF_UNLOADONLY
+				invoker.weaponstatus[CURWS_FLAGS]&CURWF_UNLOADONLY
 				||!countinv("HD10mMag25")
 			)setweaponstate("reloadend");
 		} //fallthrough to loadmag
 	loadmag:
 		---- A 12 offset(-15,44){
-			let cmag=HD10mMag25(findinventory("HD10mMag25"));
-			if(!cmag){setweaponstate("reloadend");return;}
+			let zmag=HD10mMag25(findinventory("HD10mMag25"));
+			if(!zmag){setweaponstate("reloadend");return;}
 			A_StartSound("weapons/pocket",CHAN_WEAPON);
-			if(cmag.DirtyMagsOnly())invoker.weaponstatus[0]|=CURF_LOADINGDIRTY;
+			if(zmag.DirtyMagsOnly())invoker.weaponstatus[0]|=CURWF_LOADINGDIRTY;
 			else{
-				invoker.weaponstatus[0]&=~CURF_LOADINGDIRTY;
+				invoker.weaponstatus[0]&=~CURWF_LOADINGDIRTY;
 				A_SetTics(10);
 			}
 		}
-		---- A 2 offset(-15,44) A_JumpIf(invoker.weaponstatus[0]&CURF_LOADINGDIRTY,"loadmagdirty");
+		---- A 2 offset(-15,44) A_JumpIf(invoker.weaponstatus[0]&CURWF_LOADINGDIRTY,"loadmagdirty");
 	loadmagclean:
-		#### B 8 offset(-15,45)A_StartSound("weapons/rifleload",CHAN_WEAPON);
-		#### B 1 offset(-14,44){
-			let cmag=HD10mMag25(findinventory("HD10mMag25"));
-			if(!cmag){setweaponstate("reloadend");return;}
-			if(cmag.DirtyMagsOnly()){
+		CURW B 8 offset(-15,45)A_StartSound("weapons/rifleload",CHAN_WEAPON);
+		CURW B 1 offset(-14,44){
+			let zmag=HD10mMag25(findinventory("HD10mMag25"));
+			if(!zmag){setweaponstate("reloadend");return;}
+			if(zmag.DirtyMagsOnly()){
 				setweaponstate("loadmagdirty");
 				return;
 			}
-			invoker.weaponstatus[CURS_MAG]=cmag.TakeMag(true);
+			invoker.weaponstatus[CURWS_MAG]=zmag.TakeMag(true);
 			A_StartSound("weapons/rifleclick2",CHAN_WEAPON);
 		}goto reloadend;
 	loadmagdirty:
-		#### B 0{
-			if(PressingReload())invoker.weaponstatus[0]|=CURF_STILLPRESSINGRELOAD;
-			else invoker.weaponstatus[0]&=~CURF_STILLPRESSINGRELOAD;
+		CURW B 0{
+			if(PressingReload())invoker.weaponstatus[0]|=CURWF_STILLPRESSINGRELOAD;
+			else invoker.weaponstatus[0]&=~CURWF_STILLPRESSINGRELOAD;
 		}
-		#### B 3 offset(-15,45)A_StartSound("weapons/rifleload",CHAN_WEAPON);
-		#### B 1 offset(-15,42)A_WeaponMessage(StringTable.Localize("$ZM426MAGMSG"),70);
-		#### BBBBBBBAAAA 1 offset(-15,41){
+		CURW B 3 offset(-15,45)A_StartSound("weapons/rifleload",CHAN_WEAPON);
+		CURW B 1 offset(-15,42)A_WeaponMessage(StringTable.Localize("$ZM426MAGMSG"),70);
+		CURW BBBBBBBAAAA 1 offset(-15,41){
 			bool prr=PressingReload();
 			if(
 				prr
-				&&!(invoker.weaponstatus[0]&CURF_STILLPRESSINGRELOAD)
+				&&!(invoker.weaponstatus[0]&CURWF_STILLPRESSINGRELOAD)
 			){
 				setweaponstate("reallyloadmagdirty");
 			}
-			else if(!PressingReload())invoker.weaponstatus[0]&=~CURF_STILLPRESSINGRELOAD;
+			else if(!PressingReload())invoker.weaponstatus[0]&=~CURWF_STILLPRESSINGRELOAD;
 		}
 		goto nope;
 	reallyloadmagdirty:
-		#### B 1 offset(-14,44)A_StartSound("weapons/rifleclick2",CHAN_WEAPON);
-		#### A 8 offset(-18,50){
-			let cmag=HD10mMag25(findinventory("HD10mMag25"));
-			if(!cmag){setweaponstate("reloadend");return;}
-			invoker.weaponstatus[CURS_MAG]=cmag.TakeMag(true)+50;
+		CURW B 1 offset(-14,44)A_StartSound("weapons/rifleclick2",CHAN_WEAPON);
+		CURW A 8 offset(-18,50){
+			let zmag=HD10mMag25(findinventory("HD10mMag25"));
+			if(!zmag){setweaponstate("reloadend");return;}
+			invoker.weaponstatus[CURWS_MAG]=zmag.TakeMag(true)+100;
 			A_MuzzleClimb(
 				-frandom(0.4,0.6),frandom(2.,3.)
 				-frandom(0.2,0.3),frandom(1.,1.6),
@@ -474,78 +493,78 @@ class HDCurrawong:HDWeapon{
 			realmessage.appendformat(StringTable.Localize("$ZMRELERROR")..random(0,9999)..StringTable.Localize("$ZMNOCARRIER"));
 			A_WeaponMessage(realmessage,70);
 		}
-		#### A 4 offset(-17,49);
+		CURW A 4 offset(-17,49);
 		goto chamber_manual;
 
 	reloadend:
-		#### B 2 offset(-11,39);
-		#### A 1 offset(-8,37) A_MuzzleClimb(frandom(0.2,-2.4),frandom(0.2,-1.4),wepdot:false);
-		#### A 1 offset(-3,34);
+		CURW B 2 offset(-11,39);
+		CURW A 1 offset(-8,37) A_MuzzleClimb(frandom(0.2,-2.4),frandom(0.2,-1.4),wepdot:false);
+		CURW A 1 offset(-3,34);
 		goto chamber_manual;
 
 	chamber_manual:
-		#### A 0 A_JumpIf(invoker.weaponstatus[CURS_FLAGS]&CURS_CHAMBER,"nope");
-		#### A 3 offset(-1,36)A_WeaponBusy();
-		#### B 4 offset(-3,42){
-			if(!invoker.weaponstatus[CURS_MAG]%100)invoker.weaponstatus[CURS_MAG]=0;
+		CURW A 0 A_JumpIf(invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBER,"nope");
+		CURW A 3 offset(-1,36)A_WeaponBusy();
+		CURW B 4 offset(-3,42){
+			if(!invoker.weaponstatus[CURWS_MAG]%100)invoker.weaponstatus[CURWS_MAG]=0;
 			if(
-				!(invoker.weaponstatus[CURS_FLAGS]&CURS_CHAMBER)
-				&& !(invoker.weaponstatus[CURS_FLAGS]&CURS_CHAMBER)
-				&& invoker.weaponstatus[CURS_MAG]%100>0
+				!(invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBER)
+				&& !(invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBER)
+				&& invoker.weaponstatus[CURWS_MAG]%100>0
 			){
 				A_StartSound("weapons/rifleclick",CHAN_WEAPON);
-				if(invoker.weaponstatus[CURS_MAG]==26)invoker.weaponstatus[CURS_MAG]=24;
-				else invoker.weaponstatus[CURS_MAG]--;
-				invoker.weaponstatus[CURS_FLAGS]|=CURS_CHAMBER;
+				if(invoker.weaponstatus[CURWS_MAG]==26)invoker.weaponstatus[CURWS_MAG]=24;
+				else invoker.weaponstatus[CURWS_MAG]--;
+				invoker.weaponstatus[CURWS_FLAGS]|=CURWF_CHAMBER;
 				brokenround();
 			}else setweaponstate("nope");
 		}
-		#### A 2 offset(-1,36);
-		#### A 0 offset(0,34);
+		CURW A 2 offset(-1,36);
+		CURW A 0 offset(0,34);
 		goto nope;
 
 
 	unloadchamber:
-		#### A 1 offset(-3,34);
-		#### A 1 offset(-9,39);
-		#### B 3 offset(-19,44) A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
-		#### A 2 offset(-16,42){
+		CURW A 1 offset(-3,34);
+		CURW A 1 offset(-9,39);
+		CURW B 3 offset(-19,44) A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
+		CURW A 2 offset(-16,42){
 			A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
 			if(
-				invoker.weaponstatus[CURS_FLAGS]&CURS_CHAMBER
-				&&!(invoker.weaponstatus[0]&CURS_CHAMBERBROKEN)
+				invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBER
+				&&!(invoker.weaponstatus[0]&CURWF_CHAMBERBROKEN)
 			){
 				A_SpawnItemEx("ZM66DroppedRound",0,0,20,
 					random(4,7),random(-2,2),random(-2,1),0,
 					SXF_NOCHECKPOSITION
 				);
-				invoker.weaponstatus[CURS_FLAGS]&=~CURS_CHAMBER;
+				invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_CHAMBER;
 				A_StartSound("weapons/rifleclick2",CHAN_WEAPON,CHANF_OVERLAP);
 			}else if(!random(0,4)){
-				invoker.weaponstatus[0]&=~CURS_CHAMBERBROKEN;
-				invoker.weaponstatus[CURS_FLAGS]&=~CURS_CHAMBER;
+				invoker.weaponstatus[0]&=~CURWF_CHAMBERBROKEN;
+				invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_CHAMBER;
 				A_StartSound("weapons/rifleclick",CHAN_WEAPON,CHANF_OVERLAP);
 				for(int i=0;i<5;i++)A_SpawnItemEx("FourMilChunk",0,0,20,
 					random(4,7),random(-2,2),random(-2,1),0,SXF_NOCHECKPOSITION
 				);
 				if(!random(0,5))A_SpawnItemEx("HDSmokeChunk",12,0,gunheight()-10,4,frandom(-2,2),frandom(2,4));
-			}else if(invoker.weaponstatus[0]&CURS_CHAMBERBROKEN){
+			}else if(invoker.weaponstatus[0]&CURWF_CHAMBERBROKEN){
 				A_StartSound("weapons/smack",CHAN_WEAPON,CHANF_OVERLAP);
 			}
 		}goto reloadend;
 
-	firefrag:
-		#### B 2{
-			if(!(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED)){
-				setweaponstate("nope");
-				return;
-			}
+    firefrag:
+        #### B 2{
+            if(!(invoker.weaponstatus[CURWS_FLAGS]&CURWF_4GAUGELOADED)){
+                setweaponstate("nope");
+                return;
+            }
             invoker.FireShell(Self);
-			invoker.weaponstatus[CURS_FLAGS]&=~CURF_4GAUGELOADED;
-			A_StartSound("weapons/cur4gshot",CHAN_WEAPON);
-		}
-		#### B 3{
-			A_ZoomRecoil(0.95);
+            invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_4GAUGELOADED;
+            A_StartSound("weapons/cur4gshot",CHAN_WEAPON);
+        }
+        #### B 3{
+            A_ZoomRecoil(0.95);
             A_MuzzleClimb(-frandom(5.5, 10.25), -frandom(9.5, 11.75), -frandom(8.5, 10.25), -frandom(9.5, 11.75));
             if(!gunbraced()){
                 A_ChangeVelocity(cos(pitch)*-frandom(0.375,0.75),0,sin(pitch)*frandom(0.375,0.75),CVF_RELATIVE);
@@ -553,47 +572,48 @@ class HDCurrawong:HDWeapon{
             A_ChangeVelocity(cos(pitch)*-frandom(0.125,0.25),0,sin(pitch)*frandom(0.125,0.25),CVF_RELATIVE);
             GiveBody (max(0,11-health));
             DamageMobJ (invoker, self, 10, "bashing");
-		}
-		goto nope;
+        }
+        goto nope;
+
 
 	altfire:
-		#### A 1 A_JumpIf(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED,1);
-		goto nope;
-		#### A 1;
-		#### A 3 {
-		invoker.airburst=0;
-		A_Gunflash("firefrag");
-		}
-		goto nope;
+		CURW A 1 offset(0,34){
+			if(invoker.weaponstatus[0]&CUWF_NOSHOTGUN)return;
+			invoker.weaponstatus[0]^=CUWF_SHOTMODE;
+			A_SetCrosshair(21);
+			A_SetHelpText();
+		}goto nope;
+
 
 	altreload:
-		#### A 0{
-			invoker.weaponstatus[CURS_FLAGS]&=~CURF_UNLOADONLY;
+		CURW A 0{
+			invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_UNLOADONLY;
 			if(
-				!(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED)
+				!(invoker.weaponstatus[CURWS_FLAGS]&CUWF_NOSHOTGUN)
+				&&!(invoker.weaponstatus[CURWS_FLAGS]&CURWF_4GAUGELOADED)
 				&&countinv("HD4GBAmmo")
-			)setweaponstate("unloadshell");
+			)setweaponstate("unloadgrenade");
 		}goto nope;
-	unloadshell:
-		#### B 0{
+	unloadgrenade:
+		CURW B 0{
 			A_SetCrosshair(21);
 			A_MuzzleClimb(-0.3,-0.3,wepdot:false);
 		}
-		#### B 2 offset(0,34);
-		#### B 1 offset(4,38){
+		CURW B 2 offset(0,34);
+		CURW B 1 offset(4,38){
 			A_MuzzleClimb(-0.3,-0.3,wepdot:false);
 		}
-		#### B 2 offset(8,48){
-			A_StartSound("weapons/cur4gaugeopen",CHAN_WEAPON);
+		CURW B 2 offset(8,48){
+			A_StartSound("weapons/grenopen",CHAN_WEAPon,CHANF_OVERLAP);
 			A_MuzzleClimb(-0.3,-0.3,wepdot:false);
-			if(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED)A_StartSound("weapons/grenreload",CHAN_WEAPON);
+			if(invoker.weaponstatus[CURWS_FLAGS]&CURWF_4GAUGELOADED)A_StartSound("weapons/grenreload",CHAN_WEAPON);
 		}
-		#### B 10 offset(10,49){
-			if(!(invoker.weaponstatus[CURS_FLAGS]&CURF_4GAUGELOADED)){
-				if(!(invoker.weaponstatus[CURS_FLAGS]&CURF_UNLOADONLY))A_SetTics(3);
+		CURW B 10 offset(10,49){
+			if(!(invoker.weaponstatus[CURWS_FLAGS]&CURWF_4GAUGELOADED)){
+				if(!(invoker.weaponstatus[CURWS_FLAGS]&CURWF_UNLOADONLY))A_SetTics(3);
 				return;
 			}
-			invoker.weaponstatus[CURS_FLAGS]&=~CURF_4GAUGELOADED;
+			invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_4GAUGELOADED;
 			if(
 				!PressingUnload()
 				||A_JumpIfInventory("HD4GBAmmo",0,"null")
@@ -608,203 +628,395 @@ class HDCurrawong:HDWeapon{
 				A_MuzzleClimb(frandom(0.8,-0.2),frandom(0.4,-0.2),wepdot:false);
 			}
 		}
-		#### B 0 A_JumpIf(invoker.weaponstatus[CURS_FLAGS]&CURF_UNLOADONLY,"greloadend");
-
+		CURW B 0 A_JumpIf(invoker.weaponstatus[CURWS_FLAGS]&CURWF_UNLOADONLY,"greloadend");
 	loadgrenade:
-		#### B 4 offset(10,50) A_StartSound("weapons/pocket",CHAN_WEAPON,CHANF_OVERLAP);
-		#### BBB 8 offset(10,50) A_MuzzleClimb(frandom(-0.2,0.8),frandom(-0.2,0.4),wepdot:false);
-		#### B 18 offset(8,50){
+		CURW B 4 offset(10,50) A_StartSound("weapons/pocket",CHAN_WEAPON,CHANF_OVERLAP);
+		CURW BBB 8 offset(10,50) A_MuzzleClimb(frandom(-0.2,0.8),frandom(-0.2,0.4),wepdot:false);
+		CURW B 18 offset(8,50){
 			if(!countinv("HD4GBAmmo"))return;
 			A_TakeInventory("HD4GBAmmo",1,TIF_NOTAKEINFINITE);
-			invoker.weaponstatus[CURS_FLAGS]|=CURF_4GAUGELOADED;
-			A_StartSound("weapons/cur4gaugereload",CHAN_WEAPON);
+			invoker.weaponstatus[CURWS_FLAGS]|=CURWF_4GAUGELOADED;
+			A_StartSound("weapons/grenreload",CHAN_WEAPON);
 		}
 	greloadend:
-		#### B 4 offset(4,44) A_StartSound("weapons/cur4gaugeopen",CHAN_WEAPON);
-		#### B 1 offset(0,40);
-		#### A 1 offset(0,34) A_MuzzleClimb(frandom(-2.4,0.2),frandom(-1.4,0.2),wepdot:false);
+		CURW B 4 offset(4,44) A_StartSound("weapons/grenopen",CHAN_WEAPON);
+		CURW B 1 offset(0,40);
+		CURW A 1 offset(0,34) A_MuzzleClimb(frandom(-2.4,0.2),frandom(-1.4,0.2),wepdot:false);
 		goto nope;
 
-    spawn:
-        CWRP A -1{if(invoker.weaponstatus[CURS_MAG]<0)frame=1;}
-        CWRP # -1;
-        stop;
-    }
-    override void initializewepstats(bool idfa){
-        weaponstatus[CURS_MAG]=25;
-        weaponstatus[CURS_CHAMBER]=2;
-        weaponstatus[CURF_4GAUGELOADED]=0;
-    }
-    override void loadoutconfigure(string input){
-        int firemode=getloadoutvar(input,"firemode",1);
-        if(firemode>=0)weaponstatus[CURS_AUTO]=clamp(firemode,0,2);
+	spawn:
+		RIFL DCBA 0;
+		RIGL DCBA 0;
+		RIFS DCBA 0;
+		RIGS DA 0;
+		---- A 0{
+			//don't jam just because
+			if(
+				!(invoker.weaponstatus[0]&CURWF_CHAMBER)
+				&&!(invoker.weaponstatus[0]&CURWF_CHAMBERBROKEN)
+				&&invoker.weaponstatus[CURWS_MAG]>0
+				&&invoker.weaponstatus[CURWS_MAG]<26
+			){
+				invoker.weaponstatus[CURWS_MAG]--;
+				invoker.weaponstatus[0]|=CURWF_CHAMBER;
+				brokenround();
+			}
+		}
+	spawn2:
+		---- A -1{
+			//set sprite
+			if(invoker.weaponstatus[0]&CUWF_NOSHOTGUN){
+				if(invoker.weaponstatus[0]&CURWF_NOFIRESELECT)
+					sprite=getspriteindex("RIFSA0");
+				else sprite=getspriteindex("RIFLA0");
+			}else{
+				if(invoker.weaponstatus[0]&CURWF_NOFIRESELECT)
+					sprite=getspriteindex("RIGSA0");
+				else sprite=getspriteindex("RIGLA0");
+			}
 
-        int fireswitch=getloadoutvar(input,"fireswitch",1);
-        if(fireswitch>3)weaponstatus[CURS_SWITCHTYPE]=0;
-        else if(fireswitch>0)weaponstatus[CURS_SWITCHTYPE]=clamp(fireswitch,0,3);
-    }
+			//set to no-mag frame
+			if(invoker.weaponstatus[CURWS_MAG]<0){
+				frame=3;
+			}
+		}
+	spawnshoot:
+		#### C 1 bright light("SHOT"){
+			if(invoker.weaponstatus[0]&CUWF_NOSHOTGUN){
+				sprite=getspriteindex("RIFLA0");
+			}else sprite=getspriteindex("RIGLA0");
+
+			//shoot the bullet
+			//copy any changes to flash as well!
+			double brnd=invoker.weaponstatus[CURWS_HEAT]*0.01;
+			let bbb=HDBulletActor.FireBullet(self,"HDB_426",
+				spread:brnd>1.2?invoker.weaponstatus[CURWS_HEAT]*0.1:0
+			);
+
+			//if overlapping owner, treat owner as shooter
+			let targ=invoker.target;
+			if(
+				targ
+				&&abs(targ.pos.x-invoker.pos.x)<=targ.radius
+				&&abs(targ.pos.y-invoker.pos.y)<=targ.radius
+			){
+				bbb.target=targ;
+			}
+			A_ChangeVelocity(
+				frandom(-0.4,0.1)*cos(pitch),
+				frandom(-0.1,0.08),
+				sin(pitch)+frandom(-1.,1.),CVF_RELATIVE
+			);
+			A_StartSound("weapons/rifle",CHAN_VOICE);
+			invoker.weaponstatus[CURWS_HEAT]+=random(3,5);
+			angle+=frandom(2,-7);
+			pitch+=frandom(-4,4);
+		}
+		#### B 0{
+			invoker.weaponstatus[0]&=~(CURWF_CHAMBER|CURWF_CHAMBERBROKEN);
+			if(invoker.weaponstatus[CURWS_MAG]%100>0){
+				invoker.weaponstatus[CURWS_MAG]--;
+				invoker.weaponstatus[0]|=CURWF_CHAMBER;
+				brokenround();
+			}
+		}goto spawn2;
+	}
+
+	override inventory CreateTossable(int amt){
+		let owner=self.owner;
+		let zzz=zm66assaultrifle(super.createtossable());
+		if(!zzz)return null;
+		zzz.target=owner;
+		return zzz;
+	}
+
+	override void InitializeWepStats(bool idfa){
+		if(!(weaponstatus[0]&CUWF_NOSHOTGUN))weaponstatus[0]|=CURWF_4GAUGELOADED;
+		weaponstatus[CURWS_MAG]=26;
+		if(!idfa && !owner){
+			weaponstatus[CURWS_ZOOM]=30;
+			weaponstatus[CURWS_AUTO]=0;
+			weaponstatus[CURWS_HEAT]=0;
+		}
+		if(idfa)weaponstatus[0]&=~CURWF_CHAMBERBROKEN;
+	}
+	override void loadoutconfigure(string input){
+		int nogl=getloadoutvar(input,"nogl",1);
+		//disable launchers if rocket grenades denylisted
+		string denylist=hd_noloadout;
+		if(denylist.IndexOf(HDLD_BLOOPER)>=0)nogl=1;
+		if(!nogl){
+			weaponstatus[0]&=~CUWF_NOSHOTGUN;
+		}else if(nogl>0){
+			weaponstatus[0]|=CUWF_NOSHOTGUN;
+			weaponstatus[0]&=~CURWF_4GAUGELOADED;
+		}
+		if(!(weaponstatus[0]&CUWF_NOSHOTGUN)){
+			weaponstatus[0]|=CURWF_4GAUGELOADED;
+			hdammotype2=null;
+		}
+
+		int zoom=getloadoutvar(input,"zoom",3);
+		if(zoom>=0)weaponstatus[CURWS_ZOOM]=clamp(zoom,16,70);
+
+		int xhdot=getloadoutvar(input,"dot",3);
+		if(xhdot>=0)weaponstatus[CURWS_DOT]=xhdot;
+
+		int semi=getloadoutvar(input,"semi",1);
+		if(semi>0){
+			weaponstatus[CURWS_AUTO]=-1;
+			weaponstatus[0]|=CURWF_NOFIRESELECT;
+		}else{
+			int firemode=getloadoutvar(input,"firemode",1);
+			if(firemode>=0){
+				weaponstatus[0]&=~CURWF_NOFIRESELECT;
+				weaponstatus[CURWS_AUTO]=clamp(firemode,0,2);
+			}
+		}
+		if(
+			!(weaponstatus[0]&CURWF_CHAMBER)
+			&&weaponstatus[CURWS_MAG]>0
+		){
+			weaponstatus[0]|=CURWF_CHAMBER;
+			if(weaponstatus[CURWS_MAG]==26)weaponstatus[CURWS_MAG]=24;
+			else weaponstatus[CURWS_MAG]--;
+		}
+	}
 }
+enum currawongstatus{
+	CURWF_CHAMBER=1,
+	CURWF_CHAMBERBROKEN=2,
+	CURWF_DIRTYMAG=4,
+	CURWF_4GAUGELOADED=8,
+	CUWF_NOSHOTGUN=16,
+	CURWF_NOFIRESELECT=32,
+	CUWF_SHOTMODE=64,
+	CURWF_UNLOADONLY=128,
+	CURWF_STILLPRESSINGRELOAD=256,
+	CURWF_LOADINGDIRTY=512,
 
-enum CurrawongStatus{
-    CURF_FLAGS=1,
-    CURS_CHAMBERBROKEN=2,
-    CURF_4GAUGELOADED=4,
-    CURF_UNLOADONLY=8,
-    CURF_STILLPRESSINGRELOAD=16,
-    CURF_LOADINGDIRTY=32,
-    CURF_JUSTUNLOAD=64,
-
-    CURN_SEMIONLY=1,
-    CURN_BURSTONLY=2,
-    CURN_FULLONLY=3,
-
-    CURS_FLAGS=0,
-    CURS_MAG=1,
-    CURS_AUTO=2, //0 semi, 1 burst, 2 auto
-    CURS_RATCHET=3,
-    CURS_SWITCHTYPE=4,
-    CURS_BORESTRETCHED=5,
-    CURS_HEAT=6,
-    CURS_WEIRDFIRE=7,
-    CURS_CHAMBER=8
+	CURWS_FLAGS=0,
+	CURWS_MAG=1, //-1 is empty
+	CURWS_AUTO=2, //2 is burst, 2-5 counts ratchet
+	CURWS_ZOOM=3,
+	CURWS_HEAT=4,
+	CURWS_BORESTRETCHED=5,
+	CURWS_DOT=6,
 };
 
 class HDCurrawongRandom:IdleDummy{
-    states{
-    spawn:
-        TNT1 A 0 nodelay{
-            let lll=HDCurrawong(spawn("HDCurrawong",pos,ALLOW_REPLACE));
-            if(!lll)return;
-            lll.special=special;
-            lll.vel=vel;
-            for(int i=0;i<5;i++)lll.args[i]=args[i];
-            if(!random(0,2))lll.weaponstatus[CURS_SWITCHTYPE]=random(0,3);
-        }stop;
-    }
+	states{
+	spawn:
+		TNT1 A 0 nodelay{
+			let zzz=HDCurrawong(spawn("HDCurrawong",pos,ALLOW_REPLACE));
+			if(!zzz)return;
+			zzz.special=special;
+			for(int i=0;i<5;i++)zzz.args[i]=args[i];
+			if(!random(0,2)){
+				zzz.weaponstatus[0]|=CUWF_NOSHOTGUN;
+				if(!random(0,3))zzz.weaponstatus[0]|=CURWF_NOFIRESELECT;
+			}
+			if(zzz.weaponstatus[0]&CUWF_NOSHOTGUN){
+				spawn("HD10mMag25",pos+(7,0,0),ALLOW_REPLACE);
+				spawn("HD10mMag25",pos+(5,0,0),ALLOW_REPLACE);
+			}else{
+				spawn("HD4GBAmmo",pos+(10,0,0),ALLOW_REPLACE);
+				spawn("HD4GBAmmo",pos+(8,0,0),ALLOW_REPLACE);
+				spawn("HD10mMag25",pos+(5,0,0),ALLOW_REPLACE);
+			}
+		}stop;
+	}
 }
 
 class HD10mMag25:HDMagAmmo{
     default{
-        hdmagammo.maxperunit 26; // + 50 for dirty. - [Ted]
+        //$Category "Ammo/Hideous Destructor/"
+        //$Title "4.26mm UAC Standard Mag"
+        //$Sprite "CLIPB0"
+
+        hdmagammo.maxperunit 26;  //NOTE: *only* the guns do the "+100 for dirty mag" thing
         hdmagammo.roundtype "HD10mAmmo";
         hdmagammo.roundbulk ENC_10_LOADED;
         hdmagammo.magbulk ENC_9MAG_EMPTY;
         hdmagammo.extracttime 4;
 
-        tag "$TAG_10MAG25";
-        inventory.pickupmessage "$PICKUP_10MMAG25";
+        tag "$TAG_10M25MAG";
         hdpickup.refid HDLD_CURRAWONGMAG;
+        inventory.pickupmessage "$PICKUP_10M25MAG";
     }
-	override string,string,name,double getmagsprite(int thismagamt){
-		string magsprite;
-		if(thismagamt>=51)magsprite="CWNMA0";
-		else if(thismagamt>0)magsprite="CWNMB0";
-		else magsprite="CWNMC0";
-		return magsprite,"PBRSA0","HD10mAmmo",0.6;
-	}
-	override void postbeginplay(){
-		super.postbeginplay();
-		sealtimer=0;
-		breakchance=0;
-	}
-	int breakchance;
-	int sealtimer;
-	override void doeffect(){
-		if(sealtimer>0)sealtimer--;
-		if(breakchance>0)breakchance--;
-		super.doeffect();
-	}
-	override string pickupmessage(){
-		string pms=super.pickupmessage();
-		if(mags[0]<26)pms.appendformat(" %s",StringTable.Localize("$426MAGMSG"));
-		return pms;
-	}
-	override int GetMagHudCount(int input){
-		if(input==26)return 25;
-		return input;
-	}
-	bool DirtyMagsOnly(){
-		if(mags.size()!=amount)return false;
-		for(int i=0;i<amount;i++){
-			if(mags[i]>=26)return false;
-		}
-		return true;
-	}
-	override bool Extract(){
-		SyncAmount();
-		int mindex=mags.size()-1;
-		if(
-			mags.size()<1
-			||mags[mindex]<1
-			||owner.A_JumpIfInventory(roundtype,0,"null")
-		)return false;
-		if(mags[mindex]==26){
-			if(sealtimer<1){
-				owner.A_Log(string.format(StringTable.Localize("$426MAGREALLY"),StringTable.Localize("$426MAGMSG")),true);
-				sealtimer=10;
-				extracttime=9;
-				return false;
-			}else{
-				mags[mindex]=25;
-				extracttime=12;
-				owner.A_StartSound("magmanager/426open",CHAN_WEAPON,CHANF_OVERLAP);
-				return false;
+    override void postbeginplay(){
+        super.postbeginplay();
+        sealtimer=0;
+        breakchance=0;
+    }
+    int breakchance;
+    int sealtimer;
+    bool reseal;
+    override void doeffect(){
+        if(sealtimer>0)sealtimer--;
+        if(breakchance>0)breakchance--;
+        super.doeffect();
+        reseal = owner && owner.player && owner.player.cmd.buttons&BT_USE;
+    }
+    override string pickupmessage(){
+        string pms=super.pickupmessage();
+        if(mags[0]<26)pms.appendformat(" %s",StringTable.Localize("$426MAGMSG"));
+        return pms;
+    }
+    override string,string,name,double getmagsprite(int thismagamt){
+        string magsprite;
+        if(thismagamt>=26)magsprite="CWNMA0";
+        else if(thismagamt>0)magsprite="CWNMB0";
+        else magsprite="CWNMC0";
+        return magsprite,"PBRSA0","HD10mAmmo",0.6;
+    }
+    override int GetMagHudCount(int input){
+        if(input==26)return 25;
+        return input;
+    }
+    bool DirtyMagsOnly(){
+        if(mags.size()!=amount)return false;
+        for(int i=0;i<amount;i++){
+            if(mags[i]>=26)return false;
+        }
+        return true;
+    }
+    override void DrawRoundCount(HDStatusBar sb,HDPlayerPawn hpl,name roundsprite,double scl,int offx,int offy,MagManager magman){
+		offx+=40;
+		scl=1.6;
+		sb.drawstring(
+			sb.pSmallFont,sb.FormatNumber(hpl.countinv(roundtype)),
+			(offx+2,offy),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_LEFT,
+			font.CR_BROWN
+		);
+
+
+		if(!!magman){
+			int rounddir=magman.weaponstatus[MMSS_ROUNDDIR];
+			if(rounddir!=0){
+				int broffx=offx;
+				int broffy=offy;
+				if(rounddir<0)broffx+=rounddir;
+				else broffx=rounddir+offx-40;
+				if(bseesdaggers){
+					broffy+=20;
+					if(
+						rounddir<-20
+						||(
+							rounddir>0
+							&&rounddir<20
+						)
+					){
+						broffy+=((broffx-offx)>>1);
+					}
+				}
+				broffy+=abs(abs(rounddir)-20)-20;
+				sb.drawimage(roundsprite,(broffx,broffy),
+					sb.DI_SCREEN_CENTER|sb.DI_ITEM_RIGHT_TOP,
+					scale:(scl,scl)
+				);
 			}
-		}else extracttime=default.extracttime;
-		int totake=min(random(1,6),mags[mindex]);
-		if(totake<HDPickup.MaxGive(owner,roundtype,roundbulk))HDF.Give(owner,roundtype,totake);
-		else HDPickup.DropItem(owner,roundtype,totake);
-		owner.A_StartSound("magmanager/extract",CHAN_WEAPON);
-		mags[mindex]-=totake;
-		return true;
-	}
-	override bool Insert(){
-		SyncAmount();
-		if(
-			mags.size()<1
-			||mags[mags.size()-1]>=25
-			||!owner.countinv(roundtype)
-		)return false;
-		owner.A_TakeInventory(roundtype,1,TIF_NOTAKEINFINITE);
-		owner.A_StartSound("magmanager/insert",8);
-		owner.A_StartSound("weapons/pocket",9,volume:frandom(0.1,0.6));
-		mags[mags.size()-1]++;
-		return true;
-	}
-	override void Consolidate(){
-		SyncAmount();
-		if(amount<2)return;
-		int totalrounds=0;
-		int howmanymags=0;
-		for(int i=0;i<amount;i++){
-			int thismag=mags[i];
-			if(
-				!thismag
-				||thismag>=25
-			)continue;
-			howmanymags++;
-			totalrounds+=mags[i]%25;
-			mags[i]=0; //keep the empties, do NOT call clear()!
 		}
-		if(howmanymags>1)totalrounds=int(totalrounds*frandom(0.9,1.));
-		for(int i=0;i<amount;i++){
-			if(mags[i]>=25)continue;
-			int toinsert=clamp(totalrounds,mags[i],25);
-			mags[i]=toinsert;
-			totalrounds-=toinsert;
-			if(totalrounds<1)break;
+
+		sb.drawimage(roundsprite,(offx,offy),
+			sb.DI_SCREEN_CENTER|sb.DI_ITEM_RIGHT_TOP,
+			scale:(scl,scl)
+		);
+		if(!!hpl.countinv("MM_4mmSealant")){
+			offy+=14;
+			sb.drawstring(
+				sb.pSmallFont,sb.FormatNumber(hpl.countinv("MM_4mmSealant")).." \cu[Use] Reseal Full Mag",
+				(offx+2,offy),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_LEFT,
+				font.CR_BROWN
+			);
+			sb.drawimage("SEALA0",(offx,offy),
+				sb.DI_SCREEN_CENTER|sb.DI_ITEM_RIGHT_TOP,
+				scale:(scl,scl)
+			);
 		}
 	}
+    override bool Extract(){
+        SyncAmount();
+        int mindex=mags.size()-1;
+        if(
+            mags.size()<1
+            ||mags[mindex]<1
+            ||owner.A_JumpIfInventory(roundtype,0,"null")
+        )return false;
+        if(mags[mindex]==26){
+            if(sealtimer<1){
+                owner.A_Log(string.format(StringTable.Localize("$426MAGREALLY"),StringTable.Localize("$426MAGMSG")),true);
+                sealtimer=10;
+                extracttime=9;
+                return false;
+            }else{
+                mags[mindex]=25;
+                extracttime=12;
+                owner.A_StartSound("magmanager/426open",CHAN_WEAPON,CHANF_OVERLAP);
+                return false;
+            }
+        }else extracttime=default.extracttime;
+        int totake=min(random(1,9),mags[mindex]);
+        if(totake<HDPickup.MaxGive(owner,roundtype,roundbulk))HDF.Give(owner,roundtype,totake);
+        else HDPickup.DropItem(owner,roundtype,totake);
+        owner.A_StartSound("magmanager/extract",CHAN_WEAPON);
+        owner.A_StartSound("magmanager/extract426",CHAN_WEAPON,CHANF_OVERLAP,0.4);
+        mags[mindex]-=totake;
+        return true;
+    }
+    override bool Insert(){
+        SyncAmount();
+        if(reseal && mags[mags.size()-1]==25 && owner.countinv("MM_4mmSealant"))
+        {
+            mags[mags.size()-1]++;
+            owner.A_StartSound("magmanager/insert",16);
+            owner.A_TakeInventory("MM_4mmSealant",1,TIF_NOTAKEINFINITE);
+        }
+        if(
+            mags.size()<1
+            ||mags[mags.size()-1]>=25
+            ||!owner.countinv(roundtype)
+        )return false;
+        owner.A_TakeInventory(roundtype,1,TIF_NOTAKEINFINITE);
+        owner.A_StartSound("magmanager/insert",8);
+        owner.A_StartSound("weapons/pocket",9,volume:frandom(0.1,0.6));
+        mags[mags.size()-1]++;
+        return true;
+    }
+    override void Consolidate(){
+        SyncAmount();
+        if(amount<2)return;
+        int totalrounds=0;
+        int howmanymags=0;
+        for(int i=0;i<amount;i++){
+            int thismag=mags[i];
+            if(
+                !thismag
+                ||thismag>=25
+            )continue;
+            howmanymags++;
+            totalrounds+=mags[i]%25;
+            mags[i]=0; //keep the empties, do NOT call clear()!
+        }
+        if(howmanymags>1)totalrounds=int(totalrounds*frandom(0.9,1.));
+        for(int i=0;i<amount;i++){
+            if(mags[i]>=25)continue;
+            int toinsert=clamp(totalrounds,mags[i],25);
+            mags[i]=toinsert;
+            totalrounds-=toinsert;
+            if(totalrounds<1)break;
+        }
+    }
     states(actor){
     spawn:
-        CWNM A -1 nodelay{
-			if(!mags.size()){destroy();return;}
-			int mmm=mags[0];
-			if(mmm>26)mags[0]=min(25,mmm%100);
-			if(mmm<26)frame=1;
-		}stop;
+        CWNM AB -1 nodelay{
+            if(!mags.size()){destroy();return;}
+            int mmm=mags[0];
+            if(mmm>26)mags[0]=min(25,mmm%100);
+            if(mmm<26)frame=1;
+        }stop;
     spawnempty:
-        CWNM A -1 A_SpawnEmpty();
+        CWNM C -1 A_SpawnEmpty();
         stop;
     }
 }
