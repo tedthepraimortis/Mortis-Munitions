@@ -34,6 +34,9 @@ TAG_SHOTPISTOL = "P.M.I. \'Featherduster\' Farming Shotgun";
 TAG_066MAG10 = "\'Featherduster\' 10-Round Clip";
 PICKUP_066MAG10 = "You got a Featherduster clip.";
 
+MERCH_FLAVOR_SHOTPISTOL = "Perfect for dealing with any pests you may come across.";
+MERCH_TAG_SHOTPISTOL = "P.M.I. \'Featherduster\' Shotgun";
+
 // Junco 4mm Self-Defense Weapon
 TAG_JUNCO = "P.M.I. \'Junco\' 4.26mm Pistol";
 TAG_4M25MAG = "4.26mm UAC Non-Standard Pistol Magazine";
@@ -46,6 +49,9 @@ OB_JUNCO = "%o was shown that even little birds can pack a punch.";
 
 MM_DROP_EXCESS_SEALANT = "\cuDrop excess sealant\n with the \cqpickup manager\cu.";
 
+MERCH_TAG_JUNCO = "P.M.I. \'Junco\' 4.26mm Pistol";
+MERCH_FLAVOR_JUNCO = "Don't let it overcharge, it's not junk yet!";
+
 // Currawong 10mm PDW
 TAG_CURRAWONG = "P.M.I. \'Currawong\' 10mm P.D.W.";
 PICKUP_CURRAWONG = "You got a \'Currawong\'! Show 'em what it's made of.";
@@ -55,3 +61,6 @@ TAG_10M30MAG = "P.M.I. \'Currawong\' 30-Round 10mm Magazine";
 PICKUP_10M30MAG = "Picked up a 30-round \'Currawong\' magazine.";
 10MMAGMSG = "Reloading a 10mm P.M.I \'Currawong\' magazine into another firearm without authorization is a breach of the P.M.I. End User License Agreement.";
 CUR10MMAGMSG = "Reloading a 10mm P.M.I \'Currawong\' magazine into another firearm\nwithout authorization is a breach of the\nP.M.I. End User License Agreement.";//Original one don't fit in screen
+
+MERCH_FLAVOR_CURRAWONG = "Watch the talons! They like scratchin', and they sure hurt.";
+MERCH_TAG_CURRAWONG = "P.M.I. \'Currawong\' 10mm PDW";

@@ -21,6 +21,7 @@ class JuncoPistol:HDWeapon{
         inventory.icon "RIGLA0";
 
         hdweapon.ammo1 "HD4mMag25",1;
+        hdweapon.ammo2 "MM_4mmSealant",1;
 
         hdweapon.loadoutcodes "\n\cu   firemode - 0/1, automatic/burst fire \n\cu   semi - 0/1, semi-auto lock";
     }

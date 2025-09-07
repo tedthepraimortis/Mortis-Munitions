@@ -15,6 +15,7 @@ class HDCurrawong:HDWeapon{
 		inventory.icon "CWRPA0";
 
 		hdweapon.ammo1 "HD10mMag30",1;
+        hdweapon.ammo2 "MM_4mmSealant",1;
 
 		hdweapon.loadoutcodes "
 			\cunoshot - 0/1, whether it has a 4-gauge shotgun
