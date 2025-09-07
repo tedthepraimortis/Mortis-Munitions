@@ -26,6 +26,14 @@ MERCH_FLAVOR_TARONGA = "Hot, jammy and ready for tons of penetrative fun! Till y
 MERCH_TAG_TARONGA = "P.M.I. 'Taronga' 6mm SAW";
 MERCH_CAT_MORTISMUNITIONS = "Mortis Munitions";
 
+// Featherduster .066 Bore Pistol
+OB_SHOTPISTOL = "%o got furiously dusted by %k.";
+PICKUP_SHOTPISTOL = "You got a Featherduster!";
+TAG_SHOTPISTOL = "P.M.I. \'Featherduster\' Farming Shotgun";
+
+TAG_066MAG10 = "\'Featherduster\' 10-Round Clip";
+PICKUP_066MAG10 = "You got a Featherduster clip.";
+
 // Junco 4mm Self-Defense Weapon
 TAG_JUNCO = "P.M.I. \'Junco\' 4.26mm Pistol";
 TAG_4M25MAG = "4.26mm UAC Non-Standard Pistol Magazine";
