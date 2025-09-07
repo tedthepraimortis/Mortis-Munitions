@@ -235,7 +235,7 @@ class HDCurrawong:HDWeapon{
 	states{
 	ready:
 		CURW A 1{
-			else A_WeaponReady(WRF_ALL);
+			A_WeaponReady(WRF_ALL);
 			if(invoker.weaponstatus[CURWS_AUTO]>2)invoker.weaponstatus[CURWS_AUTO]=2;
 		}goto readyend;
 	firemode:
