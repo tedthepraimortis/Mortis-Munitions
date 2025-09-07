@@ -11,6 +11,9 @@ const HDLD_CURRAWONG = "cwn";
 const HDLD_JUNCO = "jnk";
 const HDLD_SEALANT = "sel";
 
-const HDLD_CURRAWONGMAG = "c25";
+const HDLD_CURRAWONGMAG = "c30";
 const HDLD_066MAG10 = "6m1";
 const HDLD_4M25 = "425";
+
+const ENC_10MAG_EMPTY = ENC_9MAG_EMPTY * 1.1;
+const ENC_10MAG_LOADED = ENC_10MAG_EMPTY * 0.8;

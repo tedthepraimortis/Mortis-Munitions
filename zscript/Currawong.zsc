@@ -24,13 +24,13 @@ class HDCurrawong:HDWeapon{
 	}
 	override void tick(){
 		super.tick();
-		drainheat(CURWS_HEAT,12);
+		drainheat(CURWS_HEAT,9);
 	}
 	override bool AddSpareWeapon(actor newowner){return AddSpareWeaponRegular(newowner);}
 	override hdweapon GetSpareWeapon(actor newowner,bool reverse,bool doselect){return GetSpareWeaponRegular(newowner,reverse,doselect);}
 	override void postbeginplay(){
 		super.postbeginplay();
-		barrellength=25; //look at the sprites - GL does not extend beyond muzzle
+		barrellength=18;
 		if(weaponstatus[0]&CUWF_NOSHOTGUN){
 			barrelwidth=0.5;
 			barreldepth=1;
@@ -44,9 +44,9 @@ class HDCurrawong:HDWeapon{
 	}
 	override double gunmass(){
 		if(weaponstatus[0]&CUWF_NOSHOTGUN){
-			return 6.2+weaponstatus[CURWS_MAG]*0.02;
+			return 5.5+weaponstatus[CURWS_MAG]*0.02;
 		}else{
-			return 7.7+weaponstatus[CURWS_MAG]*0.01+(weaponstatus[0]&CURWF_4GAUGELOADED?1.:0.);
+			return 6.9+weaponstatus[CURWS_MAG]*0.01+(weaponstatus[0]&CURWF_4GAUGELOADED?0.82:0.);
 		}
 	}
 	override void GunBounce(){
@@ -178,19 +178,19 @@ class HDCurrawong:HDWeapon{
     static double FireShell(actor caller){
         double shotpower=1.0;
         HDBulletActor.FireBullet(caller,"HDB_4wad");
-        let p=HDBulletActor.FireBullet(caller,"HDB_400",spread:6.0,speedfactor:0.98,amount:40);
+        let p=HDBulletActor.FireBullet(caller,"HDB_400",spread:6.0,speedfactor:frandom(0.94,1.02),amount:40);
         caller.A_StartSound("weapons/cur4gaugeshot",9,CHANF_DEFAULT);
         return shotpower;
     }
 	override void SetReflexReticle(int which){weaponstatus[CURWS_DOT]=which;}
 	override double weaponbulk(){
-		double blx=90;
+		double blx=97;
 		if(!(weaponstatus[0]&CUWF_NOSHOTGUN)){
-			blx+=25;
-			if(weaponstatus[0]&CURWF_4GAUGELOADED)blx+=ENC_ROCKETLOADED;
+			blx+=19;
+			if(weaponstatus[0]&CURWF_4GAUGELOADED)blx+=ENC_4GBLOADED;
 		}
 		int mgg=weaponstatus[CURWS_MAG];
-		return blx+(mgg<0?0:(ENC_426MAG_LOADED+mgg*ENC_426_LOADED));
+		return blx+(mgg<0?0:(ENC_10MAG_LOADED+mgg*ENC_10_LOADED));
 	}
 	override void failedpickupunload(){
 		failedpickupunloadmag(CURWS_MAG,"HD10mMag30");
@@ -272,7 +272,7 @@ class HDCurrawong:HDWeapon{
 			A_ZoomRecoil(max(0.95,1.-0.05*min(invoker.weaponstatus[CURWS_AUTO],3)));
 
 			double brnd=max(invoker.weaponstatus[CURWS_HEAT],invoker.weaponstatus[CURWS_BORESTRETCHED])*0.01;
-			let bbb=HDBulletActor.FireBullet(self,"HDB_10",speedfactor:1.25,spread:brnd>1.2?brnd:0);
+			let bbb=HDBulletActor.FireBullet(self,"HDB_10",speedfactor:frandom(1.13,1.31),spread:brnd>1.2?brnd:0);
 
 			A_MuzzleClimb(
 				-frandom(0.1,0.1),-frandom(0,0.1),
@@ -443,7 +443,7 @@ class HDCurrawong:HDWeapon{
 			}else{
 				HDMagAmmo.GiveMag(self,"HD10mMag30",inmag);
 				A_StartSound("weapons/pocket",CHAN_WEAPON);
-				if(inmag<31)A_Log(StringTable.Localize("$426MAGMSG"),true);
+				if(inmag<31)A_Log(StringTable.Localize("$10MMAGMSG"),true);
 			}
 		}
 	magout:
@@ -483,7 +483,7 @@ class HDCurrawong:HDWeapon{
 			else invoker.weaponstatus[0]&=~CURWF_STILLPRESSINGRELOAD;
 		}
 		CURW B 3 offset(-15,45)A_StartSound("weapons/currawongmagin",CHAN_WEAPON);
-		CURW B 1 offset(-15,42)A_WeaponMessage(StringTable.Localize("$ZM426MAGMSG"),70);
+		CURW B 1 offset(-15,42)A_WeaponMessage(StringTable.Localize("$CUR10MMAGMSG"),70);
 		CURW BBBBBBBAAAA 1 offset(-15,41){
 			bool prr=PressingReload();
 			if(
@@ -509,7 +509,7 @@ class HDCurrawong:HDWeapon{
 			A_StartSound("weapons/currawongmagmove",CHAN_WEAPON,CHANF_OVERLAP);
 			A_StartSound("weapons/smack",CHAN_WEAPON,CHANF_OVERLAP);
 
-			string realmessage=StringTable.Localize("$426MAGMSG");
+			string realmessage=StringTable.Localize("$10MMAGMSG");
 			realmessage=realmessage.left(random(13,20));
 			realmessage.appendformat(StringTable.Localize("$ZMRELERROR")..random(0,9999)..StringTable.Localize("$ZMNOCARRIER"));
 			A_WeaponMessage(realmessage,70);
@@ -810,7 +810,7 @@ class HD10mMag30:HDMagAmmo{
         hdmagammo.maxperunit 31;  //NOTE: *only* the guns do the "+100 for dirty mag" thing
         hdmagammo.roundtype "HD10mAmmo";
         hdmagammo.roundbulk ENC_10_LOADED;
-        hdmagammo.magbulk ENC_9MAG_EMPTY;
+        hdmagammo.magbulk ENC_10MAG_EMPTY;
         hdmagammo.extracttime 4;
 
         tag "$TAG_10M30MAG";
@@ -833,7 +833,7 @@ class HD10mMag30:HDMagAmmo{
     }
     override string pickupmessage(){
         string pms=super.pickupmessage();
-        if(mags[0]<31)pms.appendformat(" %s",StringTable.Localize("$426MAGMSG"));
+        if(mags[0]<31)pms.appendformat(" %s",StringTable.Localize("$10MMAGMSG"));
         return pms;
     }
     override string,string,name,double getmagsprite(int thismagamt){
@@ -918,7 +918,7 @@ class HD10mMag30:HDMagAmmo{
         )return false;
         if(mags[mindex]==31){
             if(sealtimer<1){
-                owner.A_Log(string.format(StringTable.Localize("$426MAGREALLY"),StringTable.Localize("$426MAGMSG")),true);
+                owner.A_Log(string.format(StringTable.Localize("$426MAGREALLY"),StringTable.Localize("$10MMAGMSG")),true);
                 sealtimer=10;
                 extracttime=9;
                 return false;

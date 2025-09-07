@@ -37,11 +37,11 @@ PICKUP_066MAG10 = "You got a Featherduster clip.";
 // Junco 4mm Self-Defense Weapon
 TAG_JUNCO = "P.M.I. \'Junco\' 4.26mm Pistol";
 TAG_4M25MAG = "4.26mm UAC Non-Standard Pistol Magazine";
-TAG_4MSEALANT = "4.26mm Aftermarket Mag Sealant";
+TAG_4MSEALANT = "Aftermarket Mag Sealant";
 
 PICKUP_JUNCO = "You got the \'Junco\'! Don't burn yourself now!";
 PICKUP_4M25MAG="Picked up a 4.26mm UAC Pistol magazine.";
-PICKUP_4MSEALANT="Picked up some aftermarket 4.26mm Mag Sealant. Don't let management know!";
+PICKUP_4MSEALANT="Picked up some aftermarket Mag Sealant. Don't let management know!";
 OB_JUNCO = "%o was shown that even little birds can pack a punch.";
 
 MM_DROP_EXCESS_SEALANT = "\cuDrop excess sealant\n with the \cqpickup manager\cu.";
@@ -53,3 +53,5 @@ OB_CURRAWONG = "%o saw what %k's talons do.";
 
 TAG_10M30MAG = "P.M.I. \'Currawong\' 30-Round 10mm Magazine";
 PICKUP_10M30MAG = "Picked up a 30-round \'Currawong\' magazine.";
+10MMAGMSG = "Reloading a 10mm P.M.I \'Currawong\' magazine into another firearm without authorization is a breach of the P.M.I. End User License Agreement.";
+CUR10MMAGMSG = "Reloading a 10mm P.M.I \'Currawong\' magazine into another firearm\nwithout authorization is a breach of the\nP.M.I. End User License Agreement.";//Original one don't fit in screen
