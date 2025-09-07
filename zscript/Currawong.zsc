@@ -1,4 +1,4 @@
-class HDCurrawong:ZM66ScopeHaver{
+class HDCurrawong:HDWeapon{
 	default{
 		+hdweapon.fitsinbackpack
 		weapon.selectionorder 20;
@@ -85,9 +85,9 @@ class HDCurrawong:ZM66ScopeHaver{
 		if(sb.hudlevel==1){
 			int nextmagloaded=sb.GetNextLoadMag(hdmagammo(hpl.findinventory("HD10mMag25")));
             if(nextmagloaded>25){
-                sb.drawimage("CWNMA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,scale:(2,2));
+                sb.drawimage("CWNMA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM);
             }else if(nextmagloaded<1){
-                sb.drawimage("CWNMC0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.,scale:(2,2));
+                sb.drawimage("CWNMB0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.);
             }else sb.drawbar(
                 "CWNMA0","CWNMGREY",
                 nextmagloaded,25,
@@ -114,11 +114,9 @@ class HDCurrawong:ZM66ScopeHaver{
 		}
 		if(hdw.weaponstatus[CURWS_MAG]>100)lod=random[shitgun](10,99);
 		sb.drawnum(lod,-16,-22,sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_TEXT_ALIGN_RIGHT,Font.CR_RED);
-		if(hdw.weaponstatus[0]&CUWF_SHOTMODE){
+		/*if(hdw.weaponstatus[0]&CUWF_SHOTMODE){
 			DrawRifleGrenadeStatus(sb,hdw);
-		}else sb.drawnum(hdw.weaponstatus[CURWS_ZOOM],
-			-30,-22,sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_TEXT_ALIGN_RIGHT,Font.CR_DARKGRAY
-		);
+		}*/
 	}
 	override string gethelptext(){
 		bool gl=!(weaponstatus[0]&CUWF_NOSHOTGUN);
@@ -142,7 +140,26 @@ class HDCurrawong:ZM66ScopeHaver{
 		bool sightbob,vector2 bob,double fov,bool scopeview,actor hpc
 	){
 		int scaledyoffset=47;
-		if(hdw.weaponstatus[0]&CUWF_SHOTMODE)sb.drawgrenadeladder(hdw.airburst,bob);
+		if(hdw.weaponstatus[0]&CUWF_SHOTMODE){
+			int cx,cy,cw,ch;
+			[cx,cy,cw,ch]=screen.GetClipRect();
+			sb.SetClipRect(
+				-16+bob.x,-32+bob.y,32,40,
+				sb.DI_SCREEN_CENTER
+			);
+			vector2 bobb=bob*1.1;
+			sb.drawimage(
+				"frntsite",(0,0)+bobb,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
+				scale:(0.8,1.1)
+			);
+			sb.SetClipRect(cx,cy,cw,ch);
+
+			sb.drawimage(
+				"sgbaksit",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
+				alpha:0.9,
+				scale:(1.7,1.0)
+			);
+		}
 		else{
 			double dotoff=max(abs(bob.x),abs(bob.y));
 			if(dotoff<40){
@@ -156,7 +173,6 @@ class HDCurrawong:ZM66ScopeHaver{
 			sb.drawimage(
 				"z66site",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER
 			);
-			if(scopeview)ShowZMScope(hdw.weaponstatus[CURWS_ZOOM],hpc,sb,scaledyoffset,bob);
 		}
 	}
     //returns the power of the load just fired
