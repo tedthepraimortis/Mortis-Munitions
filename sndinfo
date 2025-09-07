@@ -35,3 +35,5 @@ weapons/cur4gshot1 "Sounds/Currawong/Balthazaar_Shoot_01.ogg"
 weapons/cur4gshot2 "Sounds/Currawong/Balthazaar_Shoot_02.ogg"
 weapons/cur4gshot3 "Sounds/Currawong/Balthazaar_Shoot_03.ogg"
 weapons/cur4gshot4 "Sounds/Currawong/Balthazaar_Shoot_04.ogg"
+
+$alias weapons/currawongjam weapons/riflejam
