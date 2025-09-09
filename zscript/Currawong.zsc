@@ -301,7 +301,7 @@ class HDCurrawong:HDWeapon{
 	hold:
 		CURW A 0 A_JumpIf(invoker.weaponstatus[0]&CUWF_SHOTMODE,"FireFrag");
 		CURW A 0 A_JumpIf(invoker.weaponstatus[0]&CURWF_NOFIRESELECT,"nope");
-		CURW A 0 A_JumpIf(invoker.weaponstatus[CURWS_AUTO]>4,"nope");
+		CURW A 0 A_JumpIf(invoker.weaponstatus[CURWS_AUTO]>3,"nope");
 		CURW A 0 A_JumpIf(invoker.weaponstatus[CURWS_AUTO],"shootgun");
 	althold:
 		---- A 0 A_Refire();
@@ -362,7 +362,7 @@ class HDCurrawong:HDWeapon{
 			A_WeaponReady(WRF_NONE);
 		}
 		CURW B 0 A_JumpIf(invoker.weaponstatus[CURWS_AUTO]<1,"nope");
-		CURW B 0 A_JumpIf(invoker.weaponstatus[CURWS_AUTO]>4,"nope");
+		CURW B 0 A_JumpIf(invoker.weaponstatus[CURWS_AUTO]>3,"nope");
 		CURW B 2 A_JumpIf(invoker.weaponstatus[CURWS_AUTO]>1,1);
 		CURW B 0 A_Refire();
 		goto ready;
@@ -770,7 +770,7 @@ enum currawongstatus{
 
 	CURWS_FLAGS=0,
 	CURWS_MAG=1, //-1 is empty
-	CURWS_AUTO=2, //2 is burst, 2-5 counts ratchet
+	CURWS_AUTO=2, //2 is burst, 2-4 counts ratchet
 	CURWS_HEAT=3,
 	CURWS_BORESTRETCHED=4,
 	CURWS_DOT=5,
