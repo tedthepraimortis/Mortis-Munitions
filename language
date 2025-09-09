@@ -40,6 +40,9 @@ MERCH_TAG_SHOTPISTOL = "P.M.I. \'Featherduster\' Shotgun";
 MERCH_FLAVOR_SHOTPISTOLCLIP = "If it doesn't kill, just shoot again! If that still doesn't kill, shoot again!";
 MERCH_TAG_SHOTPISTOLCLIP = "\'Featherduster\' 10-Round Clip";
 
+SHTPWH_ALTFIRE = "  Work slide\n";
+SHTPWH_AFIREPUNL = "  Unload chamber\n";
+
 // Junco 4mm Self-Defense Weapon
 TAG_JUNCO = "P.M.I. \'Junco\' 4.26mm Pistol";
 TAG_4M25MAG = "4.26mm UAC Non-Standard Pistol Magazine";

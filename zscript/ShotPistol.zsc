@@ -112,12 +112,12 @@ class HDShotPistol:HDHandgun{
         LocalizeHelp();
         return
         LWPHELP_FIRE..StringTable.Localize("$SHOOT_CH")..weaponstatus[SPSTS_CHOKE]..")\n"
-        ..LWPHELP_ALTRELOAD..StringTable.Localize("$PISWH_ALTRELOAD")
+		..LWPHELP_ALTFIRE..StringTable.Localize("$SHTPWH_ALTFIRE")
         ..LWPHELP_RELOAD..StringTable.Localize("$PISWH_RELOAD")
-        ..LWPHELP_USE.."+"..LWPHELP_RELOAD..StringTable.Localize("$PISWH_UPRELOAD")
+        ..LWPHELP_ALTFIRE.."+"..LWPHELP_RELOAD..StringTable.Localize("$PISWH_UPRELOAD")
+		..LWPHELP_ALTFIRE.."+"..LWPHELP_UNLOAD..StringTable.Localize("$SHTPWH_AFIREPUNL")
         ..LWPHELP_MAGMANAGER
-        ..LWPHELP_UNLOADUNLOAD
-        ;
+        ..LWPHELP_UNLOADUNLOAD;
     }
     override void DrawSightPicture(
         HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl,
