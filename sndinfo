@@ -37,3 +37,24 @@ weapons/cur4gshot3 "Sounds/Currawong/Balthazaar_Shoot_03.ogg"
 weapons/cur4gshot4 "Sounds/Currawong/Balthazaar_Shoot_04.ogg"
 
 $alias weapons/currawongjam weapons/riflejam
+
+// Featherduster
+$random weapons/shotpistol {weapons/shotpistol1 weapons/shotpistol2 weapons/shotpistol3 weapons/shotpistol4}
+weapons/shotpistol1 "Sounds/Shotpistol/Shotgun_410_B_01.ogg"
+weapons/shotpistol2 "Sounds/Shotpistol/Shotgun_410_B_02.ogg"
+weapons/shotpistol3 "Sounds/Shotpistol/Shotgun_410_B_03.ogg"
+weapons/shotpistol4 "Sounds/Shotpistol/Shotgun_410_B_04.ogg"
+
+$random weapons/shotpistolsuppressed {weapons/shtpsuppressed1 weapons/shtpsuppressed2 weapons/shtpsuppressed3 weapons/shtpsuppressed4}
+weapons/shtpsuppressed1 "Sounds/Shotpistol/Suppressed_Shot_12ga_1.ogg"
+weapons/shtpsuppressed2 "Sounds/Shotpistol/Suppressed_Shot_12ga_2.ogg"
+weapons/shtpsuppressed3 "Sounds/Shotpistol/Suppressed_Shot_12ga_3.ogg"
+weapons/shtpsuppressed4 "Sounds/Shotpistol/Suppressed_Shot_12ga_4.ogg"
+
+weapons/shotpistolchamber "Sounds/Shotpistol/PX4_BoltSlideForward.ogg"
+weapons/shotpistoldry "Sounds/Shotpistol/PX4_HammerHit.ogg"
+weapons/shotpistolprefire "Sounds/Shotpistol/PX4_PreFire.ogg"
+weapons/spstslideback "Sounds/Shotpistol/PX4_BoltSlideBackHeld.ogg"
+weapons/spstslidefwd "Sounds/Shotpistol/PX4_BoltSlideForwardHeld.ogg"
+weapons/spstloads "Sounds/Shotpistol/PX4_MagazineIn.ogg"
+weapons/spstloadm "Sounds/Shotpistol/PX4_MagazineInsertRound.ogg"
