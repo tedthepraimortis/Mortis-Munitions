@@ -16,6 +16,7 @@ weapons/tarongachamber "Sounds/Taronga/M60_Cover_Open.ogg"
 weapons/tarongaboltfwd "Sounds/Taronga/M60_BoltSlideForwardHeld.ogg"
 weapons/tarongaboltback "Sounds/Taronga/M60_BoltSlideBackHeld.ogg"
 $alias weapons/tarongaload weapons/tarongachamber
+weapons/tarongasafety "Sounds/Taronga/G3_Safety.ogg"
 
 // Currawong
 $random weapons/currawong {weapons/currashot1 weapons/currashot2 weapons/currashot3 weapons/currashot4}
@@ -27,6 +28,9 @@ weapons/currawongchamber "Sounds/Currawong/MP5_BoltSlideForwardHeld.ogg"
 weapons/currawongmagout "Sounds/Currawong/MP5_MagazineOut.ogg"
 weapons/currawongmagin "Sounds/Currawong/MP5_MagazineIn.ogg"
 weapons/currawongmagmove "Sounds/Currawong/MP5_HandleUp.ogg"
+weapons/currawongsafety "Sounds/Currawong/AUG_Safety.ogg"
+weapons/currawonghammerhit "Sounds/Currawong/MP5_HammerHit.ogg"
+weapons/currawonghback "Sounds/Currawong/MP5_HandleBack.ogg"
 $alias weapons/cur4gaugeopen weapons/targrenopen
 $alias weapons/cur4gaugeclose weapons/targrenclose
 weapons/cur4gaugereload "Sounds/Currawong/CarlGustaf84_Shell_Out_01.ogg"

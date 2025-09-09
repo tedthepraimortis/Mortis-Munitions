@@ -436,6 +436,7 @@ class HDTaronga : WAN_20mmLauncher
                 {
                     invoker.OldFireMode = invoker.WeaponStatus[TRProp_Mode];
                     int maxMode = 3;
+                    A_StartSound("weapons/tarongasafety",pitch:0.55);
                     ++invoker.WeaponStatus[TRProp_Mode] %= maxMode;
                 }
                 invoker.BurstIndex = 0;
