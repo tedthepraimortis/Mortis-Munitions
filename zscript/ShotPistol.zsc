@@ -257,7 +257,7 @@ class HDShotPistol:HDHandgun{
         #### A 1 A_Refire();
         goto ready;
 	flash:
-		STPF F 0;
+		SPST F 0;
 		---- F 1 bright{
 			HDFlashAlpha(64);
 			A_Light1();
