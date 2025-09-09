@@ -596,7 +596,7 @@ class HDTaronga : WAN_20mmLauncher
                 }
             }
 			#### A 1 Offset(0, 34) A_WeaponBusy();
-			#### A 1 Offset(1, 35);
+			#### A 1 Offset(1, 35) A_JumpIf(invoker.WeaponStatus[TRProp_BoltWeight]==2,1);
 			#### A 1 Offset (2, 36) A_JumpIf(invoker.weaponstatus[TRProp_Chamber]>1,"startjamderp");
 			#### A 1 Offset(3, 37) A_MuzzleClimb(-frandom(0.06,0.1),-frandom(0.3,0.5));
 			#### A 1 Offset(4, 38) A_ChamberGrit(randompick(0,0,1,1,2,3,4),true);

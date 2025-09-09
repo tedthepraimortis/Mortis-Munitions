@@ -96,7 +96,7 @@ class HDCurrawong:HDWeapon{
             );
 			sb.drawnum(hpl.countinv("HD10mMag30"),-43,-8,sb.DI_SCREEN_CENTER_BOTTOM);
 			if(!(hdw.weaponstatus[0]&CUWF_NOSHOTGUN)){
-				sb.drawimage("4GSIA0",(-62,-4),sb.DI_SCREEN_CENTER_BOTTOM,scale:(0.6,0.6));
+				sb.drawimage("4GSIA0",(-58,-8),sb.DI_SCREEN_CENTER_BOTTOM);
 				sb.drawnum(hpl.countinv("HD4GBAmmo"),-56,-8,sb.DI_SCREEN_CENTER_BOTTOM);
 			}
 		}
@@ -105,7 +105,11 @@ class HDCurrawong:HDWeapon{
 		sb.drawwepcounter(hdw.weaponstatus[CURWS_AUTO],
 			-22,-10,"RBRSA3A7","STFULAUT","STBURAUT"
 		);
-		if(hdw.weaponstatus[0]&CURWF_4GAUGELOADED)sb.drawrect(-20,-14,4,2.6);
+		if(hdw.weaponstatus[0]&CURWF_4GAUGELOADED)
+		{
+			sb.drawrect(-19,-21,3,5);
+			sb.drawrect(-19,-15,3,2);
+		}
 		int lod=clamp(hdw.weaponstatus[CURWS_MAG]%100,0,30);
 		sb.drawwepnum(lod,30);
 		if(hdw.weaponstatus[0]&CURWF_CHAMBER){
@@ -113,10 +117,7 @@ class HDCurrawong:HDWeapon{
 			lod++;
 		}
 		if(hdw.weaponstatus[CURWS_MAG]>100)lod=random[shitgun](10,99);
-		sb.drawnum(lod,-16,-22,sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_TEXT_ALIGN_RIGHT,Font.CR_RED);
-		/*if(hdw.weaponstatus[0]&CUWF_SHOTMODE){
-			DrawRifleGrenadeStatus(sb,hdw);
-		}*/
+		sb.drawnum(lod,-23,-22,sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_TEXT_ALIGN_RIGHT,Font.CR_RED);
 	}
 	override string gethelptext(){
 		bool gl=!(weaponstatus[0]&CUWF_NOSHOTGUN);
@@ -556,7 +557,7 @@ class HDCurrawong:HDWeapon{
 				invoker.weaponstatus[CURWS_FLAGS]&CURWF_CHAMBER
 				&&!(invoker.weaponstatus[0]&CURWF_CHAMBERBROKEN)
 			){
-				A_SpawnItemEx("HDCrushed10mm",0,0,20,
+				A_SpawnItemEx("HDSpent10mm",0,0,20,
 					random(4,7),random(-2,2),random(-2,1),0,
 					SXF_NOCHECKPOSITION
 				);
@@ -566,7 +567,7 @@ class HDCurrawong:HDWeapon{
 				invoker.weaponstatus[0]&=~CURWF_CHAMBERBROKEN;
 				invoker.weaponstatus[CURWS_FLAGS]&=~CURWF_CHAMBER;
 				A_StartSound("weapons/currawongchamber",CHAN_WEAPON,CHANF_OVERLAP);
-				for(int i=0;i<5;i++)A_SpawnItemEx("HDSpent10mm",0,0,20,
+				for(int i=0;i<5;i++)A_SpawnItemEx("HDCrushed10mm",0,0,20,
 					random(4,7),random(-2,2),random(-2,1),0,SXF_NOCHECKPOSITION
 				);
 				if(!random(0,5))A_SpawnItemEx("HDSmokeChunk",12,0,gunheight()-10,4,frandom(-2,2),frandom(2,4));
@@ -995,4 +996,31 @@ class HD10mMag30:HDMagAmmo{
     }
 }
 
-class HDCrushed10mm : HDSpent10mm{}
+class HDCrushed10mm : HDDebris
+{
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		A_ChangeVelocity(frandom(-1, 1), frandom(-0.4, 0.4), 0, CVF_RELATIVE);
+	}
+	
+
+	Default
+	{
+		BounceSound "misc/casing3";
+		Scale 0.55;
+	}
+
+	States
+	{
+		Spawn:
+			PBRS A 2 NoDelay
+			{
+				A_SetRoll(roll + 45, SPF_INTERPOLATE);
+			}
+			Loop;
+		Death:
+			PBRS # -1;
+			Stop;
+	}
+}

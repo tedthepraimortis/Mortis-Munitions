@@ -221,7 +221,6 @@ class HDShotPistol:HDHandgun{
         ---- A 0{
             invoker.weaponstatus[0]&=~SPSTF_JUSTUNLOAD;
             if(invoker.weaponstatus[SPSTS_CHAMBER]==2)setweaponstate("shoot");
-            else if(invoker.weaponstatus[SPSTS_MAG]>0)setweaponstate("chamber_manual");
         }goto nope;
     shoot:
         #### A 1{
@@ -267,6 +266,96 @@ class HDShotPistol:HDHandgun{
 		}
 		---- A 0 A_Light0();
 		stop;
+	AltFire:
+		STPF A 1 Offset(0, 34) A_WeaponBusy();
+		#### A 1 Offset(1, 35);
+		#### A 1 Offset (2, 36);
+		#### A 1 Offset(3, 37) A_MuzzleClimb(-frandom(0.06,0.1),-frandom(0.3,0.5));
+		#### A 1 Offset(4, 38);
+		#### A 0 A_Refire("chamber");
+		goto ready;
+
+	AltHold:
+		STPS A 1 A_WeaponReady(WRF_NOFIRE);
+		#### A 1{
+			A_ClearRefire();
+			bool ChamberEmpty = invoker.WeaponStatus[SPSTS_CHAMBER]<1;
+			if (PressingUnload())
+			{
+				if(ChamberEmpty)
+				{
+					return resolvestate("AltHold");
+				}
+				else
+				{
+					invoker.WeaponStatus[SPSTS_LoadType] = 0;
+					return resolvestate("loadchamber");
+				}
+			}
+			else if(PressingReload())
+			{
+				if(!ChamberEmpty)
+				{
+					invoker.WeaponStatus[SPSTS_LoadType] = 0;
+					return resolvestate("loadchamber");
+				}
+				else if (CheckInventory("HD069BoreAmmo", 1))
+				{
+					invoker.WeaponStatus[SPSTS_LoadType] = 1;
+					return resolvestate("loadchamber");
+				}
+			}
+			if (PressingAltFire())
+			{
+				return ResolveState("AltHold");
+			}
+			return resolvestate("altholdend");
+		}
+	chamber:
+		SPST C 2 offset(4,38)A_StartSound("weapons/boltback",8);
+		SPST D 2 offset(6,42)A_JumpIf(invoker.weaponstatus[0]&SPSTS_SUPPRESSOR,1);
+		SPST D 1 offset(6,42){
+			if(gunbraced())A_MuzzleClimb(
+				frandom(-0.1,0.3),frandom(-0.1,0.3)
+			);else A_MuzzleClimb(
+				frandom(-0.2,0.8),frandom(-0.4,0.8)
+			);
+		}
+		SPST D 2 offset(6,42){
+			//eject
+			int chm=invoker.weaponstatus[SPSTS_CHAMBER];
+			double cp=cos(pitch);
+			double sp=sin(pitch);
+			if(chm>1){
+				A_SpawnItemEx(
+					"HD069BoreAmmo",cp*8,1,height-7-sp*8,
+					cp*cos(angle-80)*4+vel.x,
+					cp*sin(angle-80)*4+vel.y,
+					-sp*4+vel.z,
+					0,SXF_ABSOLUTEMOMENTUM|SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH
+				);
+			}else if(chm==1){
+				A_SpawnItemEx(
+					"HDSpent069Bore",cp*8,1,height-7-sp*8,
+					cp*cos(angle-80)*6+vel.x,
+					cp*sin(angle-80)*6+vel.y,
+					-sp*6+vel.z,
+					0,SXF_ABSOLUTEMOMENTUM|SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH
+				);
+			}
+			//cycle new
+			if(invoker.weaponstatus[SPSTS_MAG]>0){  
+				invoker.weaponstatus[SPSTS_CHAMBER]=2;
+				invoker.weaponstatus[SPSTS_MAG]--;
+			}else invoker.weaponstatus[SPSTS_CHAMBER]=0;
+		}
+		SPST E 1 offset(6,42) A_WeaponReady(WRF_NOFIRE);
+		SPST E 0 A_Refire("althold");
+		goto altholdend;
+
+	AltHoldEnd:
+		#### A 2 A_StartSound("weapons/TarongaBoltFwd", 8);
+		Goto Ready;
     unload:
         ---- A 0{
             invoker.weaponstatus[0]|=SPSTF_JUSTUNLOAD;
@@ -470,7 +559,6 @@ class HDShotPistol:HDHandgun{
 		SPST A 1 offset(0,34);
 		goto ready;
 
-	altfire:
 	user1:
         goto nope;
 
@@ -512,6 +600,7 @@ enum Shotpistolstatus{
     SPSTS_CHAMBER=2, //0 empty, 1 spent, 2 loaded
     SPSTS_CHOKE=3,
     SPSTS_SUPPRESSOR=4,
+	SPSTS_LoadType=5,
 };
 
 class HDShotpistolRandom:IdleDummy{
