@@ -267,7 +267,8 @@ class HDCurrawong:HDWeapon{
             int heat = min(50, invoker.weaponStatus[CURWS_HEAT]);
 			A_Light1();
 			HDFlashAlpha(-16);
-			A_StartSound("weapons/currawong",CHAN_WEAPON,0,0.75,pitch:0.8+(invoker.weaponstatus[CURWS_MAG]*0.05));
+			let gunpitch = clamp(0.8+(invoker.weaponstatus[CURWS_MAG]*0.05),0,2);
+			A_StartSound("weapons/currawong",CHAN_WEAPON,0,0.75,pitch:gunpitch);
 			A_ZoomRecoil(max(0.95,1.-0.05*min(invoker.weaponstatus[CURWS_AUTO],3)));
 
 			double brnd=max(invoker.weaponstatus[CURWS_HEAT],invoker.weaponstatus[CURWS_BORESTRETCHED])*0.01;
