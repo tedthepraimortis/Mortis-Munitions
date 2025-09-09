@@ -125,15 +125,12 @@ class HDCurrawong:HDWeapon{
 		LocalizeHelp();
 		return
 		LWPHELP_FIRESHOOT
-		..(gl?(LWPHELP_ALTFIRE..(glmode?(StringTable.Localize("$ZMWH_ALTFIRE1")):(StringTable.Localize("$ZMWH_ALTFIRE2")))):"")
+		..(gl?(LWPHELP_ALTFIRE..(glmode?(StringTable.Localize("$ZMWH_ALTFIRE1")):(StringTable.Localize("$CWWH_ALTFIRE2")))):"")
 		..LWPHELP_RELOAD..StringTable.Localize("$ZMWH_RELOAD")
-		..(gl?(LWPHELP_ALTRELOAD..StringTable.Localize("$ZMWH_ALTRELOAD")):"")
-		..(glmode?(LWPHELP_FIREMODE.."+"..LWPHELP_UPDOWN..StringTable.Localize("$ZMWH_FMODPUD"))
-			:(
-			((weaponstatus[0]&CURWF_NOFIRESELECT)?"":LWPHELP_FIREMODE..StringTable.Localize("$ZMWH_FMODE"))
-			..LWPHELP_ZOOM.."+"..LWPHELP_FIREMODE.."+"..LWPHELP_UPDOWN..StringTable.Localize("$ZMWH_ZPFMOD")))
+		..(gl?(LWPHELP_ALTRELOAD..StringTable.Localize("$CWWH_ALTRELOAD")):"")
+		..((weaponstatus[0]&CURWF_NOFIRESELECT)?"":LWPHELP_FIREMODE..StringTable.Localize("$ZMWH_FMODE"))
 		..LWPHELP_MAGMANAGER
-		..LWPHELP_UNLOAD..StringTable.Localize("$ZMWH_UNLOAD")..(glmode?StringTable.Localize("$ZMWH_GL"):StringTable.Localize("$ZMWH_MAG"))
+		..LWPHELP_UNLOAD..StringTable.Localize("$ZMWH_UNLOAD")..(glmode?StringTable.Localize("$CWWH_SHOTGUN"):StringTable.Localize("$ZMWH_MAG"))
 		;
 	}
 	override void DrawSightPicture(

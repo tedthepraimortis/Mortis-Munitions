@@ -68,6 +68,10 @@ PICKUP_10M30MAG = "Picked up a 30-round \'Currawong\' magazine.";
 10MMAGMSG = "Reloading a 10mm P.M.I \'Currawong\' magazine into another firearm without authorization is a breach of the P.M.I. End User License Agreement.";
 CUR10MMAGMSG = "Reloading a 10mm P.M.I \'Currawong\' magazine into another firearm\nwithout authorization is a breach of the\nP.M.I. End User License Agreement.";//Original one don't fit in screen
 
+CWWH_ALTFIRE2 = "  Shotgun Mode\n";
+CWWH_SHOTGUN = "tube";
+CWWH_ALTRELOAD = "  Reload Shotgun\n";
+
 MERCH_FLAVOR_CURRAWONG = "Watch the talons! They like scratchin', and they sure hurt.";
 MERCH_TAG_CURRAWONG = "P.M.I. \'Currawong\' 10mm PDW";
 
