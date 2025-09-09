@@ -8,18 +8,21 @@ server bool taronga_allowbackpacks = true;
 server float currawong_clipbox_spawn_weight = 2;
 server bool hdm_enable_currawong = true;
 server int hdm_currawong_price = 225;
+server int hdm_currawongmag_price = 12;
 server bool Currawong_allowbackpacks = true;
 
 // Featherduster
 server float shotpistol_shellbox_spawn_weight = 2;
 server bool hdm_enable_shotpistol = true;
 server int hdm_shotpistol_price = 95;
+server int hdm_shotpistolclip_price = 9;
 server bool shotpistol_allowbackpacks = true;
 
 // Junco
 server float junco_clipmag_spawn_weight = 2;
 server bool hdm_enable_junco = true;
 server int hdm_junco_price = 35;
+server int hdm_juncomag_price = 5;
 server bool junco_allowbackpacks = true;
 
 // Mass

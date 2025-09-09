@@ -32,10 +32,13 @@ PICKUP_SHOTPISTOL = "You got a Featherduster!";
 TAG_SHOTPISTOL = "P.M.I. \'Featherduster\' Farming Shotgun";
 
 TAG_066MAG10 = "\'Featherduster\' 10-Round Clip";
-PICKUP_066MAG10 = "You got a Featherduster clip.";
+PICKUP_066MAG10 = "You got a \'Featherduster\' clip.";
 
 MERCH_FLAVOR_SHOTPISTOL = "Perfect for dealing with any pests you may come across.";
 MERCH_TAG_SHOTPISTOL = "P.M.I. \'Featherduster\' Shotgun";
+
+MERCH_FLAVOR_SHOTPISTOLCLIP = "If it doesn't kill, just shoot again! If that still doesn't kill, shoot again!";
+MERCH_TAG_SHOTPISTOLCLIP = "\'Featherduster\' 10-Round Clip";
 
 // Junco 4mm Self-Defense Weapon
 TAG_JUNCO = "P.M.I. \'Junco\' 4.26mm Pistol";
@@ -52,6 +55,9 @@ MM_DROP_EXCESS_SEALANT = "\cuDrop excess sealant\n with the \cqpickup manager\cu
 MERCH_TAG_JUNCO = "P.M.I. \'Junco\' 4.26mm Pistol";
 MERCH_FLAVOR_JUNCO = "Don't let it overcharge, it's not junk yet!";
 
+MERCH_TAG_JUNCOMAG = "4.26mm UAC Pistol Magazine";
+MERCH_FLAVOR_JUNCOMAG = "Perfectly average sized. Definitely not small. Nuh-uh.";
+
 // Currawong 10mm PDW
 TAG_CURRAWONG = "P.M.I. \'Currawong\' 10mm P.D.W.";
 PICKUP_CURRAWONG = "You got a \'Currawong\'! Show 'em what it's made of.";
@@ -64,3 +70,6 @@ CUR10MMAGMSG = "Reloading a 10mm P.M.I \'Currawong\' magazine into another firea
 
 MERCH_FLAVOR_CURRAWONG = "Watch the talons! They like scratchin', and they sure hurt.";
 MERCH_TAG_CURRAWONG = "P.M.I. \'Currawong\' 10mm PDW";
+
+MERCH_FLAVOR_CURRAWONGMAG = "DRM still intact too! Unluckily for you, not guarenteed to leave your enemies intact!";
+MERCH_TAG_CURRAWONGMAG = "\'Currawong\' 30-round Magazine";
