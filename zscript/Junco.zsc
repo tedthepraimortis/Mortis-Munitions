@@ -27,7 +27,7 @@ class JuncoPistol:HDWeapon{
     }
     override void tick(){
         super.tick();
-        drainheat(JUNCS_HEAT,1);
+        drainheat(JUNCS_HEAT,frandom(1,3));
 
         if(owner && WeaponStatus[JUNCS_HEAT] > HDCONST_ZM66COOKOFF * 2 && !(Level.time % TICRATE))
         {
@@ -241,8 +241,7 @@ class JuncoPistol:HDWeapon{
             A_AlertMonsters(HDCONST_ONEMETRE * (9 + heat));
 
             invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_CHAMBER;
-            invoker.weaponstatus[JUNCS_HEAT]+=random(5,10);
-            A_Log("Heat: "..invoker.weaponstatus[JUNCS_HEAT]);
+            invoker.weaponstatus[JUNCS_HEAT]+=random(5,7);
         }
         goto lightdone;
 
