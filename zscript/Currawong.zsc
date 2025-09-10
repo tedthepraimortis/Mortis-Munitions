@@ -814,6 +814,7 @@ class HD10mMag30:HDMagAmmo{
         hdmagammo.roundbulk ENC_10_LOADED;
         hdmagammo.magbulk ENC_10MAG_EMPTY;
         hdmagammo.extracttime 4;
+		Scale 0.35;
 
         tag "$TAG_10M30MAG";
         hdpickup.refid HDLD_CURRAWONGMAG;
@@ -900,13 +901,14 @@ class HD10mMag30:HDMagAmmo{
 		if(!!hpl.countinv("MM_4mmSealant")){
 			offy+=14;
 			sb.drawstring(
-				sb.pSmallFont,sb.FormatNumber(hpl.countinv("MM_4mmSealant")).." \cu[Use] Reseal Full Mag",
+				sb.pSmallFont,sb.FormatNumber(hpl.countinv("MM_4mmSealant"))..Stringtable.Localize("$MM_RESEAL"),
 				(offx+2,offy),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_LEFT,
-				font.CR_BROWN
+				font.CR_BROWN,
+                scale:(0.6,0.6)
 			);
 			sb.drawimage("SEALA0",(offx,offy),
 				sb.DI_SCREEN_CENTER|sb.DI_ITEM_RIGHT_TOP,
-				scale:(scl,scl)
+				scale:(0.8,0.8)
 			);
 		}
 	}

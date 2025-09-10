@@ -729,6 +729,7 @@ class HD4mMag25:HDMagAmmo{
         tag "$TAG_4M25MAG";
         hdpickup.refid HDLD_4M25;
         inventory.pickupmessage "$PICKUP_4M25MAG";
+        Scale 0.65;
     }
     override void postbeginplay(){
         super.postbeginplay();
@@ -813,11 +814,12 @@ class HD4mMag25:HDMagAmmo{
 			sb.drawstring(
 				sb.pSmallFont,sb.FormatNumber(hpl.countinv("MM_4mmSealant")).." \cu[Use] Reseal Full Mag",
 				(offx+2,offy),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_LEFT,
-				font.CR_BROWN
+				font.CR_BROWN,
+                scale:(0.6,0.6)
 			);
 			sb.drawimage("SEALA0",(offx,offy),
 				sb.DI_SCREEN_CENTER|sb.DI_ITEM_RIGHT_TOP,
-				scale:(scl,scl)
+				scale:(0.8,0.8)
 			);
 		}
 	}
@@ -926,6 +928,7 @@ class MM_4mmSealant : HDAmmo
         HDPickup.refid HDLD_SEALANT;
         +FORCEXYBILLBOARD
 		+HDPICKUP.MULTIPICKUP
+        Scale 0.35;
     }
 
     States

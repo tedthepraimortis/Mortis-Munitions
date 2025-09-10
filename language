@@ -5,6 +5,7 @@ MENU_ADVANCEDHELPTEXT = "Advanced Help Text: ";
 
 // Generic Strings
 WEPHELP_INFO = "\n\cuExtra Info\n\c-";
+MM_RESEAL = " \cu[Use] Reseal Full Mag";
 
 // Taronga 6mm SAW
 TAG_TARONGA = "P.M.I. 'Taronga' 6mm SAW";
