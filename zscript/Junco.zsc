@@ -27,7 +27,7 @@ class JuncoPistol:HDWeapon{
     }
     override void tick(){
         super.tick();
-        drainheat(JUNCS_HEAT,5);
+        drainheat(JUNCS_HEAT,1);
 
         if(owner && WeaponStatus[JUNCS_HEAT] > HDCONST_ZM66COOKOFF * 2 && !(Level.time % TICRATE))
         {
@@ -99,6 +99,7 @@ class JuncoPistol:HDWeapon{
         LocalizeHelp();
         return
         LWPHELP_FIRESHOOT
+        ..LWPHELP_ALTFIRE..Stringtable.Localize("$JNK_SMACK")
         ..LWPHELP_RELOAD..StringTable.Localize("$ZMWH_RELOAD")
         ..LWPHELP_MAGMANAGER
         ..LWPHELP_UNLOAD..StringTable.Localize("$ZMWH_UNLOAD")..StringTable.Localize("$ZMWH_MAG");
@@ -240,7 +241,8 @@ class JuncoPistol:HDWeapon{
             A_AlertMonsters(HDCONST_ONEMETRE * (9 + heat));
 
             invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_CHAMBER;
-            invoker.weaponstatus[JUNCS_HEAT]+=random(2,5);
+            invoker.weaponstatus[JUNCS_HEAT]+=random(5,10);
+            A_Log("Heat: "..invoker.weaponstatus[JUNCS_HEAT]);
         }
         goto lightdone;
 
@@ -505,6 +507,36 @@ class JuncoPistol:HDWeapon{
         goto nope;
 
 
+    altfire:
+        JNCO A 1 offset(-3,34);
+        JNCO A 1 offset(-9,39);
+        JNCO B 3 offset(-19,44) A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
+        JNCO A 2 offset(-16,42){
+            A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
+            if(
+                invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBER
+                &&!(invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN)
+            ){
+                A_StartSound("weapons/smack",CHAN_WEAPON,CHANF_OVERLAP);
+                for(int i=0;i<5;i++)A_SpawnItemEx("FourMilChunk",0,0,20,
+                    random(4,7),random(-2,2),random(-2,1),0,SXF_NOCHECKPOSITION
+                );
+                invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_CHAMBER;
+                A_StartSound("weapons/rifleclick2",CHAN_WEAPON,CHANF_OVERLAP);
+            }else if(!random(0,4)){
+                A_StartSound("weapons/smack",CHAN_WEAPON,CHANF_OVERLAP);
+                invoker.weaponstatus[0]&=~JUNCF_CHAMBERBROKEN;
+                invoker.weaponstatus[JUNCS_FLAGS]&=~JUNCF_CHAMBER;
+                A_StartSound("weapons/rifleclick",CHAN_WEAPON,CHANF_OVERLAP);
+                for(int i=0;i<5;i++)A_SpawnItemEx("FourMilChunk",0,0,20,
+                    random(4,7),random(-2,2),random(-2,1),0,SXF_NOCHECKPOSITION
+                );
+                if(!random(0,5))A_SpawnItemEx("HDSmokeChunk",12,0,gunheight()-10,4,frandom(-2,2),frandom(2,4));
+            }else if(invoker.weaponstatus[0]&JUNCF_CHAMBERBROKEN){
+                A_StartSound("weapons/smack",CHAN_WEAPON,CHANF_OVERLAP);
+            }
+            else A_StartSound("weapons/smack",CHAN_WEAPON,CHANF_OVERLAP);
+        }goto nope;
     unloadchamber:
         JNCO A 1 offset(-3,34);
         JNCO A 1 offset(-9,39);

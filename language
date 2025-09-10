@@ -61,6 +61,8 @@ MERCH_FLAVOR_JUNCO = "Don't let it overcharge, it's not junk yet!";
 MERCH_TAG_JUNCOMAG = "4.26mm UAC Pistol Magazine";
 MERCH_FLAVOR_JUNCOMAG = "Perfectly average sized. Definitely not small. Nuh-uh.";
 
+JNK_SMACK = "  Smack chamber\n";
+
 // Currawong 10mm PDW
 TAG_CURRAWONG = "P.M.I. \'Currawong\' 10mm P.D.W.";
 PICKUP_CURRAWONG = "You got a \'Currawong\'! Show 'em what it's made of.";
