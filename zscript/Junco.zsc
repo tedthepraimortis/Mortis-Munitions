@@ -176,14 +176,14 @@ class JuncoPistol:HDWeapon{
     action bool brokenround(){
         if(!(invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBERBROKEN)){
             int hht=invoker.weaponstatus[JUNCS_HEAT];
-            if(hht>240)invoker.weaponstatus[JUNCS_BORESTRETCHED]++;
+            if(hht>125)invoker.weaponstatus[JUNCS_BORESTRETCHED]++;
             hht*=hht;hht>>=10;
             int rnd=
                 (invoker.owner?1:10)
                 +max(invoker.weaponstatus[JUNCS_AUTO],hht)
                 +invoker.weaponstatus[JUNCS_BORESTRETCHED]
                 +(invoker.weaponstatus[JUNCS_MAG]>100?10:0);
-            if(random(0,2000)<rnd){
+            if(random(0,250)<rnd){
                 invoker.weaponstatus[JUNCS_FLAGS]|=JUNCF_CHAMBERBROKEN;
             }
         }return invoker.weaponstatus[JUNCS_FLAGS]&JUNCF_CHAMBERBROKEN;
