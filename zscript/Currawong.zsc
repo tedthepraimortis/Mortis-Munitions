@@ -668,10 +668,10 @@ class HDCurrawong:HDWeapon{
 		goto nope;
 
 	spawn:
-		RIFL DCBA 0;
-		RIGL DCBA 0;
-		RIFS DCBA 0;
-		RIGS DA 0;
+		CWFL DCBA 0;
+		CWGL DCBA 0;
+		CWFS DCBA 0;
+		CWGS DA 0;
 		---- A 0{
 			//don't jam just because
 			if(
@@ -690,12 +690,12 @@ class HDCurrawong:HDWeapon{
 			//set sprite
 			if(invoker.weaponstatus[0]&CUWF_NOSHOTGUN){
 				if(invoker.weaponstatus[0]&CURWF_NOFIRESELECT)
-					sprite=getspriteindex("RIFSA0");
-				else sprite=getspriteindex("RIFLA0");
+					sprite=getspriteindex("CWFSA0");
+				else sprite=getspriteindex("CWFLA0");
 			}else{
 				if(invoker.weaponstatus[0]&CURWF_NOFIRESELECT)
-					sprite=getspriteindex("RIGSA0");
-				else sprite=getspriteindex("RIGLA0");
+					sprite=getspriteindex("CWGSA0");
+				else sprite=getspriteindex("CWGLA0");
 			}
 
 			//set to no-mag frame
