@@ -28,7 +28,9 @@ class HDTaronga : WAN_20mmLauncher
         TRProp_LoadType,
         TRProp_StockWeight,
         TRProp_BarrelWeight,
-        TRProp_BoltWeight
+        TRProp_BoltWeight,
+        TRProp_Optic,
+        TRProp_Zoom
     }
 
     override void PostBeginPlay()
@@ -227,16 +229,34 @@ class HDTaronga : WAN_20mmLauncher
             WeaponStatus[TRProp_Flags] |= TRF_GL;
         }
 
+        switch (GetLoadoutVar(input, "optic", 1))
+        {
+            case 0:
+                WeaponStatus[TRProp_Optic]=0; 
+                break;
+            case 1: 
+                WeaponStatus[TRProp_Optic]=1;
+		        int zoom=getloadoutvar(input,"zoom",3);
+		        if(zoom>0)weaponstatus[TRProp_Zoom]=clamp(zoom,12,40);
+		        break;
+            case 2: 
+                WeaponStatus[TRProp_Optic]=2;
+                break;
+            default:
+                break;
+        }
+
         InitializeWepStats(false);
     }
 
     override void InitializeWepStats(bool idfa)
     {
-        WeaponStatus[TRProp_Chamber] = 0;
+        WeaponStatus[TRProp_Chamber] = 1;
         if (WeaponStatus[TRProp_Flags] & TRF_GL)
         {
             WeaponStatus[TRProp_Flags] |= TRF_GrenadeLoaded;
         }
+		WeaponStatus[TRProp_Zoom]=20;
     }
     
     override void DoEffect(){
@@ -346,13 +366,145 @@ class HDTaronga : WAN_20mmLauncher
 
     override void DrawSightPicture(HDStatusBar sb, HDWeapon hdw, HDPlayerPawn hpl, bool sightbob, vector2 bob, double fov, bool scopeview, actor hpc, string whichdot)
     {
-        int cx, cy, cw, ch;
-        [cx, cy, cw, ch] = Screen.GetClipRect();
-        sb.SetClipRect(-16 + bob.x, -4 + bob.y, 32, 16, sb.DI_SCREEN_CENTER);
-        vector2 bob2 = bob * 1.18;
-        sb.DrawImage("BCHFRONT", (0, -4) + bob2, sb.DI_SCREEN_CENTER | sb.DI_ITEM_TOP, alpha: 0.9, scale: (0.8, 0.8));
-        sb.SetClipRect(cx, cy, cw, ch);
-        sb.DrawImage("BCHBACK", (0, 2) + bob, sb.DI_SCREEN_CENTER | sb.DI_ITEM_TOP, scale: (0.8, 0.8));
+		vector2 bobb=bob*1.1;
+        double degree=6.;
+        int cx,cy,cw,ch;
+        switch (WeaponStatus[TRProp_Optic])
+        {
+            case 0:
+            {
+			    [cx,cy,cw,ch]=Screen.GetClipRect();
+                sb.SetClipRect(
+                    -16+bob.x,-64+bob.y,32,76,
+                    sb.DI_SCREEN_CENTER
+                );
+                sb.drawimage(
+                    "bsfrntsit",bob*1.14,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP
+                );
+                sb.SetClipRect(cx,cy,cw,ch);
+        
+                sb.drawimage(
+                    "bsbaksit",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
+                    alpha:0.9
+                );
+                break;
+            }
+            case 1:
+            {
+                sb.drawimage(
+			    	"bst_knob",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
+			    	scale:(1.3,1)
+			    );
+			    int scaledwidth=56;
+			    int scaledyoffset=(scaledwidth>>1)+12;
+			    [cx,cy,cw,ch]=screen.GetClipRect();
+			    sb.SetClipRect(
+			    	-28+bob.x,12+bob.y,scaledwidth,scaledwidth,
+			    	sb.DI_SCREEN_CENTER
+			    );
+			    double dotoff=max(abs(bob.x),abs(bob.y));
+			    /*sb.drawimage(
+			    	"SRVR_SC0",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,scale:(1.1,1.1)
+			    );*/
+			    texman.setcameratotexture(hpc,"HDXCAM_ZM66",degree);
+			    let cam=texman.CheckForTexture("HDXCAM_ZM66",TexMan.Type_Any);
+			    double camSize=texman.GetSize(cam);
+			    sb.DrawCircle(cam,(0,scaledyoffset)+bob,.085,usePixelRatio:true);
+			    let reticle = texman.CheckForTexture("bossret1",TexMan.Type_Any);
+			    	if((bob.y/fov)<0.4){
+			    		let reticleScale = camSize / texman.GetSize(reticle);
+			    		{
+			    			sb.DrawCircle(reticle,(0,scaledyoffset)+bobb,.403*reticleScale, uvScale: .62);
+			    		}
+			    	}
+                
+			    	screen.SetClipRect(cx,cy,cw,ch);
+                
+			    sb.drawimage(
+			    	"bossscope",(0,scaledyoffset)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,scale:(0.9,0.9)
+			    );
+                break;
+            }
+            case 2:
+            {
+			    [cx,cy,cw,ch]=Screen.GetClipRect();
+                sb.SetClipRect(
+                    -16+bob.x,-64+bob.y,32,76,
+                    sb.DI_SCREEN_CENTER
+                );
+                sb.drawimage(
+                    "bsfrntsit",bob*1.14,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP
+                );
+                sb.SetClipRect(cx,cy,cw,ch);
+        
+                sb.drawimage(
+                    "bsbaksit",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
+                    alpha:0.9
+                );
+                
+                if(scopeview){
+                    int scaledwidth=89;
+                    int scaledyoffset=60;
+                    double degree=0.1*hdw.weaponstatus[TRProp_Zoom];
+                    double deg=1/degree;
+                    int cx,cy,cw,ch;
+                    [cx,cy,cw,ch]=screen.GetClipRect();
+                    sb.SetClipRect(-44+bob.x,16+bob.y,scaledwidth,scaledwidth,
+                        sb.DI_SCREEN_CENTER
+                    );
+        
+                    sb.fill(color(255,0,0,0),
+                        bob.x-44,scaledyoffset+bob.y-44,
+                        88,88,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER
+                    );
+        
+                    texman.setcameratotexture(hpc,"HDXCAM_BOSS",degree);
+                    let cam     = texman.CheckForTexture("HDXCAM_BOSS",TexMan.Type_Any);
+                    let reticle = texman.CheckForTexture("bossret1",TexMan.Type_Any);
+        
+                    vector2 frontoffs=(0,scaledyoffset)+bob*3;
+        
+                    double camSize  = texman.GetSize(cam);
+                    sb.DrawCircle(cam, frontoffs, 0.125,usePixelRatio:true);
+        
+                    //[2022-09-17] there's a glitch in GZDoom where if the reticle would be drawn completely off screen,
+                    //the cliprect is ignored. The figure is a product of trial and error.
+                    if((bob.y/fov)<0.4){
+                        let reticleScale = camSize / texman.GetSize(reticle);
+                        if(hdw.weaponstatus[0]&BOSSF_FRONTRETICLE){
+                            sb.DrawCircle(reticle, frontoffs, .5*reticleScale, bob*deg*5-bob, 1.6*deg);
+                        }else{
+                            sb.DrawCircle(reticle, (0,scaledyoffset)+bob, .5*reticleScale,uvScale:.5);
+                        }
+                    }
+        
+                    //let holeScale    = camSize / texman.GetSize(hole);
+                    //let hole    = texman.CheckForTexture("scophole",TexMan.Type_Any);
+                    //sb.DrawCircle(hole, (0, scaledyoffset) + bob, .5 * holeScale, bob * 5, 1.5);
+        
+        
+                    screen.SetClipRect(cx,cy,cw,ch);
+        
+                    sb.drawimage(
+                        "bossscope",(0,scaledyoffset)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,
+                        scale:(1.24,1.24)
+                    );
+                    sb.drawstring(
+                        sb.mAmountFont,string.format("%.1f",degree),
+                        (6+bob.x,105+bob.y),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_RIGHT,
+                        Font.CR_BLACK
+                    );
+                    sb.drawstring(
+                        sb.mAmountFont,string.format("%i",hdw.weaponstatus[BOSSS_DROPADJUST]),
+                        (6+bob.x,9+bob.y),sb.DI_SCREEN_CENTER|sb.DI_TEXT_ALIGN_RIGHT,
+                        Font.CR_BLACK
+                    );
+                }
+                // the scope display is in 10ths of an arcminute.
+                // one dot = 6 arcminutes.
+                break;
+            }
+        }
     }
 
     private action void A_TryLoadChamber()
