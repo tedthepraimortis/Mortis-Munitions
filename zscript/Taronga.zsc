@@ -331,6 +331,8 @@ class HDTaronga : WAN_20mmLauncher
     action void A_ChamberGrit(int amt,bool onlywhileempty=false)
     {
         int ibg = invoker.weaponstatus[TRProp_Muck];
+        bool lightbolt=(invoker.weaponstatus[TRProp_BoltWeight]==1);
+        if(amt>0&&lightbolt)amt>>=1;
         if(!onlywhileempty||invoker.weaponstatus[TRProp_Chamber]<1)ibg+=amt;
         else if(!random(0,4))ibg++;
         invoker.weaponstatus[TRProp_Muck]=clamp(ibg,0,100);
@@ -342,6 +344,7 @@ class HDTaronga : WAN_20mmLauncher
         weaponstatus[TRProp_Muck]
         +(weaponstatus[TRProp_Heat]>>2)
         +weaponstatus[TRProp_Chamber];
+        if(weaponstatus[TRProp_BoltWeight]==2)return jc>>5;
         return jc;
     }
 
@@ -749,8 +752,8 @@ class HDTaronga : WAN_20mmLauncher
                 }
             }
 			#### A 1 Offset(0, 34) A_WeaponBusy();
-			#### A 1 Offset(1, 35) A_JumpIf(invoker.WeaponStatus[TRProp_BoltWeight]==2,1);
-			#### A 1 Offset (2, 36) A_JumpIf(invoker.weaponstatus[TRProp_Chamber]>1,"startjamderp");
+			#### A 2 Offset(1, 35) A_JumpIf(invoker.WeaponStatus[TRProp_BoltWeight]==1,1);
+			#### A 2 Offset (2, 36) A_JumpIf(invoker.weaponstatus[TRProp_Chamber]>1,"startjamderp");
 			#### A 1 Offset(3, 37) A_MuzzleClimb(-frandom(0.06,0.1),-frandom(0.3,0.5));
 			#### A 1 Offset(4, 38) A_ChamberGrit(randompick(0,0,1,1,2,3,4),true);
 			#### A 0 A_Refire("chamber");
@@ -927,7 +930,13 @@ class HDTaronga : WAN_20mmLauncher
 			goto althold;
 
 		AltHoldEnd:
-			#### A 2 A_StartSound("weapons/TarongaBoltFwd", 8);
+			#### A 0 A_StartSound("weapons/TarongaBoltFwd", 8);
+            #### A 2 A_WeaponReady(WRF_NOFIRE);
+            #### A 3{
+                A_Log("AltholdEnd");
+                A_WeaponReady(WRF_NOFIRE);
+                if(invoker.weaponstatus[TRProp_BoltWeight]==1)A_SetTics(1);
+            }
 			Goto Ready;
 
         Jam: 
