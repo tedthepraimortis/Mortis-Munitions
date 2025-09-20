@@ -12,7 +12,7 @@ class HDCurrawong:HDWeapon{
 		obituary "$OB_CURRAWONG";
 		hdweapon.refid HDLD_CURRAWONG;
 		tag "$TAG_CURRAWONG";
-		inventory.icon "CWRPA0";
+		inventory.icon "CWGSA0";
 
 		hdweapon.ammo1 "HD10mMag30",1;
         hdweapon.ammo2 "MM_4mmSealant",1;
@@ -67,12 +67,12 @@ class HDCurrawong:HDWeapon{
 
 		if(wep0&CUWF_NOSHOTGUN){
 			if(wep0&CURWF_NOFIRESELECT)
-				spr="CWRP";
-			else spr="CWRP";
+				spr="CWFS";
+			else spr="CWFL";
 		}else{
 			if(wep0&CURWF_NOFIRESELECT)
-				spr="CWRP";
-			else spr="CWRP";
+				spr="CWGS";
+			else spr="CWGL";
 		}
 
 		//set to no-mag frame
