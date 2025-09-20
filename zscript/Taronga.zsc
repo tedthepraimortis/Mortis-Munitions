@@ -508,16 +508,16 @@ class HDTaronga : WAN_20mmLauncher
                 float bolt;
                 switch (invoker.WeaponStatus[TRProp_BoltWeight])
                 {
-                    case 0: bolt = 1; break;
-                    case 1: bolt = 2; break;
-                    case 2: bolt = 0; break;
+                    case 0: bolt = 2; break;
+                    case 1: bolt = 3; break;
+                    case 2: bolt = 1; break;
                     default: bolt = 1; break;
                 }
                 HDBulletActor.FireBullet(self, "HDB_MM6mmFlechette", speedfactor: barrel);
                 A_AlertMonsters(HDCONST_ONEMETRE * (30 + heat * barrel));
                 invoker.WeaponStatus[TRProp_Chamber] = 0;
                 invoker.WeaponStatus[TRProp_Heat] += random(3, 7) * barrel;
-                invoker.WeaponStatus[TRProp_Muck] += random(0, 1) + bolt;
+                invoker.WeaponStatus[TRProp_Muck] += random(0, bolt);
                 A_StartSound("weapons/taronga", CHAN_WEAPON, CHANF_OVERLAP, volume: 0.7);
                 switch (invoker.WeaponStatus[TRProp_StockWeight])
                 {
@@ -547,8 +547,8 @@ class HDTaronga : WAN_20mmLauncher
                 switch (invoker.WeaponStatus[TRProp_BoltWeight])
                 {
                     case 0: bolt = 1; break;
-                    case 1: bolt = 0.75; break;
-                    case 2: bolt = 1.5; break;
+                    case 1: bolt = 0.85; break;
+                    case 2: bolt = 1.35; break;
                     default: bolt = 1; break;
                 }
                 if(random(0,invoker.jamchance())>55*bolt)
