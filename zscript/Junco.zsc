@@ -12,9 +12,10 @@ class JuncoPistol:HDWeapon{
         inventory.pickupmessage "$PICKUP_JUNCO";
         scale 0.7;
         hdweapon.barrelsize 18,0.4,0.7;
-        weapon.bobrangex 0.3;
+        weapon.bobrangex 0.1;
         weapon.bobrangey 0.6;
-        weapon.bobspeed 1.95;
+        weapon.bobspeed 2.5;
+        weapon.kickback 30;
         obituary "$OB_JUNCO";
         hdweapon.refid HDLD_JUNCO;
         tag "$TAG_JUNCO";
