@@ -381,15 +381,16 @@ class HDTaronga : WAN_20mmLauncher
                     -16+bob.x,-64+bob.y,32,76,
                     sb.DI_SCREEN_CENTER
                 );
-                sb.drawimage(
-                    "bsfrntsit",bob*1.14,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP
-                );
-                sb.SetClipRect(cx,cy,cw,ch);
-        
-                sb.drawimage(
-                    "bsbaksit",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
-                    alpha:0.9
-                );
+		        sb.drawimage(
+		        	"TRNFSITE",(0,-12)+bobb,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
+		        	scale:(1.35,1.4),
+		        	alpha:0.8
+		        );
+		        sb.SetClipRect(cx,cy,cw,ch);
+		        sb.drawimage(
+		        	"TRNBSITE",(0,-5)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
+		        	scale:(1.45,1.5)
+		        );
                 break;
             }
             case 1:
@@ -413,7 +414,7 @@ class HDTaronga : WAN_20mmLauncher
 			    let cam=texman.CheckForTexture("HDXCAM_ZM66",TexMan.Type_Any);
 			    double camSize=texman.GetSize(cam);
 			    sb.DrawCircle(cam,(0,scaledyoffset)+bob,.085,usePixelRatio:true);
-			    let reticle = texman.CheckForTexture("bossret1",TexMan.Type_Any);
+			    let reticle = texman.CheckForTexture("trnreti2",TexMan.Type_Any);
 			    	if((bob.y/fov)<0.4){
 			    		let reticleScale = camSize / texman.GetSize(reticle);
 			    		{
@@ -424,7 +425,7 @@ class HDTaronga : WAN_20mmLauncher
 			    	screen.SetClipRect(cx,cy,cw,ch);
                 
 			    sb.drawimage(
-			    	"bossscope",(0,scaledyoffset)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,scale:(0.9,0.9)
+			    	"TRNOPTIC",(10,scaledyoffset-10)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,scale:(0.9,0.9)
 			    );
                 break;
             }
