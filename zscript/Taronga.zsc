@@ -67,7 +67,7 @@ class HDTaronga : WAN_20mmLauncher
     override void tick()
     {
         super.tick();
-        drainheat(TRProp_Heat, 1);
+        //drainheat(TRProp_Heat, 1);
 
         if(owner && WeaponStatus[TRProp_Heat] > 65 && !(Level.time % TICRATE))
         {
@@ -294,6 +294,7 @@ class HDTaronga : WAN_20mmLauncher
         return 
         LWPHELP_FIRESHOOT
         ..LWPHELP_ALTFIRE..Stringtable.Localize("$TARONGA_HELPTEXT_4")
+		..LWPHELP_ALTFIRE.."+"..LWPHELP_UNLOAD..StringTable.Localize("$BOSWH_AFIREPUNL")
         ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ZOOM.." + "..LWPHELP_ALTFIRE.. Stringtable.Localize("$TARONGA_HELPTEXT_1") : "")
         ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ALTRELOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_2") : "")
         ..(WeaponStatus[TRProp_Flags] & TRF_GL ? LWPHELP_ZOOM.." + "..LWPHELP_UNLOAD.. Stringtable.Localize("$TARONGA_HELPTEXT_3") : "")
@@ -790,6 +791,15 @@ class HDTaronga : WAN_20mmLauncher
 						return resolvestate("loadchamber");
 					}
 				}
+
+                if(invoker.WeaponStatus[TRProp_Heat] > 0)
+                {
+					invoker.WeaponStatus[TRProp_Heat] = max(0, invoker.WeaponStatus[TRProp_Heat] - random(3, 15));
+
+					vector3 gpos = GunPos((0, 0, -4));
+					Actor a = null;
+					a = Spawn('HDGunsmoke', pos + gpos); a.angle = angle - 90; a.A_ChangeVelocity(3, 0, 0, CVF_RELATIVE);
+                }
 
 				if (PressingAltFire())
 				{
