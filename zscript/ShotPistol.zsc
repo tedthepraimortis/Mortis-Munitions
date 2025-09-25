@@ -23,9 +23,12 @@ class HDShotPistol:HDHandgun{
 			\cusuppressor - 0/1, significantly quieter shots at the cost of low shotpower
 			\cuchoke - 0-4, 0 skeet, 4 full; incompatible with suppressor";
     }
+
 	double shotpower;
     int handrounds;
 	const SHOTPIS_MINSHOTPOWER=0.851;
+    private transient CVar AHelpText;
+
 	//returns the power of the load just fired
 	static double Fire(actor caller,int choke=1, int suppressor=0){
 		double spread=6.;
@@ -111,6 +114,7 @@ class HDShotPistol:HDHandgun{
     }
     override string gethelptext(){
         LocalizeHelp();
+        if(!AHelpText) AHelpText = CVar.GetCVar('mm_advanced_helptext', owner.player);
         return
         LWPHELP_FIRE..StringTable.Localize("$SHOOT_CH")..weaponstatus[SPSTS_CHOKE]..")\n"
 		..LWPHELP_ALTFIRE..StringTable.Localize("$SHTPWH_ALTFIRE")
@@ -118,7 +122,11 @@ class HDShotPistol:HDHandgun{
         ..LWPHELP_ALTFIRE.."+"..LWPHELP_RELOAD..StringTable.Localize("$PISWH_UPRELOAD")
 		..LWPHELP_ALTFIRE.."+"..LWPHELP_UNLOAD..StringTable.Localize("$SHTPWH_AFIREPUNL")
         ..LWPHELP_MAGMANAGER
-        ..LWPHELP_UNLOADUNLOAD;
+        ..LWPHELP_UNLOADUNLOAD
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$WEPHELP_INFO") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$SHTPWH_RTYPE") : "")
+        ..(AHelpText.GetBool() && WeaponStatus[SPSTS_SUPPRESSOR]>0 ? Stringtable.Localize("$SHTPWH_SUPPR") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$SHTPWH_WTYPE") : "");
     }
     override void DrawSightPicture(
         HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl,

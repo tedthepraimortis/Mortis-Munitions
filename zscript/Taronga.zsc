@@ -301,10 +301,10 @@ class HDTaronga : WAN_20mmLauncher
         ..LWPHELP_MAGMANAGER
         ..(AHelpText.GetBool() ? Stringtable.Localize("$WEPHELP_INFO") : "")
         ..(AHelpText.GetBool() ? Stringtable.Localize("$TARONGA_HELPTEXT_5") : "")
-        ..(AHelpText.GetBool() ? WeaponStatus[TRProp_Flags] & TRF_GL ? Stringtable.Localize("$TARONGA_HELPTEXT_6") : "" : "")
-        ..(AHelpText.GetBool() ? WeaponStatus[TRProp_BarrelWeight]<0 ? Stringtable.Localize("$TARONGA_HELPTEXT_8") .. WeaponStatus[TRProp_BarrelWeight] : "" : "")
-        ..(AHelpText.GetBool() ? WeaponStatus[TRProp_StockWeight]<0 ? Stringtable.Localize("$TARONGA_HELPTEXT_9") .. WeaponStatus[TRProp_StockWeight] : "" : "")
-        ..(AHelpText.GetBool() ? WeaponStatus[TRProp_BoltWeight]<0 ? Stringtable.Localize("$TARONGA_HELPTEXT_10") .. WeaponStatus[TRProp_BoltWeight] : "" : "")
+        ..(AHelpText.GetBool() && WeaponStatus[TRProp_Flags] & TRF_GL ? Stringtable.Localize("$TARONGA_HELPTEXT_6") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$TARONGA_HELPTEXT_8") .. WeaponStatus[TRProp_BarrelWeight] .. "\n" : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$TARONGA_HELPTEXT_9") .. WeaponStatus[TRProp_StockWeight] .. "\n" : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$TARONGA_HELPTEXT_10") .. WeaponStatus[TRProp_BoltWeight] .. "\n" : "")
         ..(AHelpText.GetBool() ? Stringtable.Localize("$TARONGA_HELPTEXT_7") : "");
     }
 

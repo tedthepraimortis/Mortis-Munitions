@@ -23,6 +23,7 @@ class HDCurrawong:HDWeapon{
 			\cufiremode - 0-2, semi/auto/burst
 			\cudot - 0-5";
 	}
+    private transient CVar AHelpText;
 	override void tick(){
 		super.tick();
 		drainheat(CURWS_HEAT,9);
@@ -123,15 +124,21 @@ class HDCurrawong:HDWeapon{
 		bool gl=!(weaponstatus[0]&CUWF_NOSHOTGUN);
 		bool glmode=gl&&(weaponstatus[0]&CUWF_SHOTMODE);
 		LocalizeHelp();
+        if(!AHelpText) AHelpText = CVar.GetCVar('mm_advanced_helptext', owner.player);
 		return
 		LWPHELP_FIRESHOOT
-		..(gl?(LWPHELP_ALTFIRE..(glmode?(StringTable.Localize("$ZMWH_ALTFIRE1")):(StringTable.Localize("$CWWH_ALTFIRE2")))):"")
+		..(gl?(LWPHELP_ALTFIRE..(glmode?(StringTable.Localize("$CWWH_ALTFIRE1")):(StringTable.Localize("$CWWH_ALTFIRE2")))):"")
 		..LWPHELP_RELOAD..StringTable.Localize("$ZMWH_RELOAD")
 		..(gl?(LWPHELP_ALTRELOAD..StringTable.Localize("$CWWH_ALTRELOAD")):"")
 		..((weaponstatus[0]&CURWF_NOFIRESELECT)?"":LWPHELP_FIREMODE..StringTable.Localize("$ZMWH_FMODE"))
 		..LWPHELP_MAGMANAGER
-		..LWPHELP_UNLOAD..StringTable.Localize("$ZMWH_UNLOAD")..(glmode?StringTable.Localize("$CWWH_SHOTGUN"):StringTable.Localize("$ZMWH_MAG"))
-		;
+		..LWPHELP_UNLOAD..StringTable.Localize("$ZMWH_UNLOAD")
+		..(glmode?StringTable.Localize("$CWWH_SHOTGUN"):StringTable.Localize("$ZMWH_MAG"))
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$WEPHELP_INFO") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$CWWH_RTYPE") : "")
+        ..(AHelpText.GetBool() && gl ? Stringtable.Localize("$CWWH_STYPE") : "")
+        ..(AHelpText.GetBool() && gl ? Stringtable.Localize("$CWWH_GL") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$CWWH_WTYPE") : "");
 	}
 	override void DrawSightPicture(
 		HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl,
