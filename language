@@ -71,6 +71,9 @@ MERCH_TAG_JUNCOMAG = "4.26mm UAC Pistol Magazine";
 MERCH_FLAVOR_JUNCOMAG = "Perfectly average sized. Definitely not small. Nuh-uh.";
 
 JNK_SMACK = "  Smack chamber\n";
+JNKWH_RTYPE = " - Round Type: 4mm UAC\n";
+JNKWH_DTYPE = " - \crDRM Enabled!\cc\n";
+JNKWH_WTYPE = " - Weapon Type: Light Pistol\n";
 
 // Currawong 10mm PDW
 TAG_CURRAWONG = "P.M.I. \'Currawong\' 10mm P.D.W.";

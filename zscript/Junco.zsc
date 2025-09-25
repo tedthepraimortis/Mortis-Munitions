@@ -26,6 +26,7 @@ class JuncoPistol:HDWeapon{
 
         hdweapon.loadoutcodes "\n\cu   firemode - 0/1, automatic/burst fire \n\cu   semi - 0/1, semi-auto lock";
     }
+    private transient CVar AHelpText;
     override void tick(){
         super.tick();
         drainheat(JUNCS_HEAT,frandom(1,3));
@@ -98,12 +99,17 @@ class JuncoPistol:HDWeapon{
     }
     override string gethelptext(){
         LocalizeHelp();
+        if(!AHelpText) AHelpText = CVar.GetCVar('mm_advanced_helptext', owner.player);
         return
         LWPHELP_FIRESHOOT
         ..LWPHELP_ALTFIRE..Stringtable.Localize("$JNK_SMACK")
         ..LWPHELP_RELOAD..StringTable.Localize("$ZMWH_RELOAD")
         ..LWPHELP_MAGMANAGER
-        ..LWPHELP_UNLOAD..StringTable.Localize("$ZMWH_UNLOAD")..StringTable.Localize("$ZMWH_MAG");
+        ..LWPHELP_UNLOADUNLOAD
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$WEPHELP_INFO") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$JNKWH_RTYPE") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$JNKWH_DTYPE") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$JNKWH_WTYPE") : "");
     }
     override void DrawSightPicture(
 		HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl,
