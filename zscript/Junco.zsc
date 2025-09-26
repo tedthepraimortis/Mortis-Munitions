@@ -923,25 +923,3 @@ class HD4mMag25:HDMagAmmo{
         stop;
     }
 }
-
-class MM_4mmSealant : HDAmmo
-{
-    Default
-    {
-        Tag "$TAG_4MSEALANT";
-        Inventory.Icon "SEALA0";
-        Inventory.PickupMessage "$PICKUP_4MSEALANT";
-        HDPickup.Bulk 0.425;
-        HDPickup.refid HDLD_SEALANT;
-        +FORCEXYBILLBOARD
-		+HDPICKUP.MULTIPICKUP
-        Scale 0.35;
-    }
-
-    States
-    {
-        Spawn:
-            SEAL A -1;
-            Stop;
-    }
-}

@@ -57,7 +57,7 @@ class HDShotPistol:HDHandgun{
 		shotrecoil=(randompick(-1,1)*1.4,-3.4);
 		shotrecoil*=shotpower;
 		A_MuzzleClimb(0,0,shotrecoil.x,shotrecoil.y,randompick(-1,1)*shotpower,-0.3*shotpower);
-		invoker.weaponstatus[SPSTS_CHAMBER]=1;
+		if(shotpower<SHOTPIS_MINSHOTPOWER)invoker.weaponstatus[SPSTS_CHAMBER]=1;
 		invoker.shotpower=shotpower;
 	}
     override double weaponbulk(){
@@ -107,8 +107,11 @@ class HDShotPistol:HDHandgun{
 			sb.drawnum(sevenrounds,-56,-8,sb.DI_SCREEN_CENTER_BOTTOM);
         }
         sb.drawwepnum(hdw.weaponstatus[SPSTS_MAG],10);
-        if(hdw.weaponstatus[SPSTS_CHAMBER]==2){
+        if(hdw.weaponstatus[SPSTS_CHAMBER]>1){
 			sb.drawrect(-22,-12,4,2);
+			sb.drawrect(-17,-12,1,2);
+		}
+		else if(hdw.weaponstatus[SPSTS_CHAMBER]>0){
 			sb.drawrect(-17,-12,1,2);
 		}
     }
@@ -261,6 +264,9 @@ class HDShotPistol:HDHandgun{
                 invoker.weaponstatus[SPSTS_CHAMBER]=2;
                 invoker.weaponstatus[SPSTS_MAG]--;
             }
+			else{
+				invoker.weaponstatus[SPSTS_CHAMBER]=1;
+			}
         }
         #### A 1 A_Refire();
         goto ready;

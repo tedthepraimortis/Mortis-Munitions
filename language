@@ -60,6 +60,7 @@ TAG_4MSEALANT = "Aftermarket Mag Sealant";
 PICKUP_JUNCO = "You got the \'Junco\'! Don't burn yourself now!";
 PICKUP_4M25MAG="Picked up a 4.26mm UAC Pistol magazine.";
 PICKUP_4MSEALANT="Picked up some aftermarket Mag Sealant. Don't let management know!";
+PICKUP_4MSEALANT="Picked up a box of aftermarket Mag Sealant.";
 OB_JUNCO = "%o was shown that even little birds can pack a punch.";
 
 MM_DROP_EXCESS_SEALANT = "\cuDrop excess sealant\n with the \cqpickup manager\cu.";

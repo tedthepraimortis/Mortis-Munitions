@@ -4,6 +4,7 @@ version "4.14"
 #include "zscript/Currawong.zsc"
 #include "zscript/ShotPistol.zsc"
 #include "zscript/Junco.zsc"
+#include "zscript/Misc.zsc"
 
 const HDLD_TARONGA = "trn";
 const HDLD_SHTPSTL = "6ps";

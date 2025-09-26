@@ -1,0 +1,41 @@
+// Misc. stuff that doesn't fit in any one file. - [Ted]
+
+class MM_4mmSealant : HDAmmo
+{
+    Default
+    {
+        Tag "$TAG_4MSEALANT";
+        Inventory.Icon "SEALA0";
+        Inventory.PickupMessage "$PICKUP_4MSEALANT";
+        HDPickup.Bulk 0.425;
+        HDPickup.refid HDLD_SEALANT;
+        +FORCEXYBILLBOARD
+        +HDPICKUP.MULTIPICKUP
+        Scale 0.35;
+    }
+
+    States
+    {
+        Spawn:
+            SEAL A -1;
+            Stop;
+    }
+}
+
+class HDSealantBoxPickup : HDUpk
+{
+    Default
+    {
+        scale 0.4;
+        hdupk.amount 25;
+        hdupk.pickupsound "weapons/pocket";
+        hdupk.pickupmessage "$PICKUP_4MSEALANTBOX";
+        hdupk.pickuptype "MM_4mmSealant";
+    }
+    
+    States
+    {
+        spawn:
+            SELB A -1;
+    }
+}

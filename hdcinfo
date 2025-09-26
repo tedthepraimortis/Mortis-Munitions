@@ -24,7 +24,7 @@ newMerchantStoreItem => { "enabled": "#hdm_enable_currawong", "type": "mag", "ca
 // Featherduster
 addAmmoUser => { "ammoName": "HD069BoreAmmo", "name": "HDShotPistol" }
 
-addSpawnTableSingleEntry => { "tableName": "ClipMagReplaces", "name": "HDSShotpistolRandom", "weight": "#junco_clipmag_spawn_weight", "persists": "#mm_weapon_persistency" }
+addSpawnTableSingleEntry => { "tableName": "ClipMagReplaces", "name": "HDShotpistolRandom", "weight": "#junco_clipmag_spawn_weight", "persists": "#mm_weapon_persistency" }
 
 addBPSpawnPoolFilter => { "name": "HD066Clip10", "allowed": "#shotpistol_allowBackpacks" }
 addBPSpawnPoolFilter => { "name": "HDShotPistol", "allowed": "#shotpistol_allowBackpacks" }
@@ -45,3 +45,6 @@ addWeaponCrateFilter => { "name": "JuncoPistol", "allowed": "#junco_allowBackpac
 
 newMerchantStoreItem => { "enabled": "#hdm_enable_junco", "type": "weapon", "category": "$MERCH_CAT_MORTISMUNITIONS", "item": "JuncoPistol", "icon": "JNCOP0", "displayName": "$MERCH_TAG_JUNCO", "basePrice": "#hdm_junco_price", "flavorText": "$MERCH_FLAVOR_JUNCO" }
 newMerchantStoreItem => { "enabled": "#hdm_enable_junco", "type": "mag", "category": "$MERCH_CAT_MORTISMUNITIONS", "item": "HD4mMag25", "icon": "ZMAGA0", "displayName": "$MERCH_TAG_JUNCOMAG", "basePrice": "#hdm_juncomag_price", "flavorText": "$MERCH_FLAVOR_JUNCOMAG" }
+
+// Misc
+addSpawnTableSingleEntry => { "tableName": "ClipMagReplaces", "name": "HDSealantBoxPickup", "weight": "#sealant_spawn_weight", "persists": "#mm_weapon_persistency" }

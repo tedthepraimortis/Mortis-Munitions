@@ -67,7 +67,7 @@ class HDTaronga : WAN_20mmLauncher
     override void tick()
     {
         super.tick();
-        //drainheat(TRProp_Heat, 1);
+        drainheat(TRProp_Heat, 0.1);
 
         if(owner && WeaponStatus[TRProp_Heat] > 65 && !(Level.time % TICRATE))
         {
@@ -559,6 +559,17 @@ class HDTaronga : WAN_20mmLauncher
         return false;
     }
 
+    private action void A_TRNDrainHeat()
+    {
+        if(invoker.WeaponStatus[TRProp_Heat] > 0)
+        {
+			invoker.WeaponStatus[TRProp_Heat] = max(0, invoker.WeaponStatus[TRProp_Heat] - random(3, 15));
+			vector3 gpos = GunPos((0, 0, -4));
+			Actor a = null;
+			a = Spawn('HDGunsmoke', pos + gpos); a.angle = angle - 90; a.A_ChangeVelocity(3, 0, 0, CVF_RELATIVE);
+        }
+    }
+
     private HDBackpack Storage;
     private StorageItem AmmoReserve;
     private int BurstIndex;
@@ -792,14 +803,7 @@ class HDTaronga : WAN_20mmLauncher
 					}
 				}
 
-                if(invoker.WeaponStatus[TRProp_Heat] > 0)
-                {
-					invoker.WeaponStatus[TRProp_Heat] = max(0, invoker.WeaponStatus[TRProp_Heat] - random(3, 15));
-
-					vector3 gpos = GunPos((0, 0, -4));
-					Actor a = null;
-					a = Spawn('HDGunsmoke', pos + gpos); a.angle = angle - 90; a.A_ChangeVelocity(3, 0, 0, CVF_RELATIVE);
-                }
+                A_TRNDrainHeat();
 
 				if (PressingAltFire())
 				{
@@ -923,6 +927,8 @@ class HDTaronga : WAN_20mmLauncher
 				amts.appendformat("\n");
 
 				amt=randompick(-10,-15,-15,-random(30,55));
+
+                A_TRNDrainHeat();
 
 				A_ChamberGrit(amt,true);
 				amt=invoker.weaponstatus[TRProp_Muck];
