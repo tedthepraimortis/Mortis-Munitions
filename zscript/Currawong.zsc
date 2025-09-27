@@ -32,6 +32,7 @@ class HDCurrawong:HDWeapon{
 	override hdweapon GetSpareWeapon(actor newowner,bool reverse,bool doselect){return GetSpareWeaponRegular(newowner,reverse,doselect);}
 	override void postbeginplay(){
 		super.postbeginplay();
+		weaponspecial = 1337;
 		barrellength=18;
 		if(weaponstatus[0]&CUWF_NOSHOTGUN){
 			barrelwidth=0.5;
