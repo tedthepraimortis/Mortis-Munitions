@@ -40,28 +40,12 @@ class HDTaronga : WAN_20mmLauncher
         Super.PostBeginPlay();
         switch (WeaponStatus[TRProp_BarrelWeight])
         {
-            case 0:
-                barrellength=32;
-                barrelwidth=4;
-                barreldepth=6;
-                break;
-            case 1:
-                barrellength=26;
-                barrelwidth=3;
-                barreldepth=4;
-                bfitsinbackpack=true;
-                break;
-            case 2:
-                barrellength=38;
-                barrelwidth=4;
-                barreldepth=8;
-                break;
+            case 0: barrellength=32; barrelwidth=4; barreldepth=6; break;
+            case 1: barrellength=26; barrelwidth=3; barreldepth=4; bfitsinbackpack=true; break;
+            case 2: barrellength=38; barrelwidth=4; barreldepth=8; break;
             default: barrellength=32; barrelwidth=4; barreldepth=6; break;
         }
-        if (WeaponStatus[TRProp_StockWeight] && WeaponStatus[TRProp_BarrelWeight] == 1)
-        {
-            bhinderlegs=false;
-        }
+        if (WeaponStatus[TRProp_StockWeight] && WeaponStatus[TRProp_BarrelWeight] == 1) bhinderlegs=false;
     }
 
     override void tick()
@@ -120,46 +104,28 @@ class HDTaronga : WAN_20mmLauncher
         }
         switch (WeaponStatus[TRProp_StockWeight])
         {
-            case 0: 
-                break;
-            case 1: 
-                BaseBulk -= 15;
-                break;
-            case 2: 
-                BaseBulk += 15;
-                break;
-            default:
-                break;
+            case 0: break;
+            case 1: BaseBulk -= 15; break;
+            case 2: BaseBulk += 15; break;
+            default: break;
         }
         switch (WeaponStatus[TRProp_BarrelWeight])
         {
-            case 0: 
-                break;
-            case 1: 
-                BaseBulk -= 9;
-                break;
-            case 2: 
-                BaseBulk += 6;
-                break;
-            default:
-                break;
+            case 0: break;
+            case 1: BaseBulk -= 9; break;
+            case 2: BaseBulk += 6; break;
+            default: break;
         }
         switch (WeaponStatus[TRProp_BoltWeight])
         {
-            case 0: 
-                break;
-            case 1: 
-                BaseBulk -= 1;
-                break;
-            case 2: 
-                BaseBulk += 2;
-                break;
-            default:
-                break;
+            case 0: break;
+            case 1: BaseBulk -= 1; break;
+            case 2: BaseBulk += 2; break;
+            default: break;
         }
         if (WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
         {
-            BaseBulk += ENC_ROCKETLOADED;
+            BaseBulk += ENC_20MMGRENADELOADED;
         }
         return BaseBulk;
     }
@@ -181,47 +147,26 @@ class HDTaronga : WAN_20mmLauncher
         //  For next 3, 0 is stock, 1 is Lightened, 2 is heavy. - [Ted]
         switch (GetLoadoutVar(input, "stock", 1))
         {
-            case 0:
-                WeaponStatus[TRProp_StockWeight]=0; 
-                break;
-            case 1: 
-                WeaponStatus[TRProp_StockWeight]=1;
-                break;
-            case 2: 
-                WeaponStatus[TRProp_StockWeight]=2;
-                break;
-            default:
-                break;
+            case 0:WeaponStatus[TRProp_StockWeight]=0; break;
+            case 1: WeaponStatus[TRProp_StockWeight]=1; break;
+            case 2: WeaponStatus[TRProp_StockWeight]=2; break;
+            default: break;
         }
         
         switch (GetLoadoutVar(input, "barrel", 1))
         {
-            case 0:
-                WeaponStatus[TRProp_BarrelWeight]=0; 
-                break;
-            case 1: 
-                WeaponStatus[TRProp_BarrelWeight]=1;
-                break;
-            case 2: 
-                WeaponStatus[TRProp_BarrelWeight]=2;
-                break;
-            default:
-                break;
+            case 0:WeaponStatus[TRProp_BarrelWeight]=0; break;
+            case 1: WeaponStatus[TRProp_BarrelWeight]=1; break;
+            case 2: WeaponStatus[TRProp_BarrelWeight]=2; break;
+            default: break;
         }
         
         switch (GetLoadoutVar(input, "bolt", 1))
         {
-            case 0:
-                WeaponStatus[TRProp_BoltWeight]=0; 
-                break;
-            case 1: 
-                WeaponStatus[TRProp_BoltWeight]=1;
-                break;
-            case 2: 
-                WeaponStatus[TRProp_BoltWeight]=2;
-                break;
-            default:
-                break;
+            case 0:WeaponStatus[TRProp_BoltWeight]=0; break;
+            case 1: WeaponStatus[TRProp_BoltWeight]=1; break;
+            case 2: WeaponStatus[TRProp_BoltWeight]=2; break;
+            default: break;
         }
 
         if (GetLoadoutVar(input, "gl", 1) > 0)
@@ -231,19 +176,10 @@ class HDTaronga : WAN_20mmLauncher
 
         switch (GetLoadoutVar(input, "optic", 1))
         {
-            case 0:
-                WeaponStatus[TRProp_Optic]=0; 
-                break;
-            case 1: 
-                WeaponStatus[TRProp_Optic]=1;
-		        int zoom=getloadoutvar(input,"zoom",3);
-		        if(zoom>0)weaponstatus[TRProp_Zoom]=clamp(zoom,12,40);
-		        break;
-            case 2: 
-                WeaponStatus[TRProp_Optic]=2;
-                break;
-            default:
-                break;
+            case 0:WeaponStatus[TRProp_Optic]=0; break;
+            case 1: WeaponStatus[TRProp_Optic]=1; int zoom=getloadoutvar(input,"zoom",3); if(zoom>0)weaponstatus[TRProp_Zoom]=clamp(zoom,12,40); break;
+            case 2: WeaponStatus[TRProp_Optic]=2; break;
+            default: break;
         }
 
         InitializeWepStats(false);
@@ -399,8 +335,7 @@ class HDTaronga : WAN_20mmLauncher
 		        sb.drawimage(
 		        	"TRNBSITE",(0,-5)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
 		        	scale:(1.45,1.5)
-		        );
-                break;
+		        ); break;
             }
             case 1:
             {
@@ -435,8 +370,7 @@ class HDTaronga : WAN_20mmLauncher
                 
 			    sb.drawimage(
 			    	"TRNOPTIC",(10,scaledyoffset-10)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,scale:(0.9,0.9)
-			    );
-                break;
+			    ); break;
             }
             case 2:
             {
@@ -514,8 +448,7 @@ class HDTaronga : WAN_20mmLauncher
                     );
                 }
                 // the scope display is in 10ths of an arcminute.
-                // one dot = 6 arcminutes.
-                break;
+                // one dot = 6 arcminutes. break;
             }
         }
     }
@@ -650,18 +583,10 @@ class HDTaronga : WAN_20mmLauncher
                 int tics;
                 switch (invoker.WeaponStatus[TRProp_BoltWeight])
                 {
-                    case 0:
-                        tics = 1;
-                        break;
-                    case 1:
-                        tics = 0;
-                        break;
-                    case 2:
-                        tics = 2;
-                        break;
-                    default:
-                        tics = 1;
-                        break;
+                    case 0: tics = 1; break;
+                    case 1: tics = 0; break;
+                    case 2: tics = 2; break;
+                    default: tics = 1; break;
                 }
                 A_SetTics(tics);
             }
