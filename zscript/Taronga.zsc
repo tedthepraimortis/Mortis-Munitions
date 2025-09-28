@@ -339,10 +339,6 @@ class HDTaronga : WAN_20mmLauncher
             }
             case 1:
             {
-                sb.drawimage(
-			    	"bst_knob",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_TOP,
-			    	scale:(1.3,1)
-			    );
 			    int scaledwidth=56;
 			    int scaledyoffset=(scaledwidth>>1)+12;
 			    [cx,cy,cw,ch]=screen.GetClipRect();
@@ -369,7 +365,7 @@ class HDTaronga : WAN_20mmLauncher
 			    	screen.SetClipRect(cx,cy,cw,ch);
                 
 			    sb.drawimage(
-			    	"TRNOPTIC",(10,scaledyoffset-10)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,scale:(0.9,0.9)
+			    	"bossscope",(0,scaledyoffset)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,scale:(0.9,0.9)
 			    ); break;
             }
             case 2:
@@ -407,7 +403,7 @@ class HDTaronga : WAN_20mmLauncher
         
                     texman.setcameratotexture(hpc,"HDXCAM_BOSS",degree);
                     let cam     = texman.CheckForTexture("HDXCAM_BOSS",TexMan.Type_Any);
-                    let reticle = texman.CheckForTexture("bossret1",TexMan.Type_Any);
+                    let reticle = texman.CheckForTexture("reticle1",TexMan.Type_Any);
         
                     vector2 frontoffs=(0,scaledyoffset)+bob*3;
         
@@ -418,11 +414,7 @@ class HDTaronga : WAN_20mmLauncher
                     //the cliprect is ignored. The figure is a product of trial and error.
                     if((bob.y/fov)<0.4){
                         let reticleScale = camSize / texman.GetSize(reticle);
-                        if(hdw.weaponstatus[0]&BOSSF_FRONTRETICLE){
-                            sb.DrawCircle(reticle, frontoffs, .5*reticleScale, bob*deg*5-bob, 1.6*deg);
-                        }else{
-                            sb.DrawCircle(reticle, (0,scaledyoffset)+bob, .5*reticleScale,uvScale:.5);
-                        }
+                        sb.DrawCircle(reticle, (0,scaledyoffset)+bob, 0.5*reticleScale,uvScale:.5);
                     }
         
                     //let holeScale    = camSize / texman.GetSize(hole);
