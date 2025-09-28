@@ -67,11 +67,11 @@ class HDTaronga : WAN_20mmLauncher
     override void tick()
     {
         super.tick();
-        drainheat(TRProp_Heat, 0.1);
+        if(self.GetAge() % 20 == 0 && WeaponStatus[TRProp_Heat] > 0)WeaponStatus[TRProp_Heat]--;
 
         if(owner && WeaponStatus[TRProp_Heat] > 65 && !(Level.time % TICRATE))
         {
-            owner.damagemobj(owner, owner, 2, "electrical");
+            owner.damagemobj(owner, owner, random(1,3), "electrical");
         }
         
         if (!(WeaponStatus[TRProp_Flags] & TRF_GL) && WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
@@ -571,7 +571,7 @@ class HDTaronga : WAN_20mmLauncher
     {
         if(invoker.WeaponStatus[TRProp_Heat] > 0)
         {
-			invoker.WeaponStatus[TRProp_Heat] = max(0, invoker.WeaponStatus[TRProp_Heat] - random(3, 15));
+			invoker.WeaponStatus[TRProp_Heat] = max(0, invoker.WeaponStatus[TRProp_Heat] - random(3, 7));
 			vector3 gpos = GunPos((0, 0, -4));
 			Actor a = null;
 			a = Spawn('HDGunsmoke', pos + gpos); a.angle = angle - 90; a.A_ChangeVelocity(3, 0, 0, CVF_RELATIVE);
