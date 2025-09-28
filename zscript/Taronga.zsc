@@ -327,6 +327,14 @@ class HDTaronga : WAN_20mmLauncher
             sb.DrawRect(-22, -13, 6, 3);
         }
         sb.DrawWepCounter(hdw.WeaponStatus[TRProp_Mode], -26, -5, "RBRSA3A7", "STBURAUT", "STFULAUT");
+		if(hd_debug){
+			sb.drawnum(hdw.weaponstatus[TRProp_Heat],-16,-22,
+				basestatusbar.DI_SCREEN_CENTER_BOTTOM);
+			sb.drawnum(hdw.weaponstatus[TRProp_Muck],-26,-22,
+				basestatusbar.DI_SCREEN_CENTER_BOTTOM);
+			sb.drawnum(hdw.weaponstatus[TRProp_Chamber],-36,-22,
+				basestatusbar.DI_SCREEN_CENTER_BOTTOM);
+		}
     }
 
     action void A_ChamberGrit(int amt,bool onlywhileempty=false)
