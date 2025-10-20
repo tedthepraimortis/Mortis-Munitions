@@ -1,3 +1,28 @@
+class HDFumbling066Shell:HDSpent069Bore{
+	default{
+		xscale 0.3;
+		yscale 0.4;
+		bouncefactor 0.3;
+	}
+	states{
+	spawn:
+		6SHL ABCDEFGH 2;
+		loop;
+	death:
+		TNT1 A 0{
+			let sss=spawn("HD069BoreAmmo",pos);
+			sss.vel.xy=lastvel.xy+lastvel.xy.unit()*abs(lastvel.z);
+			if(sss.vel.x||sss.vel.y){
+				sss.A_FaceMovementDirection();
+				sss.angle+=90;
+				sss.frame=randompick(0,4);
+			}else sss.frame=randompick(0,0,0,4,4,4,2,2,5);
+			inventory(sss).amount=1;
+		}stop;
+	}
+}
+
+
 class HDShotPistol:HDHandgun{
     default{
         +hdweapon.fitsinbackpack
@@ -358,7 +383,7 @@ class HDShotPistol:HDHandgun{
 			double sp=sin(pitch);
 			if(chm>1){
 				A_SpawnItemEx(
-					"HD069BoreAmmo",cp*8,1,height-7-sp*8,
+					"HDFumbling066Shell",cp*8,1,height-7-sp*8,
 					cp*cos(angle-80)*4+vel.x,
 					cp*sin(angle-80)*4+vel.y,
 					-sp*4+vel.z,
