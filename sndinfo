@@ -1,3 +1,4 @@
+// Taronga
 weapons/targrenopen "Sounds/Taronga/M203_Open.ogg"
 weapons/targrenclose "Sounds/Taronga/M203_Close.ogg"
 weapons/targrenreload "Sounds/Taronga/M203_Insert_Grenade.ogg"
@@ -15,3 +16,62 @@ weapons/tarongachamber "Sounds/Taronga/M60_Cover_Open.ogg"
 weapons/tarongaboltfwd "Sounds/Taronga/M60_BoltSlideForwardHeld.ogg"
 weapons/tarongaboltback "Sounds/Taronga/M60_BoltSlideBackHeld.ogg"
 $alias weapons/tarongaload weapons/tarongachamber
+weapons/tarongasafety "Sounds/Taronga/G3_Safety.ogg"
+
+// Currawong
+$random weapons/currawong {weapons/currashot1 weapons/currashot2 weapons/currashot3 weapons/currashot4}
+weapons/currashot1 "Sounds/Currawong/MP5_Shot_1.ogg"
+weapons/currashot2 "Sounds/Currawong/MP5_Shot_2.ogg"
+weapons/currashot3 "Sounds/Currawong/MP5_Shot_3.ogg"
+weapons/currashot4 "Sounds/Currawong/MP5_Shot_4.ogg"
+weapons/currawongchamber "Sounds/Currawong/MP5_BoltSlideForwardHeld.ogg"
+weapons/currawongmagout "Sounds/Currawong/MP5_MagazineOut.ogg"
+weapons/currawongmagin "Sounds/Currawong/MP5_MagazineIn.ogg"
+weapons/currawongmagmove "Sounds/Currawong/MP5_HandleUp.ogg"
+weapons/currawongsafety "Sounds/Currawong/AUG_Safety.ogg"
+weapons/currawonghammerhit "Sounds/Currawong/MP5_HammerHit.ogg"
+weapons/currawonghback "Sounds/Currawong/MP5_HandleBack.ogg"
+$alias weapons/cur4gaugeopen weapons/targrenopen
+$alias weapons/cur4gaugeclose weapons/targrenclose
+weapons/cur4gaugereload "Sounds/Currawong/CarlGustaf84_Shell_Out_01.ogg"
+$random weapons/cur4gaugeshot {weapons/cur4gshot1 weapons/cur4gshot2 weapons/cur4gshot3 weapons/cur4gshot4}
+weapons/cur4gshot1 "Sounds/Currawong/Balthazaar_Shoot_01.ogg"
+weapons/cur4gshot2 "Sounds/Currawong/Balthazaar_Shoot_02.ogg"
+weapons/cur4gshot3 "Sounds/Currawong/Balthazaar_Shoot_03.ogg"
+weapons/cur4gshot4 "Sounds/Currawong/Balthazaar_Shoot_04.ogg"
+
+$alias weapons/currawongjam weapons/riflejam
+
+// Featherduster
+$random weapons/shotpistol {weapons/shotpistol1 weapons/shotpistol2 weapons/shotpistol3 weapons/shotpistol4}
+weapons/shotpistol1 "Sounds/Shotpistol/Shotgun_410_B_01.ogg"
+weapons/shotpistol2 "Sounds/Shotpistol/Shotgun_410_B_02.ogg"
+weapons/shotpistol3 "Sounds/Shotpistol/Shotgun_410_B_03.ogg"
+weapons/shotpistol4 "Sounds/Shotpistol/Shotgun_410_B_04.ogg"
+
+$random weapons/shotpistolsuppressed {weapons/shtpsuppressed1 weapons/shtpsuppressed2 weapons/shtpsuppressed3 weapons/shtpsuppressed4}
+weapons/shtpsuppressed1 "Sounds/Shotpistol/Suppressed_Shot_12ga_1.ogg"
+weapons/shtpsuppressed2 "Sounds/Shotpistol/Suppressed_Shot_12ga_2.ogg"
+weapons/shtpsuppressed3 "Sounds/Shotpistol/Suppressed_Shot_12ga_3.ogg"
+weapons/shtpsuppressed4 "Sounds/Shotpistol/Suppressed_Shot_12ga_4.ogg"
+
+weapons/shotpistolchamber "Sounds/Shotpistol/PX4_BoltSlideForward.ogg"
+weapons/shotpistoldry "Sounds/Shotpistol/PX4_HammerHit.ogg"
+weapons/shotpistolprefire "Sounds/Shotpistol/PX4_PreFire.ogg"
+weapons/spstslideback "Sounds/Shotpistol/PX4_BoltSlideBackHeld.ogg"
+weapons/spstslidefwd "Sounds/Shotpistol/PX4_BoltSlideForwardHeld.ogg"
+weapons/spstloads "Sounds/Shotpistol/PX4_MagazineIn.ogg"
+weapons/spstloadm "Sounds/Shotpistol/PX4_MagazineInsertRound.ogg"
+
+// Junco
+$random weapons/junco {weapons/juncoshot1 weapons/juncoshot2 weapons/juncoshot3 weapons/juncoshot4}
+weapons/juncoshot1 "Sounds/Junco/M11_Shot_1.ogg"
+weapons/juncoshot2 "Sounds/Junco/M11_Shot_2.ogg"
+weapons/juncoshot3 "Sounds/Junco/M11_Shot_3.ogg"
+weapons/juncoshot4 "Sounds/Junco/M11_Shot_4.ogg"
+$alias weapons/juncojam weapons/riflejam
+weapons/juncobfwd "Sounds/Junco/Tec9_BoltSlideForward.ogg"
+weapons/juncoload "Sounds/Junco/Tec9_MagazineIn.ogg"
+weapons/juncounload "Sounds/Junco/Tec9_MagazineOut.ogg"
+weapons/juncobfwd2 "Sounds/Junco/Tec9_BoltSlideForwardHeld.ogg"
+weapons/juncosafety "Sounds/Junco/Tec9_Safety.ogg"
