@@ -22,7 +22,7 @@ class MM_4mmSealant : HDAmmo
     }
 }
 
-class HDSealantBoxPickup : HDUpk
+class HDSealantBoxPickup : HDUPK
 {
     Default
     {

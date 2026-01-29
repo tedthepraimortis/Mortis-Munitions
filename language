@@ -101,3 +101,12 @@ MERCH_TAG_CURRAWONG = "P.M.I. \'Currawong\' 10mm PDW";
 
 MERCH_FLAVOR_CURRAWONGMAG = "DRM still intact too! Unluckily for you, not guarenteed to leave your enemies intact!";
 MERCH_TAG_CURRAWONGMAG = "\'Currawong\' 30-round Magazine";
+
+// Trocaz 4mm Rifle
+TAG_TROCAZ = "P.M.I. \'Trocaz\' 4mm Rifle";
+PICKUP_TROCAZ = "You got a \'Trocaz\' rifle! Hacked together, yet still works wonders.";
+
+// Kakapo Eather Pistol
+TAG_KAKAPO = "P.M.I. \'Kakapo\' Eather Pistol";
+PICKUP_KAKAPO = "You got a \'Kakapo' pistol! Little birdy still packs quite a punch.";
+OB_KAKAPO = "%o was blown sky high by %k's Kakapo.";
