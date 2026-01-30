@@ -21,6 +21,7 @@ class HDTrocaz:HDWeapon{
 
 		hdweapon.ammo1 "HD4mMag25",1;
 	}
+	int handrounds;
 	override bool AddSpareWeapon(actor newowner){return AddSpareWeaponRegular(newowner);}
 	override hdweapon GetSpareWeapon(actor newowner,bool reverse,bool doselect){return GetSpareWeaponRegular(newowner,reverse,doselect);}
 	override double gunmass(){
@@ -249,10 +250,9 @@ class HDTrocaz:HDWeapon{
 						A_TakeInventory("FourMilAmmo", 1, TIF_NOTAKEINFINITE);
 						invoker.WeaponStatus[TRCProp_Chamber] = 1;
 					}
-					else if (invoker.WeaponStatus[TRCProp_Chamber] == 1 && invoker.WeaponStatus[TRCProp_Mag] >= 0 && invoker.WeaponStatus[TRCProp_Mag] != 25 && A_JumpIfInventory("FourMilAmmo", 0, "null"))
+					else if (invoker.WeaponStatus[TRCProp_Chamber] == 1 && invoker.WeaponStatus[TRCProp_Mag] >= 0 && invoker.WeaponStatus[TRCProp_Mag] != 25)
 					{
-						A_TakeInventory("FourMilAmmo", 1, TIF_NOTAKEINFINITE);
-						invoker.WeaponStatus[TRCProp_Mag]++;
+						SetWeaponState("loadchamberloop");
 					}
 					break;
 			}
@@ -280,6 +280,36 @@ class HDTrocaz:HDWeapon{
         #### B 2 A_WeaponReady(WRF_NOFIRE);
         #### A 1 A_WeaponReady(WRF_NOFIRE);
 		Goto Ready;
+
+	loadchamberloop:
+		SMGG # 4{
+			int hnd=min(
+				countinv("FourMilAmmo"),5,
+				25-invoker.weaponstatus[TRCProp_Mag]
+			);
+			if(hnd<1 && !PressingAltFire()){
+				setweaponstate("AltHoldEnd");
+				return;
+			}
+			else if(hnd<1 && PressingAltFire()){
+				setweaponstate("AltHold");
+				return;
+			}else{
+				A_TakeInventory("FourMilAmmo",hnd,TIF_NOTAKEINFINITE);
+				invoker.handrounds=hnd;
+				A_StartSound("weapons/pocket",9);
+			}
+		}
+	
+	loadone:
+		SMGG A 1 offset(16,50) A_JumpIf(invoker.handrounds<1 && PressingAltFire(),"AltHold");
+		SMGG A 1 offset(16,50) A_JumpIf(invoker.handrounds<1 && !PressingAltFire(),"AltHoldEnd");
+		SMGG A 4 offset(14,46){
+			A_Log("handrounds: "..invoker.handrounds);
+			invoker.handrounds--;
+			invoker.weaponstatus[TRCProp_Mag]++;
+			A_StartSound("weapons/rifleclick2",8);
+		}loop;
 
     hold:
 		goto nope;
