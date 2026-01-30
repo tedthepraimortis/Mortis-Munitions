@@ -51,6 +51,15 @@ __Featherduster__
 Loadout Code: 6ps | suppressor - 0/1, choke - 0-4
 Clips: 6p1 | Ammo: 066, .066 Bore
 
+__Trocaz__
+
+- A rather recent 4mm rifle hacked together by various civilians during the demonic invasions, made of old Boss rifle and various ZM66 scraps that litter the lands.
+- Magazine fed with a top-up mechanic by holding the bolt back.
+- Notably more reliable, despite its origins, than the ZM66 with no barrel degradation or jamming, at the cost of reload speed, automatic fire and fire rate.
+
+Loadout Code: tcz | scope - 0/1
+Magazine: 425 | 4mm round, unreloadable due to DRM
+
 ## Credits
 
 __Taronga__
@@ -76,6 +85,13 @@ __Junco__
 
 __Featherduster__
 
-- Sprites: Tesefy/Sonik.O.Fan, to be replaced by sprites made by ComradeNikki.
+- Sprites: ComradeNikki
 - Naming and function ideas from UndeadZeratul, ComradeNikki and Satellaview-Dev.
 - Sounds from Hotdogs, Horseshoes and Hand Grenades.
+
+__Trocaz__
+
+- Sprites: Model rips from Project Silverfish
+- Name comes from a subspecies of Pigeon, the Trocaz Pigeon, function idea comes from Project Silverfish
+- Sounds from H3VR
+- Model rips done by Satellaview-Dev
