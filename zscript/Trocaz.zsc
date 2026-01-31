@@ -84,9 +84,8 @@ class HDTrocaz:HDWeapon{
 		LocalizeHelp();
 		return
 		LWPHELP_FIRESHOOT
-		..LWPHELP_RELOAD..StringTable.Localize("$SMGWH_FIRE")
-		..LWPHELP_USE.."+"..LWPHELP_RELOAD..StringTable.Localize("$SMGWH_UPRELOAD")
-		..LWPHELP_FIREMODE..StringTable.Localize("$SMGWH_FMODE")
+		..LWPHELP_RELOAD..StringTable.Localize("$TROCAZ_HELPTEXT_1")
+		..LWPHELP_ALTFIRE.."+"..LWPHELP_RELOAD..StringTable.Localize("$TROCAZ_HELPTEXT_2")
 		..LWPHELP_MAGMANAGER
 		..LWPHELP_UNLOADUNLOAD;
 	}

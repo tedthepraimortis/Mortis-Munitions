@@ -106,6 +106,9 @@ MERCH_TAG_CURRAWONGMAG = "\'Currawong\' 30-round Magazine";
 TAG_TROCAZ = "P.M.I. \'Trocaz\' 4mm Rifle";
 PICKUP_TROCAZ = "You got a \'Trocaz\' rifle! Hacked together, yet still works wonders.";
 
+TROCAZ_HELPTEXT_1 = " Reload mag\n";
+TROCAZ_HELPTEXT_2 = " Reload mag via chamber\n";
+
 // Kakapo Eather Pistol
 TAG_KAKAPO = "P.M.I. \'Kakapo\' Eather Pistol";
 PICKUP_KAKAPO = "You got a \'Kakapo' pistol! Little birdy still packs quite a punch.";
