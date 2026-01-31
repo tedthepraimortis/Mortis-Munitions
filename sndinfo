@@ -75,3 +75,15 @@ weapons/juncoload "Sounds/Junco/Tec9_MagazineIn.ogg"
 weapons/juncounload "Sounds/Junco/Tec9_MagazineOut.ogg"
 weapons/juncobfwd2 "Sounds/Junco/Tec9_BoltSlideForwardHeld.ogg"
 weapons/juncosafety "Sounds/Junco/Tec9_Safety.ogg"
+
+// Trocaz
+$random weapons/trocaz {weapons/trocazshot1 weapons/trocazshot2 weapons/trocazshot3 weapons/trocazshot4}
+weapons/trocazshot1 "Sounds/Trocaz/SG552_Shot_1.ogg"
+weapons/trocazshot2 "Sounds/Trocaz/SG552_Shot_2.ogg"
+weapons/trocazshot3 "Sounds/Trocaz/SG552_Shot_3.ogg"
+weapons/trocazshot4 "Sounds/Trocaz/SG552_Shot_4.ogg"
+weapons/TrocazBoltFwd "Sounds/Trocaz/QLB-06_BoltSlideForwardHeld.ogg"
+weapons/TrocazBoltBack "Sounds/Trocaz/QLB-06_BoltSlideBackHeld.ogg"
+weapons/TrocazLoad "Sounds/Trocaz/QLB-06_MagazineInsertRound.ogg"
+weapons/TrocazMagMove "Sounds/Trocaz/Uzi_MagazineOut.ogg"
+weapons/TrocazMagIn "Sounds/Trocaz/Uzi_MagazineIn.ogg"
