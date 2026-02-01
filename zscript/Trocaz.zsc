@@ -128,22 +128,21 @@ class HDTrocaz:HDWeapon{
 	action void A_CheckReflexSight(){
 		if(
 			invoker.weaponstatus[0]&TRCProp_ReflexSight
-		)Player.GetPSprite(PSP_WEAPON).sprite=getspriteindex("SMSGA0");
-		else Player.GetPSprite(PSP_WEAPON).sprite=getspriteindex("SMGGA0");
+		)Player.GetPSprite(PSP_WEAPON).sprite=getspriteindex("TRCSA0");
+		else Player.GetPSprite(PSP_WEAPON).sprite=getspriteindex("TRCZA0");
 	}
 	states{
 	select0:
-		SMGG A 0 A_CheckDefaultReflexReticle(TRCProp_Dot);
-		SMGG A 0 A_CheckReflexSight();
+		TRCZ A 0 A_CheckDefaultReflexReticle(TRCProp_Dot);
+		TRCZ A 0 A_CheckReflexSight();
 		goto select0small;
 	deselect0:
-		SMGG A 0 A_CheckReflexSight();
+		TRCZ A 0 A_CheckReflexSight();
 		goto deselect0small;
-		SMGG AB 0;
-		SMSG AB 0;
+		TRCZ AB 0;
 
 	ready:
-		SMGG A 0 A_CheckReflexSight();
+		TRCZ A 0 A_CheckReflexSight();
 		#### A 1{
 			A_SetCrosshair(21);
 			A_WeaponReady(WRF_ALL);
@@ -162,7 +161,7 @@ class HDTrocaz:HDWeapon{
 		goto ready;
 
 	AltHold:
-		SMGG B 1 A_WeaponReady(WRF_NOFIRE);
+		TRCZ B 1 A_WeaponReady(WRF_NOFIRE);
 		#### B 1{
 			A_ClearRefire();
 			bool ChamberEmpty = invoker.WeaponStatus[TRCProp_Chamber]<1;
@@ -228,8 +227,8 @@ class HDTrocaz:HDWeapon{
 		#### # 1 Offset(7, 72);
 		#### # 1 Offset(6, 80);
 		#### # 1 Offset(6, 88);
-		TNT1 # 25;
-		TNT1 # 4
+		#### # 25;
+		#### # 4
 		{
 			A_StartSound("weapons/TrocazLoad", 8, volume: 0.7);
 			switch (invoker.WeaponStatus[TRCProp_LoadType])
@@ -262,7 +261,7 @@ class HDTrocaz:HDWeapon{
 					break;
 			}
 		} 
-		SMGG # 2 Offset(6, 80);
+		TRCZ # 2 Offset(6, 80);
 		#### # 2 Offset(7, 72);
 		#### # 2 Offset(8, 60);
 		#### # 1 Offset(7, 52);
@@ -287,7 +286,7 @@ class HDTrocaz:HDWeapon{
 		Goto Ready;
 
 	loadchamberloop:
-		SMGG # 4{
+		TRCZ # 4{
 			int hnd=min(
 				countinv("FourMilAmmo"),5,
 				25-invoker.weaponstatus[TRCProp_Mag]
@@ -307,9 +306,9 @@ class HDTrocaz:HDWeapon{
 		}
 	
 	loadone:
-		SMGG A 1 offset(16,50) A_JumpIf(invoker.handrounds<1 && PressingAltFire(),"AltHold");
-		SMGG A 1 offset(16,50) A_JumpIf(invoker.handrounds<1 && !PressingAltFire(),"AltHoldEnd");
-		SMGG A 4 offset(14,46){
+		TRCZ A 1 offset(16,50) A_JumpIf(invoker.handrounds<1 && PressingAltFire(),"AltHold");
+		TRCZ A 1 offset(16,50) A_JumpIf(invoker.handrounds<1 && !PressingAltFire(),"AltHoldEnd");
+		TRCZ A 4 offset(14,46){
 			invoker.handrounds--;
 			invoker.weaponstatus[TRCProp_Mag]++;
 			A_StartSound("weapons/TrocazLoad",8);
@@ -320,12 +319,12 @@ class HDTrocaz:HDWeapon{
 	fire:
 		#### A 0;
 	fire2:
-		#### B 1{
+		#### A 1 offset(0,36){
 			if(invoker.weaponstatus[TRCProp_Chamber]==1)A_GunFlash();
 			else setweaponstate("nope");
 		}
-		#### A 1;
-		#### A 0{
+		#### F 1 offset(0,36);
+		#### F 0{
 			if(invoker.weaponstatus[TRCProp_Mag]>0){
 				invoker.weaponstatus[TRCProp_Mag]--;
 				invoker.weaponstatus[TRCProp_Chamber]=1;
@@ -339,7 +338,7 @@ class HDTrocaz:HDWeapon{
 		goto ready;
 	flash:
 		#### B 0{
-			let bbb=HDBulletActor.FireBullet(self,"HDB_426",speedfactor: 1.1);
+			let bbb=HDBulletActor.FireBullet(self,"HDB_426",speedfactor: 1.1,distantsound: "weapons/trocazfar");
 			if(
 				frandom(16,ceilingz-floorz)<bbb.speed*0.1
 			)A_AlertMonsters(200);
@@ -348,7 +347,7 @@ class HDTrocaz:HDWeapon{
 			A_StartSound("weapons/trocaz",CHAN_WEAPON,volume:0.7);
 			invoker.weaponstatus[TRCProp_Chamber]=0;
 		}
-		SMGF A 1 bright{
+		#### A 1 bright{
 			HDFlashAlpha(-200);
 			A_Light1();
 		}
