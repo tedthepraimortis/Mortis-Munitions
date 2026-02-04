@@ -306,9 +306,9 @@ class HDTrocaz:HDWeapon{
 		}
 	
 	loadone:
-		TRCZ A 1 offset(16,50) A_JumpIf(invoker.handrounds<1 && PressingAltFire(),"AltHold");
-		TRCZ A 1 offset(16,50) A_JumpIf(invoker.handrounds<1 && !PressingAltFire(),"AltHoldEnd");
-		TRCZ A 4 offset(14,46){
+		TRCZ # 1 Offset(6, 88) A_JumpIf(invoker.handrounds<1 && PressingAltFire(),"AltHold");
+		TRCZ # 1 Offset(6, 84) A_JumpIf(invoker.handrounds<1 && !PressingAltFire(),"AltHoldEnd");
+		TRCZ # 4 Offset(8, 88){
 			invoker.handrounds--;
 			invoker.weaponstatus[TRCProp_Mag]++;
 			A_StartSound("weapons/TrocazLoad",8);
@@ -449,7 +449,7 @@ class HDTrocaz:HDWeapon{
 		weaponstatus[TRCProp_Chamber]=1;
 	}
 }
-enum smgstatus{
+enum trocazstatus{
 	TRCProp_JustUnload=1,
 	TRCProp_ReflexSight=2,
 	TRCProp_LoadType=3,
