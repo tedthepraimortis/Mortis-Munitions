@@ -28,3 +28,7 @@ server bool junco_allowbackpacks = true;
 // Mass
 server bool mm_weapon_persistency = true;
 user bool mm_advanced_helptext = true;
+
+// Misc
+server int mm_fl_quality = 1;
+server bool mm_fl_particles = true;

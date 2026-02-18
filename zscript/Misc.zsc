@@ -39,3 +39,151 @@ class HDSealantBoxPickup : HDUPK
             SELB A -1;
     }
 }
+
+class MM_MountPoint abstract {
+    abstract clearscope string GetName();
+    abstract double, double, int, double, double, double GetMountInfo(); // [Ace] Spring, damping, inertia, offAngle, offLen, offZ.
+}
+
+class MM_GunBottom : MM_MountPoint {
+    override string GetName() { return "Gun (Bottom)"; }
+    override double, double, int, double, double, double GetMountInfo() { return 1, 1, 1, 0, 0, -1; }
+}
+
+class MMFLSpotlight : DynamicLight {
+
+    private int oldIntensity, unflickerTimer;
+    private Actor followTarget;
+    private double vela, velp, spring, damping, offsetAngle, offsetLen, offsetZ;
+    private int inertia;
+    private bool useGunPos;
+
+    Default {
+        DynamicLight.Type "Point";
+        +DYNAMICLIGHT.ATTENUATE;
+        +DYNAMICLIGHT.SPOT
+    }
+
+    static MMFLSpotlight CreateBeam(Actor other, MM_LightBeamInfo beam, MM_MountPoint mount, int type) {
+        let light = MMFLSpotlight(Spawn("MMFLSpotlight", other.pos, false));
+        light.followTarget = other;
+
+        let color = beam.GetColor(type == 2);
+        light.args[DynamicLight.LIGHT_RED]   = color.r;
+        light.args[DynamicLight.LIGHT_GREEN] = color.g;
+        light.args[DynamicLight.LIGHT_BLUE]  = color.b;
+
+        [light.spotInnerAngle, light.spotOuterAngle, light.args[DynamicLight.LIGHT_INTENSITY]] = beam.GetRadius(type);
+
+        light.angle = other.angle;
+        light.pitch = other.pitch;
+
+        [light.spring, light.damping, light.inertia, light.offsetAngle, light.offsetLen, light.offsetZ] = mount.GetMountInfo();
+        light.useGunPos = mount.getName().left(3) ~== "gun";
+
+        light.UpdateSpotlight(other.pos, other.angle, other.pitch, false);
+
+        return light;
+    }
+
+    override void Tick() {
+        super.Tick();
+
+        // Prevent invalid inertia values
+        inertia = max(inertia, 1);
+
+        // TODO: allow flashlight beams being able to follow non-players
+        if (followTarget) {
+
+            // If following a playerpawn, offset based on camera height.
+            let offZ = followTarget.player ? followTarget.player.viewZ - followTarget.pos.z : 0;
+
+            let hdp = HDPlayerPawn(followTarget);
+            let gun = hdp ? HDWeapon(hdp.player.readyWeapon) : null;
+            let nextGun = hdp ? HDWeapon(hdp.player.pendingWeapon) : null;
+            let useGun = useGunPos && hdp && gun && !gun.bMELEEWEAPON;
+            let loweredWep = (gun is 'NullWeapon' || nextGun is 'NullWeapon' || (gun && gun.bWIMPY_WEAPON) || (nextGun && nextGun.bWIMPY_WEAPON));
+
+            let newAngle = useGun ? (hdp.gunAngle + (loweredWep ? 45 : 0)) : followTarget.angle;
+            let newPitch = useGun ? (hdp.gunPitch + (loweredWep ? 30 : 0)) : followTarget.pitch;
+
+            let newPos = (
+                (
+                    useGun
+                    ? (
+                        (hdp.gunPos * (loweredWep ? 0.7 : 1.0)) + followTarget.vec3Angle(
+                            gun.barrelLength * 0.05,
+                            newAngle,
+                            sin(-newPitch) + offsetZ
+                        ) + followTarget.vec3Angle(
+                            gun.barrelWidth * offsetLen,
+                            newAngle + offsetAngle,
+                            gun.barrelDepth * offsetZ
+                        ) - followTarget.pos
+                    )
+                    : followTarget.vec3Angle(
+                        offsetLen,
+                        newAngle + offsetAngle,
+                        offZ + offsetZ
+                    )
+                ) + followTarget.vec3Angle(
+                    cos(-newPitch) * sin(-newPitch),
+                    newAngle,
+                        sin(-newPitch)
+                    ) - followTarget.pos
+                );
+
+            UpdateSpotlight(newPos, newAngle, newPitch, getAge());
+        }
+
+        if (oldIntensity > 0 && unflickerTimer-- == 0) {
+            args[DynamicLight.LIGHT_INTENSITY] = oldIntensity;
+            oldIntensity = 0;
+        }
+    }
+
+    void UpdateSpotlight(Vector3 targetPos, double targetAngle, double targetPitch, bool interpolate = true) {
+        if (interpolate) {
+            vel += HDCore.dampedSpringVec3D(pos, targetPos, vel, spring, damping);
+
+            vela += HDCore.dampedSpringDouble(angle, targetAngle, vela, spring, damping);
+            velp += HDCore.dampedSpringDouble(pitch, targetPitch, velp, spring, damping);
+
+            SetOrigin(pos + (vel / inertia), true);
+            A_SetAngle(angle + (vela / inertia), true);
+            A_SetPitch(pitch + (velp / inertia), true);
+        } else {
+            SetOrigin(targetPos, false);
+            A_SetAngle(targetAngle, false);
+            A_SetPitch(targetPitch, false);
+        }
+    }
+
+    void Flicker(int offDuration, double minFac, double maxFac) {
+        if (oldIntensity == 0) {
+            oldIntensity = args[DynamicLight.LIGHT_INTENSITY];
+            args[DynamicLight.LIGHT_INTENSITY] = clamp(int(args[DynamicLight.LIGHT_INTENSITY] * frandom(minFac, maxFac)), 1, 256);
+            unflickerTimer = offDuration;
+        }
+    }
+}
+
+class MM_LightBeamInfo abstract {
+    abstract clearscope string GetName();
+    abstract int, int, int GetRadius(int type); // [Ace] 0 = simple, 1 = quality, inner beam, 2 = quality, outer beam;
+    abstract Color GetColor(bool secondary);
+}
+
+class MM_Halogen : MM_LightBeamInfo {
+    override string GetName() { return "Halogen (3000K)"; }
+    override int, int, int GetRadius(int type) {
+        switch (type) {
+            default: return 5, 40, 448;
+            case 1: return 0, 20, 384;
+            case 2: return 10, 60, 512;
+        }
+    }
+    override Color GetColor(bool secondary) {
+        return HDCore.plancksLaw(secondary ? 3000 : 5000);
+    }
+}

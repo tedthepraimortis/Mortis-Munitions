@@ -1,5 +1,6 @@
 version "4.14"
 
+#include "zscript/EventHandlers.zsc"
 #include "zscript/Taronga.zsc"
 #include "zscript/Currawong.zsc"
 #include "zscript/ShotPistol.zsc"
