@@ -23,6 +23,17 @@ class HDKakapo:HDHandgun{
 			\cuselectfire - 0/1, whether it has a fire selector
 			\cufiremode - 0/1, semi/auto, subject to the above";
 	}
+
+	enum NiteVis{
+		NITEVIS_MAX=100,
+		NITEVIS_MAXINTEGRITY=400,
+		NITEVIS_CYCLEUNIT=NITEVIS_MAXINTEGRITY+1,
+		NITEVIS_BATCYCLE=20000,
+		NITEVIS_MAGMAXCHARGE=NITEVIS_CYCLEUNIT*NITEVIS_BATCYCLE,
+		NITEVIS_MAGMAX=NITEVIS_MAGMAXCHARGE+NITEVIS_MAXINTEGRITY,
+		NITEVIS_INVULNCOLORMAP=0,
+	}
+	
 	int cocked;
 	override double weaponbulk(){
 		int mgg=weaponstatus[PISS_MAG];
@@ -152,23 +163,41 @@ class HDKakapo:HDHandgun{
 	firemode:
 		goto nope;
 	altfire:
-		---- A 0{
-			let mmm=hdmagammo(findinventory("HDBattery"));
+		---- A 0{/*
+			A_Log("Bat");
+			//charge
+			let bbb=HDBattery(invoker.findinventory("HDBattery"));
 			if(
-				!mmm
-				||mmm.amount<1
+				!!bbb
+				&&bbb.mags.size()>0
 			){
-				mmm.mags[mmm.mags.size()-1]--;
-				setweaponstate("reload3");
-				return;
+				//get the lowest non-empty
+				int bbbindex=bbb.mags.size()-1;
+				int bbblowest=20;
+				for(int i=bbbindex;i>=0;i--){
+					if(
+						bbb.mags[i]>0
+						&&bbb.mags[i]<bbblowest
+					){
+						bbbindex=i;
+						bbblowest=bbb.mags[i];
+					}
+				}
+				if(
+					bbb.mags[0]<NITEVIS_MAGMAXCHARGE
+					&&bbb.mags[bbbindex]>0
+				){
+					bbb.mags[0]+=NITEVIS_CYCLEUNIT;
+					if(!random[rand1](0,(NITEVIS_BATCYCLE>>1)))bbb.mags[bbbindex]--;
+				}
 			}
-		}goto nope;
+		}*/goto reload3;
 	reload3:
-		#### C 12 offset(0,38) A_StartSound("weapons/bfgopen",8);
+		/*#### C 12 offset(0,38) A_StartSound("weapons/bfgopen",8);
 		#### C 16 offset(0,37) A_StartSound("weapons/bfgclick2",8);
 		#### C 2 offset(0,38);
 		#### C 2 offset(0,36);
-		#### A 2 offset(0,34);
+		#### A 2 offset(0,34);*/
 		#### A 12 {invoker.weaponstatus[PISS_CHAMBER]=1;}
 		goto ready;
 	althold:
@@ -379,11 +408,11 @@ class KakapoRayImpact : KakapoRayImpactBase
 {
 	override void OnBlast(bool miss)
 	{
-		DoorDestroyer.DestroyDoor(self, 128, 32, dedicated: true); 
-		A_Explode(random(200, 300), int(HDCONST_ONEMETRE * 3), XF_HURTSOURCE, false, damageType: 'Electrical');
+		//DoorDestroyer.DestroyDoor(self, 128, 32, dedicated: true);
+		A_Explode(random(20, 35), int(HDCONST_ONEMETRE), XF_HURTSOURCE, false, damageType: 'Electrical');
 		A_StartSound("Gungnir/RayHit", 8, attenuation: 0.5);
-		DistantQuaker.Quake(self, 2, 50, HDCONST_ONEMETRE * 30, 10, 256, 512, 128);
-		SpawnZapper(4);
+		//DistantQuaker.Quake(self, 2, 50, HDCONST_ONEMETRE * 30, 10, 256, 512, 128);
+		SpawnZapper(1);
 		SpawnBlastEffects(0, miss);
 	}
 }
