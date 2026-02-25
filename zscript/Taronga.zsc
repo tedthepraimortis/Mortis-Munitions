@@ -252,6 +252,11 @@ class HDTaronga : WAN_20mmLauncher
             sb.DrawRect(-23, -7, 1, 1);
         }
 
+        if (hdw.WeaponStatus[TRProp_Chamber] == 2)
+        {
+            sb.DrawRect(-22, -8, 6, 3);
+        }
+
         if (hdw.WeaponStatus[TRProp_Flags] & TRF_GL)
         {
             sb.DrawImage("MA7GB0",(-50, -4), sb.DI_SCREEN_CENTER_BOTTOM, scale: (1.1, 1.1));
