@@ -689,29 +689,35 @@ class HDTaronga : WAN_20mmLauncher
 		AltFire:
             HRFL A 1
             {
+                if(hd_debug)A_Log("AltFire");
                 if(PressingZoom() && invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
                 {
                     SetWeaponState("FireGL");
                 }
             }
-			#### A 1 Offset(0, 34) A_WeaponBusy();
-			#### B 2 Offset(1, 35) A_JumpIf(invoker.WeaponStatus[TRProp_BoltWeight]==1,1);
-			#### B 2 Offset (2, 36) A_JumpIf(invoker.weaponstatus[TRProp_Chamber]>1,"startjamderp");
-			#### B 1 Offset(3, 37) A_MuzzleClimb(-frandom(0.06,0.1),-frandom(0.3,0.5));
-			#### B 1 Offset(4, 38) A_ChamberGrit(randompick(0,0,1,1,2,3,4),true);
+			#### A 1 Offset(0, 20) A_WeaponBusy();
+            #### A 1 Offset(-2, 40);
+			#### B 1 Offset (-5, 50) A_JumpIf(invoker.weaponstatus[TRProp_Chamber]>1,"startjamderp");
+            #### B 1 Offset(-10, 55);
+            #### B 1 Offset(-20, 60) A_JumpIf(invoker.WeaponStatus[TRProp_BoltWeight]==1,1);
+			#### B 2 Offset(-40, 62) A_MuzzleClimb(-frandom(0.06,0.1),-frandom(0.3,0.5));
+            #### B 3 Offset(-45, 57);
+			#### B 2 Offset(-47, 53) A_ChamberGrit(randompick(0,0,1,1,2,3,4),true);
 			#### A 0 A_Refire("chamber");
 			goto ready;
 
 		AltHold:
+            
 			HRFL B 1 A_WeaponReady(WRF_NOFIRE);
 			#### B 1{
+                if(hd_debug)A_Log("AltHold");
 				A_ClearRefire();
 				bool ChamberEmpty = invoker.WeaponStatus[TRProp_Chamber]<1;
 				if (PressingUnload())
 				{
 					if(ChamberEmpty)
 					{
-						return resolvestate("altholdclean");
+						return resolvestate("beginclean");
 					}
 					else
 					{
@@ -742,9 +748,11 @@ class HDTaronga : WAN_20mmLauncher
 
 				return resolvestate("altholdend");
 			}
+
 		Chamber:
-			#### B 3 Offset(6, 42)
+			#### B 3 Offset(-48, 35)
 			{
+                if(hd_debug)A_Log("Chamber");
 				A_StartSound("Weapons/TarongaBoltBack", 8);
 				if (GunBraced())
 				{
@@ -755,8 +763,9 @@ class HDTaronga : WAN_20mmLauncher
 					A_MuzzleClimb(frandom(-0.2, 0.8), frandom(-0.4, 0.8));
 				}
 			}
-			#### B 2 Offset(6, 42)
+			#### B 5
 			{
+                if(hd_debug)A_Log("bvreihuoraegwbngrhibnarhiargnbjih");
                 if(invoker.WeaponStatus[TRProp_Chamber] == 1)
                 {
                     A_EjectCasing("HD6mmFlechetteAmmo",frandom(-1,2),(frandom(0.2,0.3),-frandom(7,7.5),frandom(0,0.2)),(0,0,-2));
@@ -772,25 +781,24 @@ class HDTaronga : WAN_20mmLauncher
                     SetWeaponState("AltHold");
                 }
 			}
-			#### B 2 Offset(7, 44);
-			#### B 1 Offset(5, 42);
-			#### B 1 Offset(1, 34);
+			//#### B 2 Offset(-46, 44);
+			//#### B 1 Offset(-45, 42);
+			//#### B 1 Offset(-44, 34);
 			#### B 1 A_WeaponReady(WRF_NOFIRE);
 			#### B 0 A_Refire("AltHold");
 			Goto AltHoldEnd;
 
 		LoadChamber:
-			#### # 1 Offset(2, 36) A_ClearRefire();
-			#### # 1 Offset(3, 38);
-			#### # 1 Offset(5, 42);
-			#### # 1 Offset(8, 48) A_StartSound("weapons/pocket", 9);
-			#### # 1 Offset(9, 52) A_MuzzleClimb(frandom(-0.2, 0.2), 0.2, frandom(-0.2, 0.2),0.2, frandom(-0.2, 0.2), 0.2);
-			#### # 1 Offset(8, 60);
-			#### # 1 Offset(7, 72);
-			#### # 1 Offset(6, 80);
-			#### # 1 Offset(6, 88);
-			TNT1 # 25;
-			TNT1 # 4
+			#### # 1 Offset(-48, 35){
+                if(hd_debug)A_Log("LoadChamber");
+                A_ClearRefire();
+            }
+			#### # 1 Offset(-47, 50);
+			#### # 3 Offset(-42, 55);
+			#### # 4 A_StartSound("weapons/pocket", 9);
+			#### # 1 A_MuzzleClimb(frandom(-0.2, 0.2), 0.2, frandom(-0.2, 0.2),0.2, frandom(-0.2, 0.2), 0.2);
+			#### # 1 Offset(-40, 60);
+			#### # 25 Offset(-41, 67)
 			{
 				A_StartSound("weapons/TarongaLoad", 8, volume: 0.7);
 				switch (invoker.WeaponStatus[TRProp_LoadType])
@@ -817,26 +825,14 @@ class HDTaronga : WAN_20mmLauncher
 						break;
 				}
 			} 
-			HRFL # 2 Offset(6, 80);
-			#### # 2 Offset(7, 72);
-			#### # 2 Offset(8, 60);
-			#### # 1 Offset(7, 52);
-			#### # 1 Offset(5, 42);
-			#### # 1 Offset(3, 38);
-			#### # 1 Offset(3, 35);
+			#### # 10 Offset(-42, 65);
+			#### # 2 Offset(-45, 55);
+            #### # 1 Offset(-47, 50);
+            #### # 1 Offset(-48, 45);
 			Goto AltHold;
 			
-		AltHoldClean:
-			HRFL B 1 offset(2,36) A_ClearRefire();
-			#### B 1 offset(3,38);
-			#### B 1 offset(5,41) A_Log(StringTable.Localize("$BOSS_CLEANS"),true);
-			#### B 1 offset(8,44) A_StartSound("weapons/pocket",9);
-			#### B 1 offset(7,50) A_MuzzleClimb(frandom(-0.2,0.2),0.2,frandom(-0.2,0.2),0.2,frandom(-0.2,0.2),0.2,wepdot:false);
-			TNT1 A 3 A_StartSound("weapons/pocket",10);
-			TNT1 AAAA 4 A_MuzzleClimb(frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),wepdot:false);
-			TNT1 A 3 A_StartSound("weapons/pocket",9);
-			TNT1 AAAA 4 A_MuzzleClimb(frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),wepdot:false);
-			TNT1 A 40{
+		Clean:
+			HRFL B 40{
 				A_StartSound("weapons/pocket",9);
 				int amt=invoker.weaponstatus[TRProp_Muck];
 				string amts=StringTable.Localize("$BOSS_CLEAN1");
@@ -855,12 +851,12 @@ class HDTaronga : WAN_20mmLauncher
 				);
 				amts=HDMath.BuildVariableString(amts);
 				amts.appendformat("\n");
-
+s
 				amt=randompick(-10,-15,-15,-random(30,55));
 
                 A_TRNDrainHeat();
 
-				A_ChamberGrit(amt,true);
+                A_ChamberGrit(amt,true);
 				amt=invoker.weaponstatus[TRProp_Muck];
 				if(amt>80)amts.appendformat(StringTable.Localize("$BOSS_CLENF1"));
 				else if(amt>50)amts.appendformat(StringTable.Localize("$BOSS_CLENF2"));
@@ -869,16 +865,53 @@ class HDTaronga : WAN_20mmLauncher
 				else amts.appendformat(StringTable.Localize("$BOSS_CLENF5"));
 				A_Log(amts,true);
 			}
-			HRFL B 1 offset(7,52);
-			#### B 1 offset(8,48);
-			#### B 1 offset(5,42);
-			#### B 1 offset(3,38);
-			#### B 1 offset(2,36);
 			goto althold;
+        
+        BeginClean:
+            HRFL B 1 offset(-48, 35){
+                if(hd_debug)A_Log("BeginClean"); 
+                A_ClearRefire();
+            }
+			#### B 1 offset(-47, 50);
+			#### B 1 offset(-42, 55) A_Log(StringTable.Localize("$BOSS_CLEANS"),true);
+			#### B 1 offset(-40, 60) A_StartSound("weapons/pocket",9);
+			#### B 1 offset(-41, 67) A_MuzzleClimb(frandom(-0.2,0.2),0.2,frandom(-0.2,0.2),0.2,frandom(-0.2,0.2),0.2,wepdot:false);
+			#### B 3 offset(-40, 65) A_StartSound("weapons/pocket",10);
+			#### B 4 offset(-41, 60) A_MuzzleClimb(frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),wepdot:false);
+			#### B 3 offset(-42, 62) A_StartSound("weapons/pocket",9);
+			#### B 4 offset(-41, 67) A_MuzzleClimb(frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),frandom(-0.2,0.2),wepdot:false);
+
+            #### B 1{
+                int amt=invoker.weaponstatus[TRProp_Muck];
+                if (amt>20){
+                    SetWeaponState("Clean");
+                }
+            }
+
+        EndClean:
+            HRFL B 1 if(hd_debug)A_Log("EndClean");
+            #### B 1{
+                if (PressingUnload()){
+                    SetWeaponState("Clean");
+                }
+            }
+            
+            Goto AltHold;
 
 		AltHoldEnd:
-			#### B 0 A_StartSound("weapons/TarongaBoltFwd", 8);
+			HRFL B 0 {
+                if(hd_debug)A_Log("AltHoldEnd"); 
+                A_StartSound("weapons/TarongaBoltFwd", 8);
+            }
             #### B 2 A_WeaponReady(WRF_NOFIRE);
+            #### A 1 offset(-48, 40);
+            #### A 1 offset(-45, 50);
+            #### A 2 offset(-35, 55);
+            #### A 3 offset(-20, 58);
+            #### A 2 offset(-12, 52);
+            #### A 2 offset(-7, 45);
+            #### A 1 offset(-2, 30);
+            #### A 1 offset(-0, 10);
             #### A 3{
                 A_WeaponReady(WRF_NOFIRE);
                 if(invoker.weaponstatus[TRProp_BoltWeight]==1)A_SetTics(1);
@@ -887,11 +920,13 @@ class HDTaronga : WAN_20mmLauncher
 
         Jam: 
             #### A 0 {
+                if(hd_debug)A_Log("Jam");
                 int chm = invoker.WeaponStatus[TRProp_Chamber];
                 if(chm<1)SetWeaponState("chamber");
             }
         StartJamDerp:
             #### A 0{
+                if(hd_debug)A_Log("StartJamDerp");
                 A_StartSound("weapons/tarongachamber",8,CHANF_OVERLAP);
             }
             #### A 1 offset(0,34);
@@ -901,7 +936,10 @@ class HDTaronga : WAN_20mmLauncher
             #### A 0 SetWeaponState("JamDerp");
         
         JamDerp:
-            #### A 0 A_StartSound("weapons/tarongachamber",8,CHANF_OVERLAP);
+            #### A 0 {
+                if(hd_debug)A_Log("JamDerp");
+                A_StartSound("weapons/tarongachamber",8,CHANF_OVERLAP);
+            }
             #### A 1 offset(0,34);
             #### A 2 offset(1,35);
             #### A 2 offset(3,37) A_MuzzleClimb(frandom(-0.5,0.6),frandom(-0.3,0.6));
@@ -922,6 +960,7 @@ class HDTaronga : WAN_20mmLauncher
         Unload:
             #### A 0
             {
+                if(hd_debug)A_Log("Unload");
                 invoker.WeaponStatus[TRProp_Flags] |= TRF_JustUnload;
                 if (PressingZoom() && invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
                 {
@@ -933,6 +972,7 @@ class HDTaronga : WAN_20mmLauncher
         AltReload:
             #### A 0
             {
+                if(hd_debug)A_Log("AltReload");
                 invoker.WeaponStatus[TRProp_Flags] &= ~TRF_JustUnload;
                 if (invoker.WeaponStatus[TRProp_Flags] & TRF_GL && !(invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded) && CheckInventory("WAN_20mmGrenadeAmmo", 1))
                 {
@@ -944,6 +984,7 @@ class HDTaronga : WAN_20mmLauncher
         FireGL:
             HRFL F 2 Bright
             {
+                if(hd_debug)A_Log("FireGL");
                 if(invoker.WeaponStatus[TRProp_Flags] & TRF_GrenadeLoaded)
                 {
                     A_Fire20mmGL();
@@ -998,7 +1039,10 @@ class HDTaronga : WAN_20mmLauncher
             }
             #### A 0 A_JumpIf(invoker.WeaponStatus[TRProp_Flags] & TRF_JustUnload, 'ReloadEndGL');
         LoadGL:
-            #### A 2 Offset(10, 50) A_StartSound("weapons/pocket", CHAN_WEAPON,  CHANF_OVERLAP);
+            #### A 2 Offset(10, 50) {
+                if(hd_debug)A_Log("LoadGL");
+                A_StartSound("weapons/pocket", CHAN_WEAPON,  CHANF_OVERLAP);
+            }
             #### AAA 5 Offset(10, 50) A_MuzzleClimb(frandom(-0.2, 0.8), frandom(-0.2, 0.4));
             #### A 15 Offset(8, 50)
             {
@@ -1007,7 +1051,10 @@ class HDTaronga : WAN_20mmLauncher
                 A_StartSound("weapons/targrenreload", CHAN_WEAPON);
             }
         ReloadEndGL:
-            #### A 4 Offset(4, 44) A_StartSound("weapons/targrenclose", CHAN_WEAPON);
+            #### A 4 Offset(4, 44) {
+                if(hd_debug)A_Log("ReloadEndGL");
+                A_StartSound("weapons/targrenclose", CHAN_WEAPON);
+            }
             #### A 1 Offset(0, 40);
             #### A 1 Offset(0, 34) A_MuzzleClimb(frandom(-2.4, 0.2), frandom(-1.4, 0.2));
             Goto Nope;
