@@ -851,7 +851,6 @@ class HDTaronga : WAN_20mmLauncher
 				);
 				amts=HDMath.BuildVariableString(amts);
 				amts.appendformat("\n");
-s
 				amt=randompick(-10,-15,-15,-random(30,55));
 
                 A_TRNDrainHeat();
@@ -889,7 +888,7 @@ s
             }
 
         EndClean:
-            HRFL B 1 if(hd_debug)A_Log("EndClean");
+            HRFL B 1 {if(hd_debug)A_Log("EndClean");}
             #### B 1{
                 if (PressingUnload()){
                     SetWeaponState("Clean");

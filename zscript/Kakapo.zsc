@@ -401,7 +401,7 @@ class HDKakapo:HDHandgun{
 		weaponstatus[KRProp_Chamber]=1;
 	}
 }
-enum pistolstatus{
+enum kakapostatus{
 	KRProp_Flags=0,
 	KRProp_Battery=1,
 	KRProp_Chamber=2, //0 empty, 1 loaded
