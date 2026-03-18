@@ -9,7 +9,7 @@ server float currawong_clipbox_spawn_weight = 2;
 server bool hdm_enable_currawong = true;
 server int hdm_currawong_price = 225;
 server int hdm_currawongmag_price = 12;
-server bool Currawong_allowbackpacks = true;
+server bool currawong_allowbackpacks = true;
 
 // Featherduster
 server float shotpistol_shellbox_spawn_weight = 2;

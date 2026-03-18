@@ -16,6 +16,27 @@ OptionMenu "MortisMunitionsMenu"
     Slider "$MENU_WEPSPAWNRATE", "hdm_taronga_price", 0.0, 10000, 10, 2
     Option "$MENU_WEPSPAWNRATE", "hdm_enable_taronga", "OnOff"
     StaticText ""
+    StaticText "$MERCH_TAG_SHOTPISTOL"
+    Slider "$MENU_WEPSPAWNRATE", "shotpistol_shellbox_spawn_weight", 0.0, 100, .01, 2
+    Slider "$MENU_WEPSPAWNRATE", "hdm_shotpistol_price", 0.0, 10000, 10, 2
+    Slider "$MENU_WEPSPAWNRATE", "hdm_shotpistolclip_price", 0.0, 10000, 10, 2
+    Option "$MENU_WEPSPAWNRATE", "shotpistol_allowbackpacks", "OnOff"
+    Option "$MENU_WEPSPAWNRATE", "hdm_enable_shotpistol", "OnOff"
+    StaticText ""
+    StaticText "$MERCH_TAG_JUNCO"
+    Slider "$MENU_WEPSPAWNRATE", "junco_clipmag_spawn_weight", 0.0, 100, .01, 2
+    Slider "$MENU_WEPSPAWNRATE", "hdm_junco_price", 0.0, 10000, 10, 2
+    Slider "$MENU_WEPSPAWNRATE", "hdm_juncomag_price", 0.0, 10000, 10, 2
+    Option "$MENU_WEPSPAWNRATE", "junco_allowbackpacks", "OnOff"
+    Option "$MENU_WEPSPAWNRATE", "hdm_enable_junco", "OnOff"
+    StaticText ""
+    StaticText "$MERCH_TAG_CURRAWONG"
+    Slider "$MENU_WEPSPAWNRATE", "currawong_clipbox_spawn_weight", 0.0, 100, .01, 2
+    Slider "$MENU_WEPSPAWNRATE", "hdm_currawong_price", 0.0, 10000, 10, 2
+    Slider "$MENU_WEPSPAWNRATE", "hdm_currawongmag_price", 0.0, 10000, 10, 2
+    Option "$MENU_WEPSPAWNRATE", "currawong_allowbackpacks", "OnOff"
+    Option "$MENU_WEPSPAWNRATE", "hdm_enable_currawong", "OnOff"
+    StaticText ""
     StaticText ""
 
     Option "$MENU_ADVANCEDHELPTEXT", "mm_advanced_helptext", "OnOff"
