@@ -316,7 +316,7 @@ class HDPochard:WAN_20mmLauncher{
 			);
 			sb.drawnum(hpl.countinv("HDPochardDrum"),-43,-8,sb.DI_SCREEN_CENTER_BOTTOM);
 			if(!(hdw.weaponstatus[0]&PCHRF_NOLAUNCHER)){
-				sb.drawimage("ROQPA0",(-62,-4),sb.DI_SCREEN_CENTER_BOTTOM,scale:(0.6,0.6));
+				sb.drawimage("MA7GB0",(-62,-4),sb.DI_SCREEN_CENTER_BOTTOM,scale:(1.1, 1.1));
 				sb.drawnum(hpl.countinv("WAN_20mmGrenadeAmmo"),-56,-8,sb.DI_SCREEN_CENTER_BOTTOM);
 			}
 		}
@@ -493,13 +493,13 @@ class HDPochard:WAN_20mmLauncher{
 	}
 	states{
 	ready:
-		RIFG A 1{
+		PCRD A 1{
 			if(A_CheckCookoff())return;
 			else A_WeaponReady(WRF_ALL);
 			if(invoker.weaponstatus[PCHRS_AUTO]>1)invoker.weaponstatus[PCHRS_AUTO]=1;
 		}goto readyend;
 	firemode:
-		RIFG A 1{
+		PCRD A 1{
 			if (PressingUse())
 			{
 				invoker.lightcheck();
@@ -515,7 +515,7 @@ class HDPochard:WAN_20mmLauncher{
 
 
 	select0:
-		RIFG A 0{
+		PCRD A 0{
 			A_CheckDefaultReflexReticle(PCHRS_DOT);
 			if(!countinv("NulledWeapon"))invoker.weaponstatus[0]&=~PCHRF_GLMODE;
 			if(invoker.weaponstatus[0]&PCHRF_NOLAUNCHER){
@@ -524,7 +524,7 @@ class HDPochard:WAN_20mmLauncher{
 			}
 		}goto select0big;
 	deselect0:
-		RIFG A 0{
+		PCRD A 0{
 			if(
 				invoker.weaponstatus[PCHRS_HEAT]>HDCONST_ZM66COOKOFF
 				&&!(invoker.weaponstatus[0]&PCHRF_CHAMBERBROKEN)
@@ -539,7 +539,7 @@ class HDPochard:WAN_20mmLauncher{
 			if(invoker.weaponstatus[0]&PCHRF_NOLAUNCHER)setweaponstate("deselect0small");
 		}goto deselect0big;
 	flash:
-		RIFF A 1 bright{
+		PCRD F 1 bright{
 			A_Light1();
 			HDFlashAlpha(-16);
 			A_StartSound("weapons/rifle",CHAN_WEAPON);
@@ -551,9 +551,9 @@ class HDPochard:WAN_20mmLauncher{
 			HDBulletActor.FireBullet(self,"HDB_828",spread:brnd>1.2?brnd:0);
 
 			A_MuzzleClimb(
-				-frandom(0.1,0.1),-frandom(0,0.1),
-				-0.2,-frandom(0.3,0.4),
-				-frandom(0.4,1.4),-frandom(1.3,2.6)
+				-frandom(0.2,0.25),-frandom(0,0.15),
+				-0.2,-frandom(1.3,1.4),
+				-frandom(0.6,1.8),-frandom(2.3,3.6)
 			);
 
 			invoker.weaponstatus[PCHRS_FLAGS]&=~PCHRF_CHAMBER;
@@ -565,15 +565,15 @@ class HDPochard:WAN_20mmLauncher{
 
 
 	fire:
-		RIFG A 2{
+		PCRD A 2{
 			if(invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_GLMODE)setweaponstate("firefrag");
 			else if(invoker.weaponstatus[PCHRS_AUTO]>0)A_SetTics(3);
 		}goto shootgun;
 	hold:
-		RIFG A 0 A_JumpIf(invoker.weaponstatus[0]&PCHRF_GLMODE,"FireFrag");
-		RIFG A 0 A_JumpIf(invoker.weaponstatus[0]&PCHRF_NOFIRESELECT,"nope");
-		RIFG A 0 A_JumpIf(invoker.weaponstatus[PCHRS_AUTO]>6,"nope");
-		RIFG A 0 A_JumpIf(invoker.weaponstatus[PCHRS_AUTO],"shootgun");
+		PCRD A 0 A_JumpIf(invoker.weaponstatus[0]&PCHRF_GLMODE,"FireFrag");
+		PCRD A 0 A_JumpIf(invoker.weaponstatus[0]&PCHRF_NOFIRESELECT,"nope");
+		PCRD A 0 A_JumpIf(invoker.weaponstatus[PCHRS_AUTO]>6,"nope");
+		PCRD A 0 A_JumpIf(invoker.weaponstatus[PCHRS_AUTO],"shootgun");
 	althold:
 		---- A 1{
 			if(!A_CheckCookoff())A_WeaponReady(WRF_NOFIRE);
@@ -581,16 +581,16 @@ class HDPochard:WAN_20mmLauncher{
 		---- A 0 A_Refire();
 		goto ready;
 	jam:
-		RIFG B 1 offset(-1,36){
+		PCRD B 1 offset(-1,36){
 			A_StartSound("weapons/riflejam",CHAN_WEAPON,CHANF_OVERLAP);
 			invoker.weaponstatus[0]|=PCHRF_CHAMBERBROKEN;
 			invoker.weaponstatus[PCHRS_FLAGS]&=~PCHRF_CHAMBER;
 		}
-		RIFG B 1 offset(1,30) A_StartSound("weapons/riflejam",CHAN_WEAPON,CHANF_OVERLAP);
+		PCRD B 1 offset(1,30) A_StartSound("weapons/riflejam",CHAN_WEAPON,CHANF_OVERLAP);
 		goto nope;
 
 	shootgun:
-		RIFG A 1{
+		PCRD A 1{
             if(invoker.weaponstatus[PCHRS_AUTO]>=1)A_SetTics(2);
 			if(
 				//can neither shoot nor chamber
@@ -611,7 +611,7 @@ class HDPochard:WAN_20mmLauncher{
 			}
 		}
 	chamber:
-		RIFG B 0 offset(0,32){
+		PCRD B 0 offset(0,32){
 			if(invoker.weaponstatus[PCHRS_MAG]<1){
 				setweaponstate("nope");
 				return;
@@ -630,11 +630,11 @@ class HDPochard:WAN_20mmLauncher{
 			}
 			A_WeaponReady(WRF_NOFIRE); //not WRF_NONE: switch to drop during cookoff
 		}
-		RIFG B 0 A_CheckCookoff();
-		RIFG B 0 A_JumpIf(invoker.weaponstatus[PCHRS_AUTO]<1,"nope");
-		RIFG B 0 A_JumpIf(invoker.weaponstatus[PCHRS_AUTO]>6,"nope");
-		RIFG B 2 A_JumpIf(invoker.weaponstatus[PCHRS_AUTO]>1,1);
-		RIFG B 0 A_Refire();
+		PCRD B 0 A_CheckCookoff();
+		PCRD B 0 A_JumpIf(invoker.weaponstatus[PCHRS_AUTO]<1,"nope");
+		PCRD B 0 A_JumpIf(invoker.weaponstatus[PCHRS_AUTO]>6,"nope");
+		PCRD B 2 A_JumpIf(invoker.weaponstatus[PCHRS_AUTO]>1,1);
+		PCRD B 0 A_Refire();
 		goto ready;
 
 	cookoffaltfirelayer:
@@ -645,7 +645,7 @@ class HDPochard:WAN_20mmLauncher{
 			}else if(JustPressed(BT_ATTACK)&&invoker.weaponstatus[0]&PCHRF_GLMODE)A_Overlay(11,"nadeflash");
 		}stop;
 	cookoff:
-		RIFG A 0{
+		PCRD A 0{
 			A_ClearRefire();
 			if(
 				(invoker.weaponstatus[PCHRS_MAG]>=0)	//something to detach
@@ -660,12 +660,12 @@ class HDPochard:WAN_20mmLauncher{
 		}
 
 	user3:
-		RIFG A 0 A_MagManager("HDPochardDrum");
+		PCRD A 0 A_MagManager("HDPochardDrum");
 		goto ready;
 
 	user4:
 	unload:
-		RIFG A 0{
+		PCRD A 0{
 			invoker.weaponstatus[PCHRS_FLAGS]|=PCHRF_UNLOADONLY;
 			if(
 				invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_GLMODE
@@ -686,7 +686,7 @@ class HDPochard:WAN_20mmLauncher{
 		}
         
 	reload:
-		RIFG A 0{
+		PCRD A 0{
 			invoker.weaponstatus[PCHRS_FLAGS]&=~PCHRF_UNLOADONLY;
 			if(	//full mag, no jam, not unload-only - why hit reload at all?
 				!(invoker.weaponstatus[0]&PCHRF_CHAMBERBROKEN)
@@ -705,10 +705,10 @@ class HDPochard:WAN_20mmLauncher{
 			}
 		}goto nope;
 	unloadmag:
-		RIFG A 1 offset(0,33);
-		RIFG A 2 offset(-3,34);
-		RIFG A 3 offset(-8,37);
-		RIFG B 2 offset(-11,39){
+		PCRD A 1 offset(0,33);
+		PCRD A 2 offset(-3,34);
+		PCRD A 3 offset(-8,37);
+		PCRD B 2 offset(-11,39){
 			if(	//no mag, skip unload
 				invoker.weaponstatus[PCHRS_MAG]<0
 			){
@@ -719,11 +719,11 @@ class HDPochard:WAN_20mmLauncher{
 			A_MuzzleClimb(-0.3,-0.3,wepdot:false);
 			A_StartSound("weapons/rifleclick2",CHAN_WEAPON,CHANF_OVERLAP);
 		}
-		RIFG B 6 offset(-12,40){
+		PCRD B 6 offset(-12,40){
 			A_MuzzleClimb(-0.3,-0.3,wepdot:false);
 			A_StartSound("weapons/rifleunload",CHAN_WEAPON);
 		}
-		RIFG B 35 offset(-14,44){
+		PCRD B 35 offset(-14,44){
 			int inmag=invoker.weaponstatus[PCHRS_MAG];
 			if(inmag>101)inmag=min(100,inmag%100);
 			invoker.weaponstatus[PCHRS_MAG]=-1;
@@ -740,7 +740,7 @@ class HDPochard:WAN_20mmLauncher{
 			}
 		}
 	magout:
-		RIFG B 0{
+		PCRD B 0{
 			if(
 				invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_UNLOADONLY
 				||!countinv("HDPochardDrum")
@@ -759,8 +759,8 @@ class HDPochard:WAN_20mmLauncher{
 		}
 		---- A 2 offset(-15,44) A_JumpIf(invoker.weaponstatus[0]&PCHRF_LOADINGDIRTY,"loadmagdirty");
 	loadmagclean:
-		RIFG B 10 offset(-15,45)A_StartSound("weapons/rifleload",CHAN_WEAPON);
-		RIFG B 3 offset(-14,44){
+		PCRD B 10 offset(-15,45)A_StartSound("weapons/rifleload",CHAN_WEAPON);
+		PCRD B 3 offset(-14,44){
 			let zmag=HDPochardDrum(findinventory("HDPochardDrum"));
 			if(!zmag){setweaponstate("reloadend");return;}
 			if(zmag.DirtyMagsOnly()){
@@ -771,13 +771,13 @@ class HDPochard:WAN_20mmLauncher{
 			A_StartSound("weapons/rifleclick2",CHAN_WEAPON);
 		}goto reloadend;
 	loadmagdirty:
-		RIFG B 0{
+		PCRD B 0{
 			if(PressingReload())invoker.weaponstatus[0]|=PCHRF_STILLPRESSINGRELOAD;
 			else invoker.weaponstatus[0]&=~PCHRF_STILLPRESSINGRELOAD;
 		}
-		RIFG B 6 offset(-15,45)A_StartSound("weapons/rifleload",CHAN_WEAPON);
-		RIFG B 2 offset(-15,42)A_WeaponMessage(StringTable.Localize("$ZM426MAGMSG"),70);
-		RIFG BBBBBBBAAAA 1 offset(-15,41){
+		PCRD B 6 offset(-15,45)A_StartSound("weapons/rifleload",CHAN_WEAPON);
+		PCRD B 2 offset(-15,42)A_WeaponMessage(StringTable.Localize("$ZM426MAGMSG"),70);
+		PCRD BBBBBBBAAAA 1 offset(-15,41){
 			bool prr=PressingReload();
 			if(
 				prr
@@ -789,8 +789,8 @@ class HDPochard:WAN_20mmLauncher{
 		}
 		goto nope;
 	reallyloadmagdirty:
-		RIFG B 3 offset(-14,44)A_StartSound("weapons/rifleclick2",CHAN_WEAPON);
-		RIFG A 12 offset(-18,50){
+		PCRD B 3 offset(-14,44)A_StartSound("weapons/rifleclick2",CHAN_WEAPON);
+		PCRD A 12 offset(-18,50){
 			let zmag=HDPochardDrum(findinventory("HDPochardDrum"));
 			if(!zmag){setweaponstate("reloadend");return;}
 			invoker.weaponstatus[PCHRS_MAG]=zmag.TakeMag(true)+100;
@@ -807,20 +807,20 @@ class HDPochard:WAN_20mmLauncher{
 			realmessage.appendformat(StringTable.Localize("$ZMRELERROR")..random(0,9999)..StringTable.Localize("$ZMNOCARRIER"));
 			A_WeaponMessage(realmessage,70);
 		}
-		RIFG A 6 offset(-17,49);
+		PCRD A 6 offset(-17,49);
 		goto chamber_manual;
 
 	reloadend:
-		RIFG B 2 offset(-11,39);
-		RIFG A 1 offset(-8,37) A_MuzzleClimb(frandom(0.2,-2.4),frandom(0.2,-1.4),wepdot:false);
-		RIFG A 0 A_CheckCookoff();
-		RIFG A 1 offset(-3,34);
+		PCRD B 2 offset(-11,39);
+		PCRD A 1 offset(-8,37) A_MuzzleClimb(frandom(0.2,-2.4),frandom(0.2,-1.4),wepdot:false);
+		PCRD A 0 A_CheckCookoff();
+		PCRD A 1 offset(-3,34);
 		goto chamber_manual;
 
 	chamber_manual:
-		RIFG A 0 A_JumpIf(invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_CHAMBER,"nope");
-		RIFG A 3 offset(-1,36)A_WeaponBusy();
-		RIFG B 4 offset(-3,42){
+		PCRD A 0 A_JumpIf(invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_CHAMBER,"nope");
+		PCRD A 3 offset(-1,36)A_WeaponBusy();
+		PCRD B 4 offset(-3,42){
 			if(!invoker.weaponstatus[PCHRS_MAG]%100)invoker.weaponstatus[PCHRS_MAG]=0;
 			if(
 				!(invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_CHAMBER)
@@ -834,16 +834,16 @@ class HDPochard:WAN_20mmLauncher{
 				brokenround();
 			}else setweaponstate("nope");
 		}
-		RIFG A 2 offset(-1,36);
-		RIFG A 0 offset(0,34);
+		PCRD A 2 offset(-1,36);
+		PCRD A 0 offset(0,34);
 		goto nope;
 
 
 	unloadchamber:
-		RIFG A 1 offset(-3,34);
-		RIFG A 1 offset(-9,39);
-		RIFG B 3 offset(-19,44) A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
-		RIFG A 2 offset(-16,42){
+		PCRD A 1 offset(-3,34);
+		PCRD A 1 offset(-9,39);
+		PCRD B 3 offset(-19,44) A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
+		PCRD A 2 offset(-16,42){
 			A_MuzzleClimb(frandom(-0.4,0.4),frandom(-0.4,0.4),wepdot:false);
 			if(
 				invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_CHAMBER
@@ -869,7 +869,7 @@ class HDPochard:WAN_20mmLauncher{
 		}goto reloadend;
 
 	firefrag:
-		RIFG B 2{
+		PCRD B 2{
 			if(!(invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_GRENADELOADED)){
 				setweaponstate("nope");
 				return;
@@ -878,7 +878,7 @@ class HDPochard:WAN_20mmLauncher{
 			invoker.weaponstatus[PCHRS_FLAGS]&=~PCHRF_GRENADELOADED;
 			A_StartSound("weapons/grenadeshot",CHAN_WEAPON);
 		}
-		RIFG B 3{
+		PCRD B 3{
 			A_ZoomRecoil(0.95);
 			A_MuzzleClimb(
 				0,0,0,0,
@@ -890,7 +890,7 @@ class HDPochard:WAN_20mmLauncher{
 
 
 	altfire:
-		RIFG A 1 offset(0,34){
+		PCRD A 1 offset(0,34){
 			if(invoker.weaponstatus[0]&PCHRF_NOLAUNCHER)return;
 			invoker.weaponstatus[0]^=PCHRF_GLMODE;
 			invoker.airburst=0;
@@ -900,7 +900,7 @@ class HDPochard:WAN_20mmLauncher{
 
 
 	altreload:
-		RIFG A 0{
+		PCRD A 0{
 			invoker.weaponstatus[PCHRS_FLAGS]&=~PCHRF_UNLOADONLY;
 			if(
 				!(invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_NOLAUNCHER)
@@ -909,20 +909,20 @@ class HDPochard:WAN_20mmLauncher{
 			)setweaponstate("unloadgrenade");
 		}goto nope;
 	unloadgrenade:
-		RIFG B 0{
+		PCRD B 0{
 			A_SetCrosshair(21);
 			A_MuzzleClimb(-0.3,-0.3,wepdot:false);
 		}
-		RIFG B 2 offset(0,34);
-		RIFG B 1 offset(4,38){
+		PCRD B 2 offset(0,34);
+		PCRD B 1 offset(4,38){
 			A_MuzzleClimb(-0.3,-0.3,wepdot:false);
 		}
-		RIFG B 2 offset(8,48){
+		PCRD B 2 offset(8,48){
 			A_StartSound("weapons/grenopen",CHAN_WEAPon,CHANF_OVERLAP);
 			A_MuzzleClimb(-0.3,-0.3,wepdot:false);
 			if(invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_GRENADELOADED)A_StartSound("weapons/grenreload",CHAN_WEAPON);
 		}
-		RIFG B 10 offset(10,49){
+		PCRD B 10 offset(10,49){
 			if(!(invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_GRENADELOADED)){
 				if(!(invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_UNLOADONLY))A_SetTics(3);
 				return;
@@ -942,20 +942,20 @@ class HDPochard:WAN_20mmLauncher{
 				A_MuzzleClimb(frandom(0.8,-0.2),frandom(0.4,-0.2),wepdot:false);
 			}
 		}
-		RIFG B 0 A_JumpIf(invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_UNLOADONLY,"greloadend");
+		PCRD B 0 A_JumpIf(invoker.weaponstatus[PCHRS_FLAGS]&PCHRF_UNLOADONLY,"greloadend");
 	loadgrenade:
-		RIFG B 4 offset(10,50) A_StartSound("weapons/pocket",CHAN_WEAPON,CHANF_OVERLAP);
-		RIFG BBB 8 offset(10,50) A_MuzzleClimb(frandom(-0.2,0.8),frandom(-0.2,0.4),wepdot:false);
-		RIFG B 18 offset(8,50){
+		PCRD B 4 offset(10,50) A_StartSound("weapons/pocket",CHAN_WEAPON,CHANF_OVERLAP);
+		PCRD BBB 8 offset(10,50) A_MuzzleClimb(frandom(-0.2,0.8),frandom(-0.2,0.4),wepdot:false);
+		PCRD B 18 offset(8,50){
 			if(!countinv("WAN_20mmGrenadeAmmo"))return;
 			A_TakeInventory("WAN_20mmGrenadeAmmo",1,TIF_NOTAKEINFINITE);
 			invoker.weaponstatus[PCHRS_FLAGS]|=PCHRF_GRENADELOADED;
 			A_StartSound("weapons/grenreload",CHAN_WEAPON);
 		}
 	greloadend:
-		RIFG B 4 offset(4,44) A_StartSound("weapons/grenopen",CHAN_WEAPON);
-		RIFG B 1 offset(0,40);
-		RIFG A 1 offset(0,34) A_MuzzleClimb(frandom(-2.4,0.2),frandom(-1.4,0.2),wepdot:false);
+		PCRD B 4 offset(4,44) A_StartSound("weapons/grenopen",CHAN_WEAPON);
+		PCRD B 1 offset(0,40);
+		PCRD A 1 offset(0,34) A_MuzzleClimb(frandom(-2.4,0.2),frandom(-1.4,0.2),wepdot:false);
 		goto nope;
 
 	spawn:
@@ -1077,7 +1077,7 @@ class HDPochard:WAN_20mmLauncher{
 		int nogl=getloadoutvar(input,"nogl",1);
 		//disable launchers if rocket grenades denylisted
 		string denylist=hd_noloadout;
-		if(denylist.IndexOf(HDLD_BLOOPER)>=0)nogl=1;
+		if(denylist.IndexOf('blo')>=0)nogl=1;
 		if(!nogl){
 			weaponstatus[0]&=~PCHRF_NOLAUNCHER;
 		}else if(nogl>0){

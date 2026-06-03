@@ -60,6 +60,8 @@ __Trocaz__
 Loadout Code: tcz | scope - 0/1
 Magazine: 425 | 4mm round, unreloadable due to DRM
 
+__Pochard__
+
 ## Credits
 
 __Taronga__
@@ -95,3 +97,9 @@ __Trocaz__
 - Name comes from a subspecies of Pigeon, the Trocaz Pigeon, function idea comes from Project Silverfish
 - Sounds from H3VR
 - Model rips done by Satellaview-Dev
+
+__Pochard__
+
+- Sprites: Sgt. Shivers, originally seen in DRLA as the Marksman Rifle.
+- Code based off the ZM66 and bits from UndeadZeratul's HD-Flashlight addon and HDCoreLib implementations.
+- A Pochard is a species of duck, function came from talking with Charlotte.Lua when the original 8.28mm Rifle was being made.
