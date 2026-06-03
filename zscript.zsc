@@ -8,7 +8,7 @@ version "4.14"
 #include "zscript/Kakapo.zsc"
 #include "zscript/Trocaz.zsc"
 #include "zscript/Misc.zsc"
-#include "zscript/Pochard.zsc"
+//#include "zscript/Pochard.zsc"
 //#include "zscript/Wigeon.zsc"
 //#include "zscript/ColdCalculus.zsc"
 

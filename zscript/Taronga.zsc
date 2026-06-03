@@ -449,53 +449,47 @@ class HDTaronga : WAN_20mmLauncher
             }
         }
     }
+    
+    private action void A_TryLoadChamber() {
+		if (invoker.Storage && invoker.Storage.owner == invoker.owner) {
+			if (invoker.WeaponStatus[TRProp_Chamber] == 0) {
+				if (invoker.Storage.count("HD6mmFlechetteAmmo") > 0) {
+					// TODO: Figure out better way to silently extract ammo
+					let rnd = invoker.Storage.Extract(invoker.storage.IndexOf("HD6mmFlechetteAmmo"));
+					if (rnd) {
+						invoker.WeaponStatus[TRProp_Chamber] = 1;
 
-    private action void A_TryLoadChamber()
-    {
-        if (invoker.Storage && invoker.Storage.owner == invoker.owner && invoker.Storage.Storage && invoker.weaponstatus[TRProp_Chamber] < 2)
-        {
-            if (invoker.WeaponStatus[TRProp_Chamber] == 0)
-            {
-                if (invoker.AmmoReserve && invoker.AmmoReserve.Amounts.Size() > 0 && invoker.AmmoReserve.Amounts[0] > 0)
-                {
-                    invoker.Storage.Storage.RemoveItem(invoker.AmmoReserve, null, null, 1);
-                    invoker.WeaponStatus[TRProp_Chamber] = 1;
-                }
-                else
-                {
-                    invoker.AmmoReserve = null;
-                    if (A_FindStorage())
-                    {
-                        A_TryLoadChamber();
-                    }
-                }
-            }
-            return;
-        }
-        if (A_FindStorage())
-        {
-            A_TryLoadChamber();
-        }
-    }
+						rnd.destroy();
+					}
+				} else {
+					// invoker.AmmoReserve = null;
+					if (A_FindStorage()) {
+						A_TryLoadChamber();
+					}
+				}
+			}
+			return;
+		}
 
-    private action bool A_FindStorage()
-    {
-        for (Inventory Next = Inv; Next; Next = Next.Inv)
-        {
-            let bp = HDBackpack(Next);
-            if (bp && bp.Storage)
-            {
-                let nma = bp.Storage.Find('HD6mmFlechetteAmmo');
-                if (nma && nma.Amounts.Size() > 0 && nma.Amounts[0] > 0)
-                {
-                    invoker.AmmoReserve = nma;
-                    invoker.Storage = bp;
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+		if (A_FindStorage()) {
+			A_TryLoadChamber();
+		}
+	}
+
+	private action bool A_FindStorage() {
+		for (Inventory Next = Inv; Next; Next = Next.Inv) {
+			let bp = HDStorageItem(Next);
+			if (bp) {
+				// let nma = bp.count("HDPistolAmmo");
+				if (bp.count("HD6mmFlechetteAmmo") > 0) {
+					invoker.Storage = bp;
+					// invoker.AmmoReserve = bp.;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
     private action void A_TRNDrainHeat()
     {
@@ -508,8 +502,8 @@ class HDTaronga : WAN_20mmLauncher
         }
     }
 
-    private HDBackpack Storage;
-    private StorageItem AmmoReserve;
+    private HDStorageItem Storage;
+    //private StorageItem AmmoReserve;
     private int BurstIndex;
     private transient CVar AHelpText;
     transient int OldFireMode;
