@@ -12,8 +12,8 @@ newMerchantStoreItem => { "enabled": "#hdm_enable_taronga", "type": "weapon", "c
 addAmmoUser => { "ammoName": "HD10mAmmo", "name": "HDCurrawong" }
 addAmmoUser => { "ammoName": "HD4GBAmmo", "name": "HDCurrawong" }
 
-addBPSpawnPoolFilter => { "name": "HD10mMag30", "allowed": "#currawong_allowBackpacks" }
-addBPSpawnPoolFilter => { "name": "HDCurrawong", "allowed": "#currawong_allowBackpacks" }
+addStorageItemListFilter => { "name": "HD10mMag30", "allowed": "#currawong_allowBackpacks" }
+addStorageItemListFilter => { "name": "HDCurrawong", "allowed": "#currawong_allowBackpacks" }
 addWeaponCrateFilter => { "name": "HDCurrawong", "allowed": "#currawong_allowBackpacks" }
 
 addSpawnTableSingleEntry => { "tableName": "ClipBoxReplaces", "name": "HDCurrawongRandom", "weight": "#currawong_clipbox_spawn_weight", "persists": "#mm_weapon_persistency" }
@@ -26,8 +26,8 @@ addAmmoUser => { "ammoName": "HD069BoreAmmo", "name": "HDShotPistol" }
 
 addSpawnTableSingleEntry => { "tableName": "ClipMagReplaces", "name": "HDShotpistolRandom", "weight": "#junco_clipmag_spawn_weight", "persists": "#mm_weapon_persistency" }
 
-addBPSpawnPoolFilter => { "name": "HD066Clip10", "allowed": "#shotpistol_allowBackpacks" }
-addBPSpawnPoolFilter => { "name": "HDShotPistol", "allowed": "#shotpistol_allowBackpacks" }
+addStorageItemListFilter => { "name": "HD066Clip10", "allowed": "#shotpistol_allowBackpacks" }
+addStorageItemListFilter => { "name": "HDShotPistol", "allowed": "#shotpistol_allowBackpacks" }
 addWeaponCrateFilter => { "name": "HDShotPistol", "allowed": "#shotpistol_allowBackpacks" }
 
 newMerchantStoreItem => { "enabled": "#hdm_enable_shotpistol", "type": "weapon", "category": "$MERCH_CAT_MORTISMUNITIONS", "item": "HDShotPistol", "icon": "SPIPA0", "displayName": "$MERCH_TAG_SHOTPISTOL", "basePrice": "#hdm_shotpistol_price", "flavorText": "$MERCH_FLAVOR_SHOTPISTOL" }
@@ -38,9 +38,9 @@ addAmmoUser => { "ammoName": "FourMilAmmo", "name": "JuncoPistol" }
 
 addSpawnTableSingleEntry => { "tableName": "ClipMagReplaces", "name": "HDJuncoRandom", "weight": "#junco_clipmag_spawn_weight", "persists": "#mm_weapon_persistency" }
 
-addBPSpawnPoolFilter => { "name": "HD4mMag25", "allowed": "#junco_allowBackpacks" }
-addBPSpawnPoolFilter => { "name": "MM_4mmSealant", "allowed": "#sealant_allowBackpacks" }
-addBPSpawnPoolFilter => { "name": "JuncoPistol", "allowed": "#junco_allowBackpacks" }
+addStorageItemListFilter => { "name": "HD4mMag25", "allowed": "#junco_allowBackpacks" }
+addStorageItemListFilter => { "name": "MM_4mmSealant", "allowed": "#sealant_allowBackpacks" }
+addStorageItemListFilter => { "name": "JuncoPistol", "allowed": "#junco_allowBackpacks" }
 addWeaponCrateFilter => { "name": "JuncoPistol", "allowed": "#junco_allowBackpacks" }
 
 newMerchantStoreItem => { "enabled": "#hdm_enable_junco", "type": "weapon", "category": "$MERCH_CAT_MORTISMUNITIONS", "item": "JuncoPistol", "icon": "JNCOP0", "displayName": "$MERCH_TAG_JUNCO", "basePrice": "#hdm_junco_price", "flavorText": "$MERCH_FLAVOR_JUNCO" }
