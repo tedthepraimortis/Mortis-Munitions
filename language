@@ -117,3 +117,6 @@ OB_KAKAPO = "%o was blown sky high by %k's Kakapo.";
 // Pochard 8mm LMG
 TAG_POCHARD = "P.M.I. \'Pochard\' 8mm LMG";
 PICKUP_POCHARD = "You got the \'Pochard\' LMG!";
+
+TAG_POCHARDDRUM = "8.28mm P.M.I. drum magazine";
+PICKUP_POCHARDDRUM = "Picked up an 8.28mm drum magazine.";

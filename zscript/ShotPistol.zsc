@@ -39,7 +39,7 @@ class HDShotPistol:HDHandgun{
         obituary "$OB_SHOTPISTOL";
         inventory.pickupmessage "$PICKUP_SHOTPISTOL";
         tag "$TAG_SHOTPISTOL";
-        hdweapon.refid HDLD_SHTPSTL;
+        hdweapon.refid "6ps";
         hdweapon.barrelsize 16,0.3,0.5;
 
         hdweapon.ammo1 "HD066Clip10",1;
@@ -684,7 +684,7 @@ class HD066Clip10:HDMagAmmo{
 		hdmagammo.roundtype "HD069BoreAmmo";
 		hdmagammo.roundbulk ENC_069BORE_LOADED;
 		hdmagammo.magbulk ENC_776CLIP_EMPTY;
-		hdpickup.refid HDLD_066MAG10;
+		hdpickup.refid "6m1";
 		tag "$TAG_066MAG10";
 		inventory.pickupmessage "$PICKUP_066MAG10";
 		scale 0.6;

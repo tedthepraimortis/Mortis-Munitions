@@ -15,7 +15,7 @@ class HDTrocaz:HDWeapon{
 		scale 0.55;
 		inventory.pickupmessage "$PICKUP_TROCAZ";
 		hdweapon.barrelsize 36,1,1;
-		hdweapon.refid HDLD_TROCAZ;
+		hdweapon.refid "tcz";
 		tag "$TAG_TROCAZ";
 		inventory.icon "SMGNA0";
 

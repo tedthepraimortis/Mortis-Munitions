@@ -17,7 +17,7 @@ class JuncoPistol:HDWeapon{
         weapon.bobspeed 2.5;
         weapon.kickback 30;
         obituary "$OB_JUNCO";
-        hdweapon.refid HDLD_JUNCO;
+        hdweapon.refid "jnk";
         tag "$TAG_JUNCO";
         inventory.icon "RIGLA0";
 
@@ -747,7 +747,7 @@ class HD4mMag25:HDMagAmmo{
         hdmagammo.extracttime 8;
 
         tag "$TAG_4M25MAG";
-        hdpickup.refid HDLD_4M25;
+        hdpickup.refid "425";
         inventory.pickupmessage "$PICKUP_4M25MAG";
         Scale 0.65;
     }

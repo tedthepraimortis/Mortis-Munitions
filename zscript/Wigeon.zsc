@@ -19,7 +19,7 @@ class HD_Wigeon:HDWeapon{
 		scale 0.55;
 		inventory.pickupmessage "$PICKUP_SMG";
 		hdweapon.barrelsize 26,0.5,1;
-		hdweapon.refid HDLD_WGN;
+		hdweapon.refid "wgn";
 		tag "$TAG_SMG";
 		inventory.icon "SMGNA0";
 

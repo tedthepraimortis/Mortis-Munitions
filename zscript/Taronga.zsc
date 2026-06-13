@@ -517,7 +517,7 @@ class HDTaronga : WAN_20mmLauncher
         Weapon.SlotPriority 1.75;
         Scale 0.75;
         Tag "$TAG_TARONGA";
-        HDWeapon.Refid HDLD_TARONGA;
+        HDWeapon.Refid "trn";
         HDWeapon.Loadoutcodes
         "\n\cu   gl - 0/1, grenade launcher \n\cu   stock - 0-2, stock/light/heavy \n\cu   barrel - 0-2, stock/short/long \n\cu   bolt - 0-2, stock/light/heavy";
     }

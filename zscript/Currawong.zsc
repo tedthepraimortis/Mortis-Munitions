@@ -10,7 +10,7 @@ class HDCurrawong:HDWeapon{
 		weapon.bobrangex 0.2;
 		weapon.bobrangey 0.8;
 		obituary "$OB_CURRAWONG";
-		hdweapon.refid HDLD_CURRAWONG;
+		hdweapon.refid "cwn";
 		tag "$TAG_CURRAWONG";
 		inventory.icon "CWGSA0";
 
@@ -834,7 +834,7 @@ class HD10mMag30:HDMagAmmo{
 		Scale 0.35;
 
         tag "$TAG_10M30MAG";
-        hdpickup.refid HDLD_CURRAWONGMAG;
+        hdpickup.refid "c30";
         inventory.pickupmessage "$PICKUP_10M30MAG";
     }
     override void postbeginplay(){

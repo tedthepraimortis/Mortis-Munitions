@@ -10,9 +10,9 @@ class HDPochardDrum:HDMagAmmo{
 		hdmagammo.magbulk ENC_426MAG_EMPTY;
 		hdmagammo.extracttime 8;
 
-		tag "$TAG_4MMAG";
-		hdpickup.refid HDLD_8M100;
-		inventory.pickupmessage "$PICKUP_4MMAG";
+		tag "$TAG_POCHARDDRUM";
+		hdpickup.refid "108";
+		inventory.pickupmessage "$PICKUP_POCHARDDRUM";
 	}
 
 	int breakchance;
@@ -155,7 +155,7 @@ class HDPochard:WAN_20mmLauncher{
 		weapon.bobrangex 0.2;
 		weapon.bobrangey 0.8;
 		obituary "$OB_ZM66";
-		hdweapon.refid HDLD_POCHARD;
+		hdweapon.refid "pch";
 		tag "$TAG_POCHARD";
 		inventory.icon "RIGLA0";
 

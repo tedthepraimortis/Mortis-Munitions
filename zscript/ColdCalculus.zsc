@@ -15,7 +15,7 @@ class ColdCalculus:HDWeapon{
 		weapon.bobrangey 0.9;
 		scale 0.7;
 		obituary "%o was cut into Seven little bits by %k.";
-		hdweapon.refid HDLD_CCALC;
+		hdweapon.refid "ccl";
 		tag "$TAG_CCALC";
 		inventory.icon "BRFLB0";
 

@@ -8,7 +8,7 @@ class MM_4mmSealant : HDAmmo
         Inventory.Icon "SEALA0";
         Inventory.PickupMessage "$PICKUP_4MSEALANT";
         HDPickup.Bulk 0.425;
-        HDPickup.refid HDLD_SEALANT;
+        HDPickup.refid "sel";
         +FORCEXYBILLBOARD
         +HDPICKUP.MULTIPICKUP
         Scale 0.35;

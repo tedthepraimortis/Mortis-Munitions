@@ -14,7 +14,7 @@ class HDKakapo:HDHandgun{
 		obituary "$OB_KAKAPO";
 		inventory.pickupmessage "$PICKUP_KAKAPO";
 		tag "$TAG_KAKAPO";
-		hdweapon.refid HDLD_KAKAPO;
+		hdweapon.refid "kpo";
 		hdweapon.barrelsize 19,0.3,0.5;
 
 		hdweapon.ammo1 "HDBattery",1;
