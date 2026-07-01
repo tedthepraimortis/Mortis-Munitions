@@ -51,9 +51,9 @@ class HDTaronga : WAN_20mmLauncher
     override void tick()
     {
         super.tick();
-        if(self.GetAge() % 20 == 0 && WeaponStatus[TRProp_Heat] > 0)WeaponStatus[TRProp_Heat]--;
+        if(self.GetAge() % 10 == 0 && WeaponStatus[TRProp_Heat] > 0)WeaponStatus[TRProp_Heat]--;
 
-        if(owner && WeaponStatus[TRProp_Heat] > 100 && !(Level.time % TICRATE))
+        if(owner && WeaponStatus[TRProp_Heat] > 135 && !(Level.time % TICRATE))
         {
             owner.damagemobj(owner, owner, random(1,3), "electrical");
         }
