@@ -120,3 +120,15 @@ PICKUP_POCHARD = "You got the \'Pochard\' LMG!";
 
 TAG_POCHARDDRUM = "8.28mm P.M.I. drum magazine";
 PICKUP_POCHARDDRUM = "Picked up an 8.28mm drum magazine.";
+
+// Wigeon 9mm NDM PDW
+TAG_JUNCO = "P.M.I. \'Wigeon\' 9mm NDM PDW";
+TAG_4M25MAG = "\'Wigeon\' PDW Casket Magazine";
+
+//Wigeon Mag Messages
+WGNMAGMSG = "Reloading a P.M.I. \'Wigeon\' Magazine into another firearm without authorization is a breach of the P.M.I. End User License Agreement.";
+4MILNOTE = " NOTE:  %s";
+WGNMAGREALLY = "%s\nDo you really want to do that?";
+WGNMAGMSG2 = "Reloading a P.M.I. \'Wigeon\' Magazine into another firearm\nwithout authorization is a breach of the\nP.M.I. End User License Agreement.";//Original one don't fit in screen
+WGNRELERROR = "\cg[FATAL ERR (code ";
+WGNNOCARRIER = ") no carrier, aborting]";
