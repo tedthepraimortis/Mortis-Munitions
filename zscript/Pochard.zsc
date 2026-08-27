@@ -198,7 +198,7 @@ class HDPochard:WAN_20mmLauncher{
 
 	override void tick(){
 		super.tick();
-		drainheat(PCHRS_HEAT,3);
+		drainheat(PCHRS_HEAT,1);
 
 		// Init if needed
         if (!handler)   handler   = MMFLDataHandler(StaticEventHandler.find('MMFLDataHandler'));
@@ -270,6 +270,9 @@ class HDPochard:WAN_20mmLauncher{
 		if(!random(0,5))weaponstatus[0]&=~PCHRF_CHAMBERBROKEN;
 	}
 	override void OnPlayerDrop(){
+		if (active) {
+            deactivateLight();
+        }
 		if(
 			weaponstatus[0]&PCHRF_CHAMBER
 			&&!random(0,15)
@@ -491,6 +494,12 @@ class HDPochard:WAN_20mmLauncher{
             activateLight();
         }
 	}
+
+	void lightoff() {
+		if(active) { 
+			deactivateLight();
+		}
+	}
 	states{
 	ready:
 		PCRD A 1{
@@ -536,6 +545,7 @@ class HDPochard:WAN_20mmLauncher{
 				DropInventory(invoker);
 				return;
 			}
+			invoker.deactivateLight();
 			if(invoker.weaponstatus[0]&PCHRF_NOLAUNCHER)setweaponstate("deselect0small");
 		}goto deselect0big;
 	flash:
