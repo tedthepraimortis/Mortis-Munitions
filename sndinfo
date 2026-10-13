@@ -88,3 +88,10 @@ weapons/TrocazBoltBack "Sounds/Trocaz/QLB-06_BoltSlideBackHeld.ogg"
 weapons/TrocazLoad "Sounds/Trocaz/QLB-06_MagazineInsertRound.ogg"
 weapons/TrocazMagMove "Sounds/Trocaz/Uzi_MagazineOut.ogg"
 weapons/TrocazMagIn "Sounds/Trocaz/Uzi_MagazineIn.ogg"
+
+// D4RT
+weapons/d4rt "Sounds/D4RT/D4RT_Shoot.wav"
+weapons/D4RT_Reload_A "Sounds/D4RT/D4RT_Reload_A.wav"
+weapons/D4RT_Reload_B "Sounds/D4RT/D4RT_Reload_B.wav"
+weapons/D4RT_Reload_C "Sounds/D4RT/D4RT_Reload_C.wav"
+weapons/D4RT_Charge "Sounds/D4RT/D4RT_Charge.wav"

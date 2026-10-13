@@ -122,8 +122,11 @@ TAG_POCHARDDRUM = "8.28mm P.M.I. drum magazine";
 PICKUP_POCHARDDRUM = "Picked up an 8.28mm drum magazine.";
 
 // Wigeon 9mm NDM PDW
-TAG_JUNCO = "P.M.I. \'Wigeon\' 9mm NDM PDW";
-TAG_4M25MAG = "\'Wigeon\' PDW Casket Magazine";
+TAG_WIGEON = "P.M.I. \'Wigeon\' 9mm NDM PDW";
+TAG_NDM30MAG = "\'Wigeon\' PDW Casket Magazine";
+
+PICKUP_WIGEON = "You got the P.M.I. \'Wigeon\'! Try not to let them explode on ya...";
+PICKUP_NDM30MAG = "Picked up a 9mm NDM casket magazine.";
 
 //Wigeon Mag Messages
 WGNMAGMSG = "Reloading a P.M.I. \'Wigeon\' Magazine into another firearm without authorization is a breach of the P.M.I. End User License Agreement.";
@@ -132,3 +135,9 @@ WGNMAGREALLY = "%s\nDo you really want to do that?";
 WGNMAGMSG2 = "Reloading a P.M.I. \'Wigeon\' Magazine into another firearm\nwithout authorization is a breach of the\nP.M.I. End User License Agreement.";//Original one don't fit in screen
 WGNRELERROR = "\cg[FATAL ERR (code ";
 WGNNOCARRIER = ") no carrier, aborting]";
+WGN_EXPLODEMSG = "[FATAL ERROR] NO CARRIER FOUND, RESORTING TO ANTI-PIRACY MEASURES.";
+
+// D4RT
+PICKUP_D4RT = "You got a \'D4RT\' Break-Action Laser Rifle!";
+TAG_D4RT = "P.M.I. \'D4RT\' Laser Rifle";
+OB_D4RT = "%o got shown that %k doesn't need sulfur and salt to kill.";
