@@ -11,7 +11,6 @@ version "4.14"
 #include "zscript/Pochard.zsc"
 #include "zscript/Wigeon.zsc"
 #include "zscript/dart.zsc"
-//#include "zscript/ColdCalculus.zsc"
 
 const ENC_10MAG_EMPTY = ENC_9MAG_EMPTY * 1.1;
 const ENC_10MAG_LOADED = ENC_10MAG_EMPTY * 0.8;

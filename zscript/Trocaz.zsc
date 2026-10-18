@@ -21,20 +21,28 @@ class HDTrocaz:HDWeapon{
 
 		hdweapon.ammo1 "HD4mMag25",1;
 	}
+
 	int handrounds;
+	int hudFuckery;
+
 	override bool AddSpareWeapon(actor newowner){return AddSpareWeaponRegular(newowner);}
+
 	override hdweapon GetSpareWeapon(actor newowner,bool reverse,bool doselect){return GetSpareWeaponRegular(newowner,reverse,doselect);}
+	
 	override double gunmass(){
 		return 11+((weaponstatus[TRCProp_Mag]<0)?-0.5:(weaponstatus[TRCProp_Mag]*0.05));
 	}
+
 	override double weaponbulk(){
 		int mg=weaponstatus[TRCProp_Mag];
 		if(mg<0)return 66;
 		else return (66+(ENC_426MAG_LOADED*0.82+mg*ENC_426_LOADED*0.93));
 	}
+
 	override void failedpickupunload(){
 		failedpickupunloadmag(TRCProp_Mag,"HD4mMag25");
 	}
+
 	override void DropOneAmmo(int amt){
 		if(owner){
 			amt=clamp(amt,1,10);
@@ -42,10 +50,23 @@ class HDTrocaz:HDWeapon{
 			else owner.A_DropInventory("HD4mMag25",amt);
 		}
 	}
+
 	override void ForceBasicAmmo(){
 		owner.A_TakeInventory("FourMilAmmo");
 		ForceOneBasicAmmo("HD4mMag25");
 	}
+
+	override void tick()
+	{
+		super.tick();
+
+		if(weaponStatus[TRCProp_HudTicker]++ > 10)
+		{
+			hudFuckery = frandom(-4,4);
+			weaponStatus[TRCProp_HudTicker] -= frandom(1,10);
+		}
+	}
+
 	override string,double getpickupsprite(bool usespare){
         string spr;
         int wep0=GetSpareWeaponValue(0,usespare);
@@ -56,6 +77,7 @@ class HDTrocaz:HDWeapon{
 
         return spr.."0",1.;
     }
+
 	override void DrawHUDStuff(HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl){
 		if(sb.hudlevel==1){
 			int nextmagloaded=sb.GetNextLoadMag(hdmagammo(hpl.findinventory("HD4mMag25")));
@@ -74,8 +96,11 @@ class HDTrocaz:HDWeapon{
 
         int lod=clamp(hdw.weaponstatus[TRCProp_Mag]%100,0,25);
 		
-		if(hdw.weaponstatus[TRCProp_Mag]>50)lod=random[shitgun](10,99);
-        sb.drawnum(lod,-16,-22,sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_TEXT_ALIGN_RIGHT,Font.CR_RED);
+        if (hudFuckery==1) sb.drawnum(0,-16-22,sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_TEXT_ALIGN_RIGHT,Font.CR_RED);
+		else sb.drawnum(lod+hudFuckery,-16,-22,sb.DI_SCREEN_CENTER_BOTTOM|sb.DI_TEXT_ALIGN_RIGHT,Font.CR_RED);
+
+		sb.drawimage("TBRSZ0",(-60,-10),sb.DI_SCREEN_CENTER_BOTTOM,alpha:1,scale:(2,2));
+		sb.drawnum(hpl.countinv("FourMilAmmo"),-56,-8,sb.DI_SCREEN_CENTER_BOTTOM);
 
 		sb.drawwepnum(hdw.weaponstatus[TRCProp_Mag],25);
 		if(hdw.weaponstatus[TRCProp_Chamber]==1)sb.drawrect(-19,-11,3,1);
@@ -125,10 +150,9 @@ class HDTrocaz:HDWeapon{
 		}
 	}
 	override void SetReflexReticle(int which){weaponstatus[TRCProp_Dot]=which;}
+
 	action void A_CheckReflexSight(){
-		if(
-			invoker.weaponstatus[0]&TRCProp_ReflexSight
-		)Player.GetPSprite(PSP_WEAPON).sprite=getspriteindex("TRCSA0");
+		if(invoker.weaponstatus[0]&TRCProp_ReflexSight) Player.GetPSprite(PSP_WEAPON).sprite=getspriteindex("TRCSA0");
 		else Player.GetPSprite(PSP_WEAPON).sprite=getspriteindex("TRCZA0");
 	}
 	states{
@@ -458,4 +482,5 @@ enum trocazstatus{
 	TRCProp_Mag=1,
 	TRCProp_Chamber=2, //0 empty, 1 loaded
 	TRCProp_Dot=3,
+	TRCProp_HudTicker=4,
 };

@@ -25,7 +25,7 @@ class MM_Dart:HDWeapon{
 	default{
 		+hdweapon.fitsinbackpack
 		weapon.selectionorder 60;
-		weapon.slotnumber 7;
+		weapon.slotnumber 6;
 		weapon.slotpriority 2;
 		weapon.kickback 100;
 		weapon.bobrangex 0.21;
@@ -33,7 +33,7 @@ class MM_Dart:HDWeapon{
 		scale 0.6;
 		inventory.pickupmessage "$PICKUP_D4RT";
 		obituary "$OB_D4RT";
-		hdweapon.barrelsize 24,1,2;
+		hdweapon.barrelsize 34,1,2;
 		tag "$TAG_D4RT";
 		hdweapon.refid "d4t";
 

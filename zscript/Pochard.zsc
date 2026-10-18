@@ -1052,7 +1052,7 @@ class HDPochard:WAN_20mmLauncher{
 
 	override inventory CreateTossable(int amt){
 		let owner=self.owner;
-		let zzz=zm66assaultrifle(super.createtossable());
+		let zzz=HDPochard(super.createtossable());
 		if(!zzz)return null;
 		zzz.target=owner;
 		return zzz;

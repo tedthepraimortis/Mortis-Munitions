@@ -215,7 +215,7 @@ class HDTaronga : WAN_20mmLauncher
 		let hdp=hdplayerpawn(owner);
 		if(hdp){
 			//droop downwards
-			if(!hdp.gunbraced && !!hdp.player && hdp.player.readyweapon==self && hdp.strength && hdp.pitch<frandom(5*stock,8*barrel) && WeaponStatus[TRProp_StockWeight] && WeaponStatus[TRProp_BarrelWeight] != 1)
+			if(!hdp.gunbraced && !!hdp.player && hdp.player.readyweapon==self && hdp.strength < 12 && hdp.pitch<frandom(5*stock,8*barrel) && WeaponStatus[TRProp_StockWeight] && WeaponStatus[TRProp_BarrelWeight] != 1)
             {
                 hdp.A_MuzzleClimb((frandom(-0.05*stock,0.05*stock),frandom(0.1,clamp(1-pitch,0.08/hdp.strength,0.12))),(0,0),(0,0),(0,0)*barrel);
     		}
