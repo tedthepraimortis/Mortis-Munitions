@@ -72,11 +72,11 @@ class JuncoPistol:HDWeapon{
         if(sb.hudlevel==1){
             int nextmagloaded=sb.GetNextLoadMag(hdmagammo(hpl.findinventory("HD4mMag25")));
             if(nextmagloaded>25){
-                sb.drawimage("ZMAGA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,scale:(2,2));
+                sb.drawimage("PZMGA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,scale:(2,2));
             }else if(nextmagloaded<1){
-                sb.drawimage("ZMAGC0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.,scale:(2,2));
+                sb.drawimage("PZMGC0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.,scale:(2,2));
             }else sb.drawbar(
-                "ZMAGNORM","ZMAGGREY",
+                "PZMGNORM","PZMGGREY",
                 nextmagloaded,25,
                 (-46,-3),-1,
                 sb.SHADER_VERT,sb.DI_SCREEN_CENTER_BOTTOM
@@ -436,10 +436,10 @@ class JuncoPistol:HDWeapon{
         } //fallthrough to loadmag
     loadmag:
         ---- A 12 offset(-15,44){
-            let zmag=HD4mMag25(findinventory("HD4mMag25"));
-            if(!zmag){setweaponstate("reloadend");return;}
+            let PZMG=HD4mMag25(findinventory("HD4mMag25"));
+            if(!PZMG){setweaponstate("reloadend");return;}
             A_StartSound("weapons/pocket",CHAN_WEAPON);
-            if(zmag.DirtyMagsOnly())invoker.weaponstatus[0]|=JNF_LoadingDirty;
+            if(PZMG.DirtyMagsOnly())invoker.weaponstatus[0]|=JNF_LoadingDirty;
             else{
                 invoker.weaponstatus[0]&=~JNF_LoadingDirty;
                 A_SetTics(10);
@@ -449,13 +449,13 @@ class JuncoPistol:HDWeapon{
     loadmagclean:
         JNCO B 8 offset(-15,45)A_StartSound("weapons/juncoload",CHAN_WEAPON);
         JNCO B 1 offset(-14,44){
-            let zmag=HD4mMag25(findinventory("HD4mMag25"));
-            if(!zmag){setweaponstate("reloadend");return;}
-            if(zmag.DirtyMagsOnly()){
+            let PZMG=HD4mMag25(findinventory("HD4mMag25"));
+            if(!PZMG){setweaponstate("reloadend");return;}
+            if(PZMG.DirtyMagsOnly()){
                 setweaponstate("loadmagdirty");
                 return;
             }
-            invoker.weaponstatus[JNProp_Mag]=zmag.TakeMag(true);
+            invoker.weaponstatus[JNProp_Mag]=PZMG.TakeMag(true);
             A_StartSound("weapons/juncobfwd2",CHAN_WEAPON);
         }goto reloadend;
     loadmagdirty:
@@ -479,9 +479,9 @@ class JuncoPistol:HDWeapon{
     reallyloadmagdirty:
         JNCO B 1 offset(-14,44)A_StartSound("weapons/juncobfwd2",CHAN_WEAPON);
         JNCO A 8 offset(-18,50){
-            let zmag=HD4mMag25(findinventory("HD4mMag25"));
-            if(!zmag){setweaponstate("reloadend");return;}
-            invoker.weaponstatus[JNProp_Mag]=zmag.TakeMag(true)+100;
+            let PZMG=HD4mMag25(findinventory("HD4mMag25"));
+            if(!PZMG){setweaponstate("reloadend");return;}
+            invoker.weaponstatus[JNProp_Mag]=PZMG.TakeMag(true)+100;
             A_MuzzleClimb(
                 -frandom(0.4,0.6),frandom(2.,3.)
                 -frandom(0.2,0.3),frandom(1.,1.6),
@@ -772,9 +772,9 @@ class HD4mMag25:HDMagAmmo{
     }
     override string,string,name,double getmagsprite(int thismagamt){
         string magsprite;
-        if(thismagamt>=26)magsprite="ZMAGA0";
-        else if(thismagamt>0)magsprite="ZMAGB0";
-        else magsprite="ZMAGC0";
+        if(thismagamt>=26)magsprite="PZMGA0";
+        else if(thismagamt>0)magsprite="PZMGB0";
+        else magsprite="PZMGC0";
         return magsprite,"RBRSBRN","FourMilAmmo",2.;
     }
     override int GetMagHudCount(int input){
@@ -925,14 +925,14 @@ class HD4mMag25:HDMagAmmo{
     }
     states(actor){
     spawn:
-        ZMAG AB -1 nodelay{
+        PZMG AB -1 nodelay{
             if(!mags.size()){destroy();return;}
             int mmm=mags[0];
             if(mmm>26)mags[0]=min(25,mmm%100);
             if(mmm<26)frame=1;
         }stop;
     spawnempty:
-        ZMAG C -1 A_SpawnEmpty();
+        PZMG C -1 A_SpawnEmpty();
         stop;
     }
 }

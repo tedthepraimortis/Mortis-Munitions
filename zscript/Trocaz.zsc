@@ -82,11 +82,11 @@ class HDTrocaz:HDWeapon{
 		if(sb.hudlevel==1){
 			int nextmagloaded=sb.GetNextLoadMag(hdmagammo(hpl.findinventory("HD4mMag25")));
 			if(nextmagloaded>=25){
-				sb.drawimage("ZMAGA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,scale:(2,2));
+				sb.drawimage("PZMGA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,scale:(2,2));
 			}else if(nextmagloaded<1){
-				sb.drawimage("ZMAGC0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.,scale:(2,2));
+				sb.drawimage("PZMGC0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.,scale:(2,2));
 			}else sb.drawbar(
-                "ZMAGNORM","ZMAGGREY",
+                "PZMGNORM","PZMGGREY",
                 nextmagloaded,25,
                 (-46,-3),-1,
                 sb.SHADER_VERT,sb.DI_SCREEN_CENTER_BOTTOM
@@ -408,7 +408,7 @@ class HDTrocaz:HDWeapon{
 		#### B 3 offset(20,46);
 		#### B 5 offset(30,52){
 			A_MuzzleClimb(0.3,0.4,wepdot:false);
-			A_StartSound("weapons/trocazmagmove",8,CHANF_OVERLAP);
+			A_StartSound("weapons/trocaPZMGmove",8,CHANF_OVERLAP);
 		}
 		#### B 0{
 			int magamt=invoker.weaponstatus[TRCProp_Mag];
@@ -446,7 +446,7 @@ class HDTrocaz:HDWeapon{
 			let mmm=hdmagammo(findinventory("HD4mMag25"));
 			if(mmm){
 				invoker.weaponstatus[TRCProp_Mag]=mmm.TakeMag(true);
-				A_StartSound("weapons/TrocazMagIn",8,CHANF_OVERLAP);
+				A_StartSound("weapons/TrocaPZMGIn",8,CHANF_OVERLAP);
 			}
 			if(
 				invoker.weaponstatus[TRCProp_Mag]<1
