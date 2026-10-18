@@ -109,6 +109,10 @@ PICKUP_TROCAZ = "You got a \'Trocaz\' rifle! Hacked together, yet still works wo
 TROCAZ_HELPTEXT_1 = "  Reload mag\n";
 TROCAZ_HELPTEXT_2 = "  Reload mag via chamber\n";
 
+TCZWH_RTYPE = " - Round Type: 4mm UAC\n";
+TCZWH_DTYPE = " - \crDRM\cc \c[Green]Dis-\cc\crabled!\cc\n";
+TCZWH_WTYPE = " - Weapon Type: Infantry Rifle\n";
+
 // Kakapo Eather Pistol
 TAG_KAKAPO = "P.M.I. \'Kakapo\' Eather Pistol";
 PICKUP_KAKAPO = "You got a \'Kakapo' pistol! Little birdy still packs quite a punch.";
@@ -135,7 +139,7 @@ WGNMAGREALLY = "%s\nDo you really want to do that?";
 WGNMAGMSG2 = "Reloading a P.M.I. \'Wigeon\' Magazine into another firearm\nwithout authorization is a breach of the\nP.M.I. End User License Agreement.";//Original one don't fit in screen
 WGNRELERROR = "\cg[FATAL ERR (code ";
 WGNNOCARRIER = ") no carrier, aborting]";
-WGN_EXPLODEMSG = "[FATAL ERROR] NO CARRIER FOUND, RESORTING TO ANTI-PIRACY MEASURES.";
+WGN_EXPLODEMSG = "\cr[FATAL ERROR]\cc \c[DarkGray]NO CARRIER FOUND, RESORTING TO ANTI-PIRACY MEASURES.\cc";
 
 // D4RT
 PICKUP_D4RT = "You got a \'D4RT\' Break-Action Laser Rifle!";

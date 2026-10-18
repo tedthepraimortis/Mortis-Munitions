@@ -436,10 +436,10 @@ class JuncoPistol:HDWeapon{
         } //fallthrough to loadmag
     loadmag:
         ---- A 12 offset(-15,44){
-            let PZMG=HD4mMag25(findinventory("HD4mMag25"));
-            if(!PZMG){setweaponstate("reloadend");return;}
+            let pzmg=HD4mMag25(findinventory("HD4mMag25"));
+            if(!pzmg){setweaponstate("reloadend");return;}
             A_StartSound("weapons/pocket",CHAN_WEAPON);
-            if(PZMG.DirtyMagsOnly())invoker.weaponstatus[0]|=JNF_LoadingDirty;
+            if(pzmg.DirtyMagsOnly())invoker.weaponstatus[0]|=JNF_LoadingDirty;
             else{
                 invoker.weaponstatus[0]&=~JNF_LoadingDirty;
                 A_SetTics(10);
@@ -449,13 +449,13 @@ class JuncoPistol:HDWeapon{
     loadmagclean:
         JNCO B 8 offset(-15,45)A_StartSound("weapons/juncoload",CHAN_WEAPON);
         JNCO B 1 offset(-14,44){
-            let PZMG=HD4mMag25(findinventory("HD4mMag25"));
-            if(!PZMG){setweaponstate("reloadend");return;}
-            if(PZMG.DirtyMagsOnly()){
+            let pzmg=HD4mMag25(findinventory("HD4mMag25"));
+            if(!pzmg){setweaponstate("reloadend");return;}
+            if(pzmg.DirtyMagsOnly()){
                 setweaponstate("loadmagdirty");
                 return;
             }
-            invoker.weaponstatus[JNProp_Mag]=PZMG.TakeMag(true);
+            invoker.weaponstatus[JNProp_Mag]=pzmg.TakeMag(true);
             A_StartSound("weapons/juncobfwd2",CHAN_WEAPON);
         }goto reloadend;
     loadmagdirty:
@@ -479,9 +479,9 @@ class JuncoPistol:HDWeapon{
     reallyloadmagdirty:
         JNCO B 1 offset(-14,44)A_StartSound("weapons/juncobfwd2",CHAN_WEAPON);
         JNCO A 8 offset(-18,50){
-            let PZMG=HD4mMag25(findinventory("HD4mMag25"));
-            if(!PZMG){setweaponstate("reloadend");return;}
-            invoker.weaponstatus[JNProp_Mag]=PZMG.TakeMag(true)+100;
+            let pzmg=HD4mMag25(findinventory("HD4mMag25"));
+            if(!pzmg){setweaponstate("reloadend");return;}
+            invoker.weaponstatus[JNProp_Mag]=pzmg.TakeMag(true)+100;
             A_MuzzleClimb(
                 -frandom(0.4,0.6),frandom(2.,3.)
                 -frandom(0.2,0.3),frandom(1.,1.6),
