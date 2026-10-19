@@ -305,7 +305,8 @@ class HDTrocaz:HDWeapon{
             if(invoker.WeaponStatus[TRCProp_Chamber] == 0)
             {
 				if(invoker.weaponstatus[TRCProp_Mag]>0){
-					invoker.weaponstatus[TRCProp_Mag]--;
+					if(invoker.weaponstatus[TRCProp_Mag]==26)invoker.weaponstatus[TRCProp_Mag]=24;
+					else invoker.weaponstatus[TRCProp_Mag]--;
 					invoker.weaponstatus[TRCProp_Chamber]=1;
 				}
             }
@@ -491,14 +492,30 @@ class HDTrocaz:HDWeapon{
 		}
 	}
 }
-enum trocazstatus{
-	TRCProp_JustUnload=1,
-	TRCProp_ReflexSight=2,
-	TRCProp_LoadType=3,
 
+class HDTrocazRandom:IdleDummy{
+	states{
+	spawn:
+		TNT1 A 0 nodelay{
+			let zzz=HDTrocaz(spawn("HDTrocaz",pos,ALLOW_REPLACE));
+			if(!zzz)return;
+			zzz.special=special;
+			for(int i=0;i<5;i++)zzz.args[i]=args[i];
+            if(!random(0,3))zzz.weaponstatus[0]|=TRCProp_ReflexSight;
+			spawn("HD4mMag25",pos+(frandom(1,7),0,0),ALLOW_REPLACE);
+			spawn("HD4mMag25",pos+(frandom(1,5),0,0),ALLOW_REPLACE);
+			spawn("HD4mMag25",pos+(frandom(1,3),0,0),ALLOW_REPLACE);
+		}stop;
+	}
+}
+
+enum trocazstatus{
 	TRCProp_Flags=0,
 	TRCProp_Mag=1,
 	TRCProp_Chamber=2, //0 empty, 1 loaded
 	TRCProp_Dot=3,
 	TRCProp_HudTicker=4,
+	TRCProp_JustUnload=5,
+	TRCProp_ReflexSight=6,
+	TRCProp_LoadType=7
 };

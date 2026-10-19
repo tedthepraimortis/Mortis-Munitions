@@ -25,6 +25,12 @@ server int hdm_junco_price = 35;
 server int hdm_juncomag_price = 5;
 server bool junco_allowbackpacks = true;
 
+// Trocaz
+server float trocaz_clipmag_spawn_weight = 2;
+server bool hdm_enable_trocaz = true;
+server int hdm_trocaz_price = 55;
+server bool trocaz_allowBackpacks = true;
+
 // Mass
 server bool mm_weapon_persistency = true;
 user bool mm_advanced_helptext = true;

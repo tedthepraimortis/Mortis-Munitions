@@ -109,6 +109,9 @@ PICKUP_TROCAZ = "You got a \'Trocaz\' rifle! Hacked together, yet still works wo
 TROCAZ_HELPTEXT_1 = "  Reload mag\n";
 TROCAZ_HELPTEXT_2 = "  Reload mag via chamber\n";
 
+MERCH_TAG_TROCAZ = "P.M.I. \'Trocaz\' Survival Rifle";
+MERCH_FLAVOR_TROCAZ = "From a mountainous island somewhere in the sea, this little survival rifle'll keep you kickin'.";
+
 TCZWH_RTYPE = " - Round Type: 4mm UAC\n";
 TCZWH_DTYPE = " - \crDRM\cc \c[Green]Dis-\cc\crabled!\cc\n";
 TCZWH_WTYPE = " - Weapon Type: Infantry Rifle\n";

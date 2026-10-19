@@ -46,5 +46,14 @@ addWeaponCrateFilter => { "name": "JuncoPistol", "allowed": "#junco_allowBackpac
 newMerchantStoreItem => { "enabled": "#hdm_enable_junco", "type": "weapon", "category": "$MERCH_CAT_MORTISMUNITIONS", "item": "JuncoPistol", "icon": "JNCOP0", "displayName": "$MERCH_TAG_JUNCO", "basePrice": "#hdm_junco_price", "flavorText": "$MERCH_FLAVOR_JUNCO" }
 newMerchantStoreItem => { "enabled": "#hdm_enable_junco", "type": "mag", "category": "$MERCH_CAT_MORTISMUNITIONS", "item": "HD4mMag25", "icon": "PZMGA0", "displayName": "$MERCH_TAG_JUNCOMAG", "basePrice": "#hdm_juncomag_price", "flavorText": "$MERCH_FLAVOR_JUNCOMAG" }
 
+// Trocaz
+addAmmoUser => { "ammoName": "FourMilAmmo", "name": "HDTrocaz" }
+
+addSpawnTableSingleEntry => { "tableName": "ClipMagReplaces", "name": "HDTrocazRandom", "weight": "#trocaz_clipmag_spawn_weight", "persists": "#mm_weapon_persistency" }
+addStorageItemListFilter => { "name": "HDTrocaz", "allowed": "#trocaz_allowBackpacks" }
+addWeaponCrateFilter => { "name": "HDTrocaz", "allowed": "#trocaz_allowBackpacks" }
+
+newMerchantStoreItem => { "enabled": "#hdm_enable_trocaz", "type": "weapon", "category": "$MERCH_CAT_MORTISMUNITIONS", "item": "HDTrocaz", "icon": "JNCOP0", "displayName": "$MERCH_TAG_TROCAZ", "basePrice": "#hdm_trocaz_price", "flavorText": "$MERCH_FLAVOR_TROCAZ" }
+
 // Misc
 addSpawnTableSingleEntry => { "tableName": "ClipMagReplaces", "name": "HDSealantBoxPickup", "weight": "#sealant_spawn_weight", "persists": "#mm_weapon_persistency" }
