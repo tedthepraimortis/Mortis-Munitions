@@ -58,7 +58,7 @@ __Trocaz__
 - Notably more reliable, despite its origins, than the ZM66 with no barrel degradation or jamming, at the cost of reload speed, automatic fire and fire rate.
 
 Loadout Code: tcz | scope - 0/1
-Magazine: 425 | 4mm round, unreloadable due to DRM
+Magazine: 425 | Ammo: 4mm, 4.26mm UAC
 
 __Pochard__
 

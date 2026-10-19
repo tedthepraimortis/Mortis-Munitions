@@ -380,7 +380,7 @@ class HDTaronga : WAN_20mmLauncher
 			    	screen.SetClipRect(cx,cy,cw,ch);
                 
 			    sb.drawimage(
-			    	"bossscope",(0,scaledyoffset)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,scale:(0.9,0.9)
+			    	"bossscope",(0,scaledyoffset)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,scale:(0.75,0.75)
 			    ); break;
             }
             case 2:

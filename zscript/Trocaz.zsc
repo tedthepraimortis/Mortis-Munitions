@@ -124,20 +124,39 @@ class HDTrocaz:HDWeapon{
 		bool sightbob,vector2 bob,double fov,bool scopeview,actor hpc
 	){
 		vector2 bobb=bob*1.18;
-		if(weaponstatus[0]&TRCProp_ReflexSight){
-			double dotoff=max(abs(bob.x),abs(bob.y));
-			if(dotoff<30){
-				string whichdot=sb.ChooseReflexReticle(hdw.weaponstatus[TRCProp_Dot]);
-				sb.drawimage(
-					whichdot,(0,0)+bobb,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,
-					alpha:0.8-dotoff*0.01,scale:(1.6,1.6),
-					col:0xFF000000|sb.crosshaircolor.GetInt()
-				);
-			}
-			sb.drawimage(
-				"smgrearsight",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER
-			);
-		}else{
+        double degree=6.;
+        int cx,cy,cw,ch;
+		if(weaponstatus[0]&TRCProp_ReflexSight)
+            {
+			    int scaledwidth=56;
+			    int scaledyoffset=(scaledwidth>>1)+12;
+			    [cx,cy,cw,ch]=screen.GetClipRect();
+			    sb.SetClipRect(
+			    	-28+bob.x,12+bob.y,scaledwidth,scaledwidth,
+			    	sb.DI_SCREEN_CENTER
+			    );
+			    double dotoff=max(abs(bob.x),abs(bob.y));
+			    /*sb.drawimage(
+			    	"SRVR_SC0",(0,0)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,scale:(1.1,1.1)
+			    );*/
+			    texman.setcameratotexture(hpc,"HDXCAM_ZM66",degree);
+			    let cam=texman.CheckForTexture("HDXCAM_ZM66",TexMan.Type_Any);
+			    double camSize=texman.GetSize(cam);
+			    sb.DrawCircle(cam,(0,scaledyoffset)+bob,.085,usePixelRatio:true);
+			    let reticle = texman.CheckForTexture("trnreti2",TexMan.Type_Any);
+			    	if((bob.y/fov)<0.4){
+			    		let reticleScale = camSize / texman.GetSize(reticle);
+			    		{
+			    			sb.DrawCircle(reticle,(0,scaledyoffset)+bobb,.403*reticleScale, uvScale: .62);
+			    		}
+			    	}
+                
+			    	screen.SetClipRect(cx,cy,cw,ch);
+                
+			    sb.drawimage(
+			    	"bossscope",(0,scaledyoffset)+bob,sb.DI_SCREEN_CENTER|sb.DI_ITEM_CENTER,scale:(0.75,0.75)
+			    );
+            }else{
 			int cx,cy,cw,ch;
 			[cx,cy,cw,ch]=screen.GetClipRect();
 			sb.SetClipRect(
@@ -517,5 +536,6 @@ enum trocazstatus{
 	TRCProp_HudTicker=4,
 	TRCProp_JustUnload=5,
 	TRCProp_ReflexSight=6,
-	TRCProp_LoadType=7
+	TRCProp_LoadType=7,
+	TRCProp_Zoom=8
 };
