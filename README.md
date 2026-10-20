@@ -62,6 +62,21 @@ Magazine: 425 | Ammo: 4mm, 4.26mm UAC
 
 __Pochard__
 
+- :(
+
+__Wigeon__
+
+- A heavily DRM'd 9mm NDM SMG made for quick breach and clear operations where the high damage high rate of fire requirements were very necessary.
+- Magazine fed with a manual bolt to clear jams when they happened, with anti-piracy protection built into the gun.
+
+__D4RT__
+
+- Microcell brontornis equivalent idfk i dont wabnba type this shit rn dude fuuuck
+
+__Kakapo__
+
+- plasgma pistol :)
+
 ## Credits
 
 __Taronga__
