@@ -115,6 +115,6 @@ __Trocaz__
 
 __Pochard__
 
-- Sprites: Sgt. Shivers, originally seen in DRLA as the Marksman Rifle.
+- Sprites: Modified from ["Heavy Assault Rifle"](https://skfb.ly/6RGPy) by pixelgrapher which is licensed under [Creative Commons Attribution](http://creativecommons.org/licenses/by/4.0/).
 - Code based off the ZM66 and bits from UndeadZeratul's HD-Flashlight addon and HDCoreLib implementations.
 - A Pochard is a species of duck, function came from talking with Charlotte.Lua when the original 8.28mm Rifle was being made.
