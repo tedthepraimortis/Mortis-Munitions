@@ -12,8 +12,5 @@ const ENC_10MAG_LOADED = ENC_10MAG_EMPTY * 0.8;
 #include "zscript/Misc.zsc"
 #include "zscript/Pochard.zsc"
 #include "zscript/Wigeon.zsc"
-
-// May you be added soon, my love. - [chei]
-//#include "zscript/Kakapo.zsc"
-// And I hope I can even get sprites for you, fuckhead. - [Tavi]
-//#include "zscript/dart.zsc"
+#include "zscript/Kakapo.zsc"
+#include "zscript/dart.zsc"
