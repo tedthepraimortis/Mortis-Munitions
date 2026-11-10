@@ -117,9 +117,9 @@ class HD_Wigeon:HDWeapon{
         ..LWPHELP_MAGMANAGER
         ..LWPHELP_UNLOADUNLOAD
         ..(AHelpText.GetBool() ? Stringtable.Localize("$WEPHELP_INFO") : "")
-        ..(AHelpText.GetBool() ? Stringtable.Localize("$JNKWH_RTYPE") : "")
-        ..(AHelpText.GetBool() ? Stringtable.Localize("$JNKWH_DTYPE") : "")
-        ..(AHelpText.GetBool() ? Stringtable.Localize("$JNKWH_WTYPE") : "");
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$WGNWH_RTYPE") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$WGNWH_DTYPE") : "")
+        ..(AHelpText.GetBool() ? Stringtable.Localize("$WGNWH_WTYPE") : "");
     }
     override void DrawSightPicture(
 		HDStatusBar sb,HDWeapon hdw,HDPlayerPawn hpl,
