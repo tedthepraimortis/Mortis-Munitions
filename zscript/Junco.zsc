@@ -719,6 +719,20 @@ enum juncostatus{
     JNProp_Suppressor=5,
 };
 
+class HD4mMag25Random:IdleDummy{
+	states{
+	spawn:
+		TNT1 A 0 nodelay{
+			spawn("HD4mMag25",pos+(frandom(-7,7),frandom(-7,7),frandom(-7,7)),ALLOW_REPLACE);
+			if(!random(0,1))spawn("HD4mMag25",pos+(frandom(-5,5),frandom(-5,5),frandom(-5,5)),ALLOW_REPLACE);
+			if(!random(0,3))spawn("HD4mMag25",pos+(frandom(-3,3),frandom(-3,3),frandom(-3,3)),ALLOW_REPLACE);
+			if(!random(0,5))spawn("HD4mMag25",pos+(frandom(-1,1),frandom(-1,1),frandom(-1,1)),ALLOW_REPLACE);
+			for(int i=0;i<random(15,150);i++)spawn("FourMilAmmo",pos+(frandom(-10,10),frandom(-10,10),frandom(-10,10)),ALLOW_REPLACE);
+			if(!random(0,1))spawn("HDSealantBoxPickup",pos+(frandom(-1,1),frandom(-1,1),frandom(-1,1)),ALLOW_REPLACE);
+		}stop;
+	}
+}
+
 class HDJuncoRandom:IdleDummy{
 	states{
 	spawn:
