@@ -71,11 +71,11 @@ class HD_Wigeon:HDWeapon{
         if(sb.hudlevel==1){
             int nextmagloaded=sb.GetNextLoadMag(hdmagammo(hpl.findinventory("HDNDMMag30")));
             if(nextmagloaded>30){
-                sb.drawimage("ZMAGA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,scale:(2,2));
+                sb.drawimage("WGNMA0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,scale:(2,2));
             }else if(nextmagloaded<1){
-                sb.drawimage("ZMAGC0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.,scale:(2,2));
+                sb.drawimage("WGNMC0",(-46,-3),sb.DI_SCREEN_CENTER_BOTTOM,alpha:nextmagloaded?0.6:1.,scale:(2,2));
             }else sb.drawbar(
-                "ZMAGNORM","ZMAGGREY",
+                "WGNMNORM","WGNMGREY",
                 nextmagloaded,30,
                 (-46,-3),-1,
                 sb.SHADER_VERT,sb.DI_SCREEN_CENTER_BOTTOM
@@ -394,43 +394,6 @@ class HD_Wigeon:HDWeapon{
                 if(inmag<31)A_Log(StringTable.Localize("$WGNMAGMSG"),true);
             }
         }
-        goto nope;
-    // Shamelessly stolen from the P90. Full credit to Prettyfist. - [Tavi] 
-	unjamstart:
-		WIGN A 24 offset(-14,44){
-			A_WeaponBusy();
-			A_SetTics(1);
-		}
-	spaghettimag: //All of the rounds, all of them
-		---- A 1{
-			invoker.weaponstatus[WGProp_Mag]--;
-			A_SpillNDM();
-			A_StartSound("weapons/bp90chamber",8);
-		}
-		---- A 0{
-			if(invoker.weaponstatus[WGProp_Mag]>0)setweaponstate("spaghettimag");
-		}
-		---- A 1{
-			invoker.weaponstatus[0]&=~WGF_Chamber;
-			A_SpillNDM();
-			A_StartSound("weapons/bp90chamber",8);
-		}
-		---- A 0{
-			HDMagAmmo.SpawnMag(self,"HDNDMMag30",0);
-			invoker.weaponstatus[WGProp_Mag]=-1;
-            invoker.weaponstatus[WGProp_Flags]&=~WGF_Chamber;
-		}
-        ---- A 1
-        {
-            invoker.weaponstatus[0]&=~WGF_ChamberBroken;
-            invoker.weaponstatus[WGProp_Flags]&=~WGF_Chamber;
-            A_StartSound("weapons/juncobfwd2",CHAN_WEAPON,CHANF_OVERLAP);
-            for(int i=0;i<5;i++)A_SpawnItemEx("FourMilChunk",0,0,20,
-                random(4,7),random(-2,2),random(-2,1),0,SXF_NOCHECKPOSITION
-            );
-            if(!random(0,5))A_SpawnItemEx("HDSmokeChunk",12,0,gunheight()-10,4,frandom(-2,2),frandom(2,4));
-        }
-		goto nope;
     magout:
         WIGN B 0{
             if(
@@ -508,6 +471,43 @@ class HD_Wigeon:HDWeapon{
         WIGN A 1 offset(-3,34);
         goto nope;
 
+    // Shamelessly stolen from the P90. Full credit to Prettyfist. - [Tavi] 
+	unjamstart:
+		WIGN A 24 offset(-14,44){
+			A_WeaponBusy();
+			A_SetTics(1);
+		}
+	spaghettimag: //All of the rounds, all of them
+		---- A 1{
+			invoker.weaponstatus[WGProp_Mag]--;
+			A_SpillNDM();
+			A_StartSound("weapons/bp90chamber",8);
+		}
+		---- A 0{
+			if(invoker.weaponstatus[WGProp_Mag]>0)setweaponstate("spaghettimag");
+		}
+		---- A 1{
+			invoker.weaponstatus[0]&=~WGF_Chamber;
+			A_SpillNDM();
+			A_StartSound("weapons/bp90chamber",8);
+		}
+		---- A 0{
+			HDMagAmmo.SpawnMag(self,"HDNDMMag30",0);
+			invoker.weaponstatus[WGProp_Mag]=-1;
+            invoker.weaponstatus[WGProp_Flags]&=~WGF_Chamber;
+		}
+        ---- A 1
+        {
+            invoker.weaponstatus[0]&=~WGF_ChamberBroken;
+            invoker.weaponstatus[WGProp_Flags]&=~WGF_Chamber;
+            A_StartSound("weapons/juncobfwd2",CHAN_WEAPON,CHANF_OVERLAP);
+            for(int i=0;i<5;i++)A_SpawnItemEx("FourMilChunk",0,0,20,
+                random(4,7),random(-2,2),random(-2,1),0,SXF_NOCHECKPOSITION
+            );
+            if(!random(0,5))A_SpawnItemEx("HDSmokeChunk",12,0,gunheight()-10,4,frandom(-2,2),frandom(2,4));
+        }
+		goto nope;
+
     /*chamber_manual:
         WIGN A 0 A_JumpIf(invoker.weaponstatus[WGProp_Flags]&WGF_Chamber,"nope");
         WIGN A 3 offset(-1,36)A_WeaponBusy();
@@ -553,7 +553,7 @@ class HD_Wigeon:HDWeapon{
 		#### B 3 Offset(6, 42)
 		{
             A_StartSound("Weapons/TrocazBoltBack", 8);
-            invoker.weaponstatus[JNProp_Flags]&=~JNF_Chamber;
+            invoker.weaponstatus[WGProp_Flags]&=~WGF_Chamber;
 			if (GunBraced())
 			{
 				A_MuzzleClimb(frandom(-0.1, 0.3), frandom(-0.1, 0.3));
@@ -771,9 +771,9 @@ class HDNDMMag30:HDMagAmmo{
     }
     override string,string,name,double getmagsprite(int thismagamt){
         string magsprite;
-        if(thismagamt>=31)magsprite="ZMAGA0";
-        else if(thismagamt>0)magsprite="ZMAGB0";
-        else magsprite="ZMAGC0";
+        if(thismagamt>=31)magsprite="WGNMA0";
+        else if(thismagamt>0)magsprite="WGNMB0";
+        else magsprite="WGNMC0";
         return magsprite,"PBRSA0","HDNDMLoose",0.6;
     }
     override int GetMagHudCount(int input){
@@ -924,14 +924,14 @@ class HDNDMMag30:HDMagAmmo{
     }
     states(actor){
     spawn:
-        ZMAG AB -1 nodelay{
+        WGNM AB -1 nodelay{
             if(!mags.size()){destroy();return;}
             int mmm=mags[0];
             if(mmm>31)mags[0]=min(30,mmm%100);
             if(mmm<31)frame=1;
         }stop;
     spawnempty:
-        ZMAG C -1 A_SpawnEmpty();
+        WGNM C -1 A_SpawnEmpty();
         stop;
     }
 }
