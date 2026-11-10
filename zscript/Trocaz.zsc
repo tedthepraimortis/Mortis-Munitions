@@ -5,7 +5,7 @@ class HDTrocaz:HDWeapon{
 	default{
 		+hdweapon.fitsinbackpack
 		obituary "$OB_SMG";
-		weapon.selectionorder 69;
+		weapon.selectionorder 67;
 		weapon.slotnumber 4;
 		weapon.slotpriority 67;
 		weapon.kickback 20;
