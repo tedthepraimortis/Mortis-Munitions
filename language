@@ -3,6 +3,13 @@
 MORTISMUNITIONS_MENU = "\c[Cyan]Ⓜ\c- \'Mortis Munitions";
 MENU_ADVANCEDHELPTEXT = "Advanced Help Text: ";
 
+MENU_WEPSPAWNRATE = "Weapon Spawn Weight: ";
+MENU_WEPPRICE = "Weapon Price: ";
+MENU_MAGSPAWNRATE = "Magazine Spawn Weight: ";
+MENU_MAGPRICE = "Magazine Price: ";
+MENU_PERSIST = "Persistent Spawning: ";
+MENU_ENABLED = "Weapon Enabled: ";
+
 // Generic Strings
 WEPHELP_INFO = "\n\cuExtra Info\n\c-";
 MM_RESEAL = " \cu[Use] Reseal Full Mag";
@@ -101,3 +108,50 @@ MERCH_TAG_CURRAWONG = "P.M.I. \'Currawong\' 10mm PDW";
 
 MERCH_FLAVOR_CURRAWONGMAG = "DRM still intact too! Unluckily for you, not guarenteed to leave your enemies intact!";
 MERCH_TAG_CURRAWONGMAG = "\'Currawong\' 30-round Magazine";
+
+// Trocaz 4mm Rifle
+TAG_TROCAZ = "P.M.I. \'Trocaz\' 4mm Rifle";
+PICKUP_TROCAZ = "You got a \'Trocaz\' rifle! Hacked together, yet still works wonders.";
+
+TROCAZ_HELPTEXT_1 = "  Reload mag\n";
+TROCAZ_HELPTEXT_2 = "  Reload mag via chamber\n";
+
+MERCH_TAG_TROCAZ = "P.M.I. \'Trocaz\' Survival Rifle";
+MERCH_FLAVOR_TROCAZ = "And from a mountainous island in the sea called out, \'Was that five shots or six?\'.";
+
+TCZWH_RTYPE = " - Round Type: 4mm UAC\n";
+TCZWH_DTYPE = " - \crDRM\cc \c[Green]Dis-\cc\crabled!\cc\n";
+TCZWH_WTYPE = " - Weapon Type: Infantry Rifle\n";
+
+// Kakapo Eather Pistol
+TAG_KAKAPO = "P.M.I. \'Kakapo\' Eather Pistol";
+PICKUP_KAKAPO = "You got a \'Kakapo' pistol! Little birdy still packs quite a punch.";
+OB_KAKAPO = "%o was blown sky high by %k's Kakapo.";
+
+// Pochard 8mm LMG
+TAG_POCHARD = "P.M.I. \'Pochard\' 8mm LMG";
+PICKUP_POCHARD = "You got the \'Pochard\' LMG!";
+
+TAG_POCHARDDRUM = "8.28mm P.M.I. drum magazine";
+PICKUP_POCHARDDRUM = "Picked up an 8.28mm drum magazine.";
+
+// Wigeon 9mm NDM PDW
+TAG_WIGEON = "P.M.I. \'Wigeon\' 9mm NDM PDW";
+TAG_NDM30MAG = "\'Wigeon\' PDW Casket Magazine";
+
+PICKUP_WIGEON = "You got the P.M.I. \'Wigeon\'! Try not to let them explode on ya...";
+PICKUP_NDM30MAG = "Picked up a 9mm NDM casket magazine.";
+
+//Wigeon Mag Messages
+WGNMAGMSG = "Reloading a P.M.I. \'Wigeon\' Magazine into another firearm without authorization is a breach of the P.M.I. End User License Agreement.";
+4MILNOTE = " NOTE:  %s";
+WGNMAGREALLY = "%s\nDo you really want to do that?";
+WGNMAGMSG2 = "Reloading a P.M.I. \'Wigeon\' Magazine into another firearm\nwithout authorization is a breach of the\nP.M.I. End User License Agreement.";//Original one don't fit in screen
+WGNRELERROR = "\cg[FATAL ERR (code ";
+WGNNOCARRIER = ") no carrier, aborting]";
+WGN_EXPLODEMSG = "\cr[FATAL ERROR]\cc \c[DarkGray]NO CARRIER FOUND, RESORTING TO ANTI-PIRACY MEASURES.\cc";
+
+// D4RT
+PICKUP_D4RT = "You got a \'D4RT\' Break-Action Laser Rifle!";
+TAG_D4RT = "P.M.I. \'D4RT\' Laser Rifle";
+OB_D4RT = "%o got shown that %k doesn't need sulfur and salt to kill.";

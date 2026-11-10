@@ -10,7 +10,7 @@ class HDCurrawong:HDWeapon{
 		weapon.bobrangex 0.2;
 		weapon.bobrangey 0.8;
 		obituary "$OB_CURRAWONG";
-		hdweapon.refid HDLD_CURRAWONG;
+		hdweapon.refid "cwn";
 		tag "$TAG_CURRAWONG";
 		inventory.icon "CWGSA0";
 
@@ -796,6 +796,20 @@ enum currawongstatus{
 	CWProp_WeirdFire=6,
 };
 
+class HD10mMag30Random:IdleDummy{
+	states{
+	spawn:
+		TNT1 A 0 nodelay{
+			spawn("HD10mMag30",pos+(frandom(-7,7),frandom(-7,7),frandom(-7,7)),ALLOW_REPLACE);
+			if(!random(0,1))spawn("HD10mMag30",pos+(frandom(-5,5),frandom(-5,5),frandom(-5,5)),ALLOW_REPLACE);
+			if(!random(0,3))spawn("HD10mMag30",pos+(frandom(-3,3),frandom(-3,3),frandom(-3,3)),ALLOW_REPLACE);
+			if(!random(0,5))spawn("HD10mMag30",pos+(frandom(-1,1),frandom(-1,1),frandom(-1,1)),ALLOW_REPLACE);
+			if(!random(0,2))spawn("HDSealantBoxPickup",pos+(frandom(-1,1),frandom(-1,1),frandom(-1,1)),ALLOW_REPLACE);
+			if(!random(0,2))spawn("HD10mBoxPickup",pos+(frandom(-1,1),frandom(-1,1),frandom(-1,1)),ALLOW_REPLACE);
+		}stop;
+	}
+}
+
 class HDCurrawongRandom:IdleDummy{
 	states{
 	spawn:
@@ -809,12 +823,13 @@ class HDCurrawongRandom:IdleDummy{
 				if(!random(0,3))zzz.weaponstatus[0]|=CWF_NoFireselect;
 			}
 			if(zzz.weaponstatus[0]&CWF_NoShotgun){
-				spawn("HD10mMag30",pos+(7,0,0),ALLOW_REPLACE);
-				spawn("HD10mMag30",pos+(5,0,0),ALLOW_REPLACE);
+				spawn("HD10mMag30",pos+(frandom(-5,5),frandom(-5,5),frandom(-5,5)),ALLOW_REPLACE);
+				spawn("HD10mMag30",pos+(frandom(-3,3),frandom(-3,3),frandom(-3,3)),ALLOW_REPLACE);
+				spawn("HDSealantBoxPickup",pos+(frandom(-1,1),frandom(-1,1),frandom(-1,1)),ALLOW_REPLACE);
 			}else{
-				spawn("HD4GBAmmo",pos+(10,0,0),ALLOW_REPLACE);
-				spawn("HD4GBAmmo",pos+(8,0,0),ALLOW_REPLACE);
-				spawn("HD10mMag30",pos+(5,0,0),ALLOW_REPLACE);
+				spawn("HD4GBBox",pos+(frandom(-8,8),frandom(-8,8),frandom(-8,8)),ALLOW_REPLACE);
+				spawn("HD10mMag30",pos+(frandom(-5,5),frandom(-5,5),frandom(-5,5)),ALLOW_REPLACE);
+				spawn("HDSealantBoxPickup",pos+(frandom(-1,1),frandom(-1,1),frandom(-1,1)),ALLOW_REPLACE);
 			}
 		}stop;
 	}
@@ -834,7 +849,7 @@ class HD10mMag30:HDMagAmmo{
 		Scale 0.35;
 
         tag "$TAG_10M30MAG";
-        hdpickup.refid HDLD_CURRAWONGMAG;
+        hdpickup.refid "c30";
         inventory.pickupmessage "$PICKUP_10M30MAG";
     }
     override void postbeginplay(){

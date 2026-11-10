@@ -1,0 +1,12 @@
+// Taken from HDFL. Credits entirely to UndeadZeratul, I'm not smart enough for this stuffs. - [Ted]
+class MMFLDataHandler : StaticEventHandler {
+    Array<MM_LightBeamInfo> beams;
+    Array<MM_MountPoint> mounts;
+
+    override void OnRegister() {
+        for (int i = 0; i < AllClasses.Size(); ++i) {
+            if (HDCore.isChildClass(AllClasses[i], 'MM_LightBeamInfo')) beams.Push(MM_LightBeamInfo(new(AllClasses[i])));
+            if (HDCore.isChildClass(AllClasses[i], 'MM_MountPoint'))    mounts.Push(MM_MountPoint(new(AllClasses[i])));
+        }
+    }
+}

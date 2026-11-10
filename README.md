@@ -51,6 +51,32 @@ __Featherduster__
 Loadout Code: 6ps | suppressor - 0/1, choke - 0-4
 Clips: 6p1 | Ammo: 066, .066 Bore
 
+__Trocaz__
+
+- A rather recent 4mm rifle hacked together by various civilians during the demonic invasions, made of old Boss rifle and various ZM66 scraps that litter the lands.
+- Magazine fed with a top-up mechanic by holding the bolt back.
+- Notably more reliable, despite its origins, than the ZM66 with no barrel degradation or jamming, at the cost of reload speed, automatic fire and fire rate.
+
+Loadout Code: tcz | scope - 0/1
+Magazine: 425 | Ammo: 4mm, 4.26mm UAC
+
+__Pochard__
+
+- :(
+
+__Wigeon__
+
+- A heavily DRM'd 9mm NDM SMG made for quick breach and clear operations where the high damage high rate of fire requirements were very necessary.
+- Magazine fed with a manual bolt to clear jams when they happened, with anti-piracy protection built into the gun.
+
+__D4RT__
+
+- Microcell brontornis equivalent idfk i dont wabnba type this shit rn dude fuuuck
+
+__Kakapo__
+
+- plasgma pistol :)
+
 ## Credits
 
 __Taronga__
@@ -76,6 +102,19 @@ __Junco__
 
 __Featherduster__
 
-- Sprites: Tesefy/Sonik.O.Fan, to be replaced by sprites made by ComradeNikki.
+- Sprites: ComradeNikki
 - Naming and function ideas from UndeadZeratul, ComradeNikki and Satellaview-Dev.
 - Sounds from Hotdogs, Horseshoes and Hand Grenades.
+
+__Trocaz__
+
+- Sprites: Model rips from Project Silverfish
+- Name comes from a subspecies of Pigeon, the Trocaz Pigeon, function idea comes from Project Silverfish
+- Sounds from H3VR
+- Model rips done by Satellaview-Dev
+
+__Pochard__
+
+- Sprites: Modified from ["Heavy Assault Rifle"](https://skfb.ly/6RGPy) by pixelgrapher which is licensed under [Creative Commons Attribution](http://creativecommons.org/licenses/by/4.0/).
+- Code based off the ZM66 and bits from UndeadZeratul's HD-Flashlight addon and HDCoreLib implementations.
+- A Pochard is a species of duck, function came from talking with Charlotte.Lua when the original 8.28mm Rifle was being made.
