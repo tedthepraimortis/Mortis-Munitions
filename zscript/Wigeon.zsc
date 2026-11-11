@@ -19,7 +19,7 @@ class HD_Wigeon:HDWeapon{
         obituary "$OB_WIGEON";
         hdweapon.refid "wgn";
         tag "$TAG_WIGEON";
-        inventory.icon "RIGLA0";
+        inventory.icon "WGNPA0";
 
         hdweapon.ammo1 "HDNDMMag30",1;
         hdweapon.ammo2 "MM_4mmSealant",1;
@@ -237,7 +237,7 @@ class HD_Wigeon:HDWeapon{
             A_ZoomRecoil(max(0.95,1.-0.05*min(invoker.weaponstatus[WGProp_Auto],3)));
 
             double brnd=max(invoker.weaponstatus[WGProp_Heat],invoker.weaponstatus[WGProp_Broken])*0.01;
-            HDBulletActor.FireBullet(self,"HDB_NDM",spread:brnd>1.2?brnd:0,speedfactor: 0.9);
+            HDBulletActor.FireBullet(self,"HDB_NDM",spread:brnd>1.2?brnd:0,speedfactor: 1.14);
 
             A_MuzzleClimb(-frandom(0.45,1.3),-frandom(0.49,1.7));
             A_AlertMonsters(HDCONST_ONEMETRE * (9 + heat));
@@ -532,7 +532,7 @@ class HD_Wigeon:HDWeapon{
 	altfire:
 		#### A 1 Offset(0, 34) A_WeaponBusy();
 		#### B 2 Offset(1, 35);
-		#### B 2 Offset (2, 36);
+		#### B 1 Offset (2, 36) A_JumpIf(invoker.weaponstatus[0]&WGF_ChamberBroken>=1,"jamderp");
 		#### B 1 Offset(3, 37) A_MuzzleClimb(-frandom(0.06,0.1),-frandom(0.3,0.5));
 		#### B 1 Offset(4, 38);
 		#### A 0 A_Refire("chamber");
@@ -565,10 +565,6 @@ class HD_Wigeon:HDWeapon{
 		}
 		#### B 2 Offset(6, 42)
 		{
-            if(invoker.weaponstatus[0]&WGF_ChamberBroken>=1)
-            {
-                invoker.weaponstatus[0]&=~WGF_ChamberBroken;
-            }
             if(invoker.WeaponStatus[WGF_Chamber] == 1)
             {
                 A_EjectCasing("HDNDMLoose",frandom(-1,2),(frandom(0.2,0.3),-frandom(7,7.5),frandom(0,0.2)),(0,0,-2));
@@ -605,6 +601,22 @@ class HD_Wigeon:HDWeapon{
         #### B 2 A_WeaponReady(WRF_NOFIRE);
         #### A 1 A_WeaponReady(WRF_NOFIRE);
 		Goto Ready;
+	jamderp:
+		#### A 0 A_StartSound("weapons/bossclick",8,CHANF_OVERLAP);
+		#### B 1 offset(4,38);
+		#### B 2 offset(2,36);
+		#### B 2 offset(4,38)A_MuzzleClimb(frandom(-0.5,0.6),frandom(-0.3,0.6));
+		#### B 3 offset(2,36){
+			A_MuzzleClimb(frandom(-0.5,0.6),frandom(-0.3,0.6));
+			if(frandom(0,12)>10){
+                setweaponstate("chamber");
+                invoker.weaponstatus[0]&=~WGF_ChamberBroken;
+			}
+		}
+		#### B 2 offset(4,38);
+		#### B 3 offset(2,36);
+		#### A 0 A_Refire("jamderp");
+		goto ready;
 
     unloadchamber:
         WIGN A 1 offset(-3,34);
@@ -743,7 +755,8 @@ class HDNDMMag30:HDMagAmmo{
         hdmagammo.roundtype "HDNDMLoose";
         hdmagammo.roundbulk ENC_426_LOADED*0.93;
         hdmagammo.magbulk ENC_426MAG_EMPTY*0.82;
-        hdmagammo.extracttime 8;
+        hdmagammo.inserttime 10;
+        hdmagammo.extracttime 2;
 
         tag "$TAG_NDM30MAG";
         hdpickup.refid "n30";
@@ -771,7 +784,7 @@ class HDNDMMag30:HDMagAmmo{
         if(thismagamt>=31)magsprite="WGNMA0";
         else if(thismagamt>0)magsprite="WGNMB0";
         else magsprite="WGNMC0";
-        return magsprite,"PBRSA0","HDNDMLoose",0.6;
+        return magsprite,"NRNDA0","HDNDMLoose",0.6;
     }
     override int GetMagHudCount(int input){
         if(input==31)return 30;
