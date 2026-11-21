@@ -173,5 +173,5 @@ CYA_ALTRELOAD = "	Reload Underbarrel Shotgun\n";
 CYA_RELOADCHAMBER = "	Reload Shotgun Chamber\n";
 
 CYA_HELPTEXT_1 = " - Round Type: 6mm Flechettes\n";
-CYA_HELPTEXT_2 = " - Shell Type: Buckshot\n";
+CYA_HELPTEXT_2 = " - Shell Type: Explosive Slug\n";
 CYA_HELPTEXT_3 = " - Weapon Type: Assault Carbine";
