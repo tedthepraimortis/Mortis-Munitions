@@ -160,3 +160,18 @@ WGN_EXPLODEMSG = "\cr[FATAL ERROR]\cc \c[DarkGray]NO CARRIER FOUND, RESORTING TO
 PICKUP_D4RT = "You got a \'D4RT\' Break-Action Laser Rifle!";
 TAG_D4RT = "P.M.I. \'D4RT\' Laser Rifle";
 OB_D4RT = "%o got shown that %k doesn't need sulfur and salt to kill.";
+
+// Cayanesis
+OB_CAYANESIS = "%o got their eyes clawed out by %k's Cayanesis.";
+PICKUP_CAYANESIS = "Picked up a P.M.I. \'Cayanesis\' Rifle.";
+TAG_CAYANESIS = "P.M.I. \'Cayanesis\' 6mm Carbine";
+TAG_CAYANESISMAG = "\'Cayanesis\' 6mm Flechette Drum";
+PICKUP_CAYANESISMAG = "Picked up a \'Cayanesis\' drum.";
+
+CYA_ALTFIRE = "	Shoot/Pump Underbarrel Shotgun\n";
+CYA_ALTRELOAD = "	Reload Underbarrel Shotgun\n";
+CYA_RELOADCHAMBER = "	Reload Shotgun Chamber\n";
+
+CYA_HELPTEXT_1 = " - Round Type: 6mm Flechettes\n";
+CYA_HELPTEXT_2 = " - Shell Type: Buckshot\n";
+CYA_HELPTEXT_3 = " - Weapon Type: Assault Carbine";

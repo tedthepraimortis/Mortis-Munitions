@@ -14,3 +14,4 @@ const ENC_10MAG_LOADED = ENC_10MAG_EMPTY * 0.8;
 #include "zscript/Wigeon.zsc"
 #include "zscript/Kakapo.zsc"
 #include "zscript/dart.zsc"
+#include "zscript/Cayanesis.zsc"

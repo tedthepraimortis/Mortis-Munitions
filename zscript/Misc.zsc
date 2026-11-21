@@ -1,5 +1,4 @@
 // Misc. stuff that doesn't fit in any one file. - [Ted]
-
 class MM_4mmSealant : HDAmmo
 {
     Default
@@ -186,4 +185,15 @@ class MM_Halogen : MM_LightBeamInfo {
     override Color GetColor(bool secondary) {
         return HDCore.plancksLaw(secondary ? 3000 : 5000);
     }
+}
+
+// Just to get rid of the Sabot as it looks really scuffed. - [Ted]
+class HDB_MM6mmFlechette:HDB_6mmFlechette{
+	override void postbeginplay(){
+		resetrandoms();
+		realpos=pos;
+		gunsmoke();
+		if(distantsound!="")distantnoise.make(self,distantsound,distantsoundvol,distantsoundpitch);
+		scalebullet();
+	}
 }

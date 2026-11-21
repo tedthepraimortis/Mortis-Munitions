@@ -1,14 +1,3 @@
-// Just to get rid of the Sabot as it looks really scuffed. - [Ted]
-class HDB_MM6mmFlechette:HDB_6mmFlechette{
-	override void postbeginplay(){
-		resetrandoms();
-		realpos=pos;
-		gunsmoke();
-		if(distantsound!="")distantnoise.make(self,distantsound,distantsoundvol,distantsoundpitch);
-		scalebullet();
-	}
-}
-
 class HDTaronga : WAN_20mmLauncher
 {
     enum TarongaFlags
