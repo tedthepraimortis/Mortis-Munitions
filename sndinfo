@@ -95,3 +95,18 @@ weapons/D4RT_Reload_A "Sounds/D4RT/D4RT_Reload_A.wav"
 weapons/D4RT_Reload_B "Sounds/D4RT/D4RT_Reload_B.wav"
 weapons/D4RT_Reload_C "Sounds/D4RT/D4RT_Reload_C.wav"
 weapons/D4RT_Charge "Sounds/D4RT/D4RT_Charge.wav"
+
+// Cayanesis
+$alias weapons/cayanesis weapons/taronga
+weapons/cayanesisunloadchamber
+weapons/cayanesisloadchamber
+weapons/cayanesismagin
+weapons/cayanesismagmove
+weapons/cayanesismagout
+
+$alias weapons/cya_sgshoot weapons/hunter
+$alias weapons/cya_sgrackbak weapons/huntrackbak
+$alias weapons/cya_sgreloadchamber weapons/huntreloadchamber
+$alias weapons/cya_sgrackfwd weapons/huntrackfwd
+$alias weapons/cya_sgopen weapons/huntopen
+$alias weapons/cya_sgreload weapons/huntreload
