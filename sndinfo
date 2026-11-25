@@ -98,11 +98,13 @@ weapons/D4RT_Charge "Sounds/D4RT/D4RT_Charge.wav"
 
 // Cayanesis
 $alias weapons/cayanesis weapons/taronga
-weapons/cayanesisunloadchamber
-weapons/cayanesisloadchamber
-weapons/cayanesismagin
-weapons/cayanesismagmove
-weapons/cayanesismagout
+weapons/cayanesisunloadchamber "Sounds/Cayanesis/AEK919K_BoltSlideBackHeld.ogg"
+weapons/cayanesisloadchamber "Sounds/Cayanesis/AEK919K_BoltSlideForwardHeld.ogg"
+weapons/cayanesismagin "Sounds/Cayanesis/Sako85_MagazineIn.ogg"
+weapons/cayanesismagmove "Sounds/Cayanesis/BreakAction_MagazineInsertRound.ogg"
+weapons/cayanesismagout "Sounds/Cayanesis/Sako85_MagazineOut.ogg"
+weapons/cya_firemode "Sounds/Cayanesis/Sako85_TriggerReset.ogg"
+weapons/cya_dryfire "Sounds/Cayanesis/Sako85_HammerHit.ogg"
 
 $alias weapons/cya_sgshoot weapons/hunter
 $alias weapons/cya_sgrackbak weapons/huntrackbak
